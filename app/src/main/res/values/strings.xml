@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WatherApp</string>
+    <string name="husk_mig">Husk mig</string>
+    <string name="indtast_bruger_id">Indtast Bruger ID</string>
+    <string name="indtast_password">Indtast Password</string>
+    <string name="forkert_login">Forkert Login</string>
+</resources>
