@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.controller;
+package com.grp8.weatherapp.Activities;
 
 /**
  * Created by lbirk on 02-10-2016.
