@@ -1,4 +1,4 @@
-package com.lasse.watherapp.controller;
+package com.grp8.weatherapp.controller;
 
 /**
  * Created by lbirk on 02-10-2016.

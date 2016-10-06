@@ -1,4 +1,4 @@
-package com.lasse.watherapp;
+package com.grp8.weatherapp;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

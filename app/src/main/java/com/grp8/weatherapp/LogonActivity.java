@@ -1,4 +1,4 @@
-package com.lasse.watherapp;
+package com.grp8.weatherapp;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.lasse.watherapp.controller.Authorizer;
-import com.lasse.watherapp.controller.Constants;
+import com.grp8.weatherapp.controller.Authorizer;
+import com.grp8.weatherapp.controller.Constants;
 
 public class LogonActivity extends AppCompatActivity {
 
