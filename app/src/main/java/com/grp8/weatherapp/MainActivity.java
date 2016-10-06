@@ -19,5 +19,6 @@ public class MainActivity extends AppCompatActivity
         Bundle b = intent.getExtras();
 
         String user = b.getString(Constants.KEY_USERID);
+        // Frederik test
     }
 }
