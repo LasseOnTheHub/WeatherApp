@@ -16,7 +16,7 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
     private Button DetailButton;
     // maybe ill just directly source the images in the XML file since they're gonna be static anyway
     private ImageView WeatherWindow, TempIcon, HumidityIcon, UpdateIcon;
-    private TextView Temp, Humidity, Update;
+    private TextView Temp, Humidity, Updated;
 
 
     @Override
@@ -27,7 +27,7 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         // TextView declaration
         Temp = (TextView)findViewById(R.id.Temp);
         Humidity = (TextView)findViewById(R.id.Humidity);
-        Update = (TextView)findViewById(R.id.Update);
+        Updated = (TextView)findViewById(R.id.Updated);
 
         // Button declaration
         DetailButton = (Button)findViewById(R.id.DetailButton);

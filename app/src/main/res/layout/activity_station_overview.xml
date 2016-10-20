@@ -36,7 +36,7 @@
         android:layout_below="@+id/relativeLayout"
         android:background="#fe8080"
         android:visibility="visible"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="30dp"
         android:layout_above="@+id/DetailButton">
 
         <TableRow
@@ -126,18 +126,18 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
                 android:layout_marginLeft="30dp"
-                android:id="@+id/Update" />
+                android:id="@+id/Updated" />
 
         </TableRow>
 
     </TableLayout>
 
     <Button
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Details"
         android:id="@+id/DetailButton"
+        android:background="#44d7cb"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="#44d7cb" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
