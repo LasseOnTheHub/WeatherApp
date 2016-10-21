@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // RestService.getDevices(user);
 
         android.support.v7.app.ActionBar ab = getSupportActionBar();
-        ab.setTitle("Weather Stations");
+        ab.setTitle("Choose a station");
 
 
         final String[] devices = {
@@ -63,4 +65,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra(Constants.KEY_SELECTED_STATION, position);*/
         System.out.print("Pressed station " + position+1);
     }
+
+
+    // Menu bar
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_stationslist, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+
+                break;
+            case R.id.add_station:
+                break;
+        }
+
+
+        return true;
+    }
+
+
 }
