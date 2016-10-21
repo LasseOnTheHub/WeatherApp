@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         // RestService.getDevices(user);
+
+        Toolbar bar = (Toolbar) findViewById(R.id.toolbar);
+        setActionBar(bar);
 
         android.support.v7.app.ActionBar ab = getSupportActionBar();
         ab.setTitle("Choose a station");
