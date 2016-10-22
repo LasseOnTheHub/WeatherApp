@@ -76,18 +76,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // ###################################################################################
 
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, R.id.station_title, devices) {
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, R.id.station_title, devices)
+        {
             @Override
-            public View getView(int position, View cachedView, ViewGroup parent) {
-                View view = super.getView(position, cachedView, parent);
+            public View getView(int position, View cachedView, ViewGroup parent)
+            {
+                View     view         = super.getView(position, cachedView, parent);
                 TextView stationTitle = (TextView) view.findViewById(R.id.station_title);
+
                 stationTitle.setText(devices[position]);
-                view.setOnClickListener(new View.OnClickListener() {
+
+                view.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View v) {
-                        System.out.println("Pressed something");
+                    public void onClick(View v)
+                    {
+                        startActivity(new Intent(MainActivity.this, StationOverviewActivity.class));
                     }
                 });
+
                 return view;
             }
         };
@@ -134,9 +141,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v)
     {
-        Intent intent = new Intent(MainActivity.this, MapOverviewActivity.class);
-        startActivity(intent);
+        if(v == this.mapButton)
+        {
+            Intent intent = new Intent(MainActivity.this, MapOverviewActivity.class);
+            startActivity(intent);
+        }
     }
-
 
 }
