@@ -13,12 +13,17 @@ import com.grp8.weatherapp.TestData.WeatherStations;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener
+public class MainActivity extends AppCompatActivity
 {
     WeatherStations weatherStations;
 
-    //Skal fjernes ved merge af branch
-    Button btnGoToMaps;
+
+    /*
+            Start MapOverviewActivity med denne.
+                Intent intent = new Intent(MainActivity.this, MapOverviewActivity.class);
+                startActivity(intent);
+     */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,10 +34,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
         setContentView(R.layout.activity_main);
 
         weatherStations = new WeatherStations();
-        //Skal fjernes ved Merge
-        btnGoToMaps = (Button)findViewById(R.id.buttonGoToMaps);
-        btnGoToMaps.setOnClickListener(this);
-
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -41,14 +42,5 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
         // Frederik test
 
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == btnGoToMaps)
-        {
-                Intent intent = new Intent(MainActivity.this, MapOverviewActivity.class);
-                startActivity(intent);
-        }
     }
 }

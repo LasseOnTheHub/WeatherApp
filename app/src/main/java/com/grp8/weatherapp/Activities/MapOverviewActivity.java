@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStation;
@@ -49,12 +52,27 @@ public class MapOverviewActivity extends FragmentActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng lastLatLng= new LatLng(5, 10);
+        ArrayList<Marker> markers = new ArrayList<>();
+
         for (WeatherStation w: weatherStations.getWeatherStations())
         {
-            lastLatLng = new LatLng(w.getLatitude(), w.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(lastLatLng).title(w.getTitle()));
+            LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
+            markers.add(marker);
+
+
+            //mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
+
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLatLng));
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markers) {
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+
+        int padding = 200; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        googleMap.animateCamera(cu);
     }
 }
