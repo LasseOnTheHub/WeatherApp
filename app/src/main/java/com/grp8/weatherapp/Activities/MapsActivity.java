@@ -1,6 +1,5 @@
 package com.grp8.weatherapp.Activities;
 
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -11,28 +10,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.TestData.WeatherStation;
-import com.grp8.weatherapp.TestData.WeatherStations;
 
-import java.util.ArrayList;
-
-public class MapOverviewActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    WeatherStations weatherStations;
-    ArrayList<WeatherStation> weatherStationsArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map_overview);
+        setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        weatherStations = new WeatherStations();
-        weatherStations.createWeatherStations();
     }
 
 
@@ -49,12 +39,9 @@ public class MapOverviewActivity extends FragmentActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng lastLatLng= new LatLng(5, 10);
-        for (WeatherStation w: weatherStations.getWeatherStations())
-        {
-            lastLatLng = new LatLng(w.getLatitude(), w.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(lastLatLng).title(w.getTitle()));
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLatLng));
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }
