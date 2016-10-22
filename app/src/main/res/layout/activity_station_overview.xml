@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/temperature"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="15dp"
                 android:id="@+id/TempText" />
 
             <TextView
@@ -70,7 +70,7 @@
         <TableRow
             android:layout_weight="1"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:gravity="center">
 
             <ImageView
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/humidity"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="15dp"
                 android:id="@+id/HumidityText" />
 
             <TextView
@@ -100,7 +100,7 @@
         <TableRow
             android:layout_weight="1"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:gravity="center">
 
             <ImageView
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/last_updated"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="15dp"
                 android:id="@+id/UpdateText" />
 
             <TextView
