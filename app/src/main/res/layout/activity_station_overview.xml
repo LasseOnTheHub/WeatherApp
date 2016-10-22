@@ -8,6 +8,133 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#FFFFFF"
     tools:context="com.grp8.weatherapp.Activities.StationOverviewActivity">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/WeatherWindow"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/mockup"/>
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/relativeLayout"
+        android:visibility="visible"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@+id/DetailButton">
+
+        <TableRow
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/TempIcon"
+                android:src="@drawable/temperature"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/temperature"
+                android:layout_marginLeft="15dp"
+                android:id="@+id/TempText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:layout_marginLeft="30dp"
+                android:id="@+id/Temp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/HumidityIcon"
+                android:src="@drawable/humidity"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/humidity"
+                android:layout_marginLeft="15dp"
+                android:id="@+id/HumidityText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:layout_marginLeft="30dp"
+                android:id="@+id/Humidity" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/UpdateIcon"
+                android:src="@drawable/clock" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/last_updated"
+                android:layout_marginLeft="15dp"
+                android:id="@+id/UpdateText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:layout_marginLeft="30dp"
+                android:id="@+id/Updated" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Details"
+        android:id="@+id/DetailButton"
+        android:background="@color/colorAccent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

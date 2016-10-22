@@ -6,4 +6,7 @@
     <string name="forkert_login">Forkert Login</string>
     <string name="title_activity_map_overview">Map</string>
     <string name="title_activity_maps">Map</string>
+    <string name="last_updated">Last updated</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
 </resources>
