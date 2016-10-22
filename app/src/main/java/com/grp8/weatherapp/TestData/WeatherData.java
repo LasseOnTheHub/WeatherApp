@@ -66,4 +66,5 @@ public class WeatherData {
     public int getAirPressure() {
         return airPressure;
     }
+
 }

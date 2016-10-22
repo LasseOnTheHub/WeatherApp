@@ -48,12 +48,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean searchIsVisible = false;
     private Button mapButton;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        weatherStations = new WeatherStations();
+        //For at hente test-data
+        weatherStations = WeatherStations.getInstance();
+        /*
+            Kald weatherStations.getWeatherstation, som returnere et array af weatherstation.
+         */
+
         setContentView(R.layout.activity_main);
 
         /*

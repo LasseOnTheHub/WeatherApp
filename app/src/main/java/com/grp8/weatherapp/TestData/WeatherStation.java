@@ -45,4 +45,8 @@ public class WeatherStation implements Serializable {
     public double getLongitude() {
         return longitude;
     }
+
+    public WeatherData getWeatherData() {
+        return weatherData;
+    }
 }

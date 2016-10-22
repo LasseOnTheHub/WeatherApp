@@ -34,8 +34,9 @@ public class MapOverviewActivity extends FragmentActivity implements OnMapReadyC
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        weatherStations = new WeatherStations();
-        weatherStations.createWeatherStations();
+        weatherStations = WeatherStations.getInstance();
+
+
     }
 
 

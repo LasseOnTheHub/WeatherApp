@@ -10,7 +10,24 @@ public final class WeatherStations {
 
     ArrayList<WeatherStation> weatherStationsArr;
 
-    public boolean createWeatherStations()
+    private static WeatherStations instance = null;
+
+    public static WeatherStations getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new WeatherStations();
+        }
+
+        return instance;
+    }
+
+    private WeatherStations()
+    {
+        createWeatherStations();
+    };
+
+    private void createWeatherStations()
     {
 
         //Testdata
@@ -27,7 +44,6 @@ public final class WeatherStations {
 
         weatherStationsArr.add(ID1);
         weatherStationsArr.add(ID2);
-        return true;
     }
 
     public ArrayList<WeatherStation> getWeatherStations()
