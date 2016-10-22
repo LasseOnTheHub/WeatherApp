@@ -45,9 +45,10 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/TempIcon" />
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/TempIcon"
+                android:src="@drawable/temperature"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,7 +76,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/HumidityIcon" />
+                android:id="@+id/HumidityIcon"
+                android:src="@drawable/humidity"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -100,14 +102,12 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center">
-            // android:background="#803b6b">
-
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/UpdateIcon"
-                android:src="@mipmap/clock" />
+                android:src="@drawable/clock" />
 
             <TextView
                 android:layout_width="wrap_content"
