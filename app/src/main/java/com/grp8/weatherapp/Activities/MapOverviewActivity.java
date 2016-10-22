@@ -59,10 +59,6 @@ public class MapOverviewActivity extends FragmentActivity implements OnMapReadyC
             LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
             markers.add(marker);
-
-
-            //mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
-
         }
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();

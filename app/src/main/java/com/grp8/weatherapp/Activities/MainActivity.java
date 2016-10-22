@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
-    WeatherStations weatherStations;
 
+    WeatherStations weatherStations;
 
     /*
             Start MapOverviewActivity med denne.
@@ -24,16 +24,27 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
      */
 
+    /*
+            Hent vejrstationer med følgende.
+            WeatherStations weatherStations;
+            weatherStations = new WeatherStations();
+            weatherStations.createWeatherStations();
+
+            for (WeatherStation w: weatherStations.getWeatherStations())
+                {
+                }
+
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-
+        weatherStations = new WeatherStations();
         setContentView(R.layout.activity_main);
 
-        weatherStations = new WeatherStations();
+
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
