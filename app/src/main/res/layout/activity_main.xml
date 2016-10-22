@@ -6,19 +6,35 @@
     android:layout_height="match_parent"
     tools:context="com.grp8.weatherapp.Activities.MainActivity">
 
-    <Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="76dp"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:minHeight="?android:attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:gravity="bottom" />
+        android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/searchFrame">
+
+        <EditText
+            android:id="@+id/search"
+            android:text="Search..."
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"/>
+
+        <ImageView
+            android:id="@+id/searchBtn"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="17dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/search" />
+    </FrameLayout>
 
     <Button
         android:text="Map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/searchFrame"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

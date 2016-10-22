@@ -1,22 +1,25 @@
 package com.grp8.weatherapp.Activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.grp8.weatherapp.R;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private FrameLayout searchLayout;
+    private boolean searchIsVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,9 +36,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // RestService.getDevices(user);
 
-        Toolbar bar = (Toolbar) findViewById(R.id.toolbar);
-        setActionBar(bar);
-
         android.support.v7.app.ActionBar ab = getSupportActionBar();
         ab.setTitle("Choose a station");
 
@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 View view = super.getView(position, cachedView, parent);
                 TextView stationTitle = (TextView) view.findViewById(R.id.station_title);
                 stationTitle.setText(devices[position]);
-
                 return view;
             }
         };
@@ -61,6 +60,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         list.setOnItemClickListener(this);
         list.setSelector(android.R.drawable.ic_notification_overlay);
 
+        searchLayout = (FrameLayout) findViewById(R.id.searchFrame);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
+        searchLayout.setLayoutParams(lp);
     }
 
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
@@ -83,7 +86,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-
+                if (searchIsVisible) {
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
+                    searchLayout.setLayoutParams(lp);
+                } else {
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), (int) getResources().getDimension(R.dimen.search_frame_height));
+                    searchLayout.setLayoutParams(lp);
+                }
+                searchLayout.requestLayout();
                 break;
             case R.id.add_station:
                 break;
