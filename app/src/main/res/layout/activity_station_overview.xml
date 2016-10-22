@@ -26,7 +26,7 @@
             android:id="@+id/WeatherWindow"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:background="#eac6c6" />
+            android:src="@mipmap/mockup"/>
     </RelativeLayout>
 
     <TableLayout
@@ -34,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/relativeLayout"
-        android:background="#fe8080"
         android:visibility="visible"
         android:layout_marginBottom="30dp"
         android:layout_above="@+id/DetailButton">
@@ -43,8 +42,7 @@
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="center"
-            android:background="#632f2f">
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -55,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Temperature"
+                android:text="@string/temperature"
                 android:layout_marginLeft="20dp"
                 android:id="@+id/TempText" />
 
@@ -72,8 +70,7 @@
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="center"
-            android:background="#65a9a2">
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -84,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Humidity"
+                android:text="@string/humidity"
                 android:layout_marginLeft="20dp"
                 android:id="@+id/HumidityText" />
 
@@ -102,8 +99,8 @@
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="center"
-            android:background="#803b6b">
+            android:gravity="center">
+            // android:background="#803b6b">
 
 
             <ImageView
@@ -116,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Last updated"
+                android:text="@string/last_updated"
                 android:layout_marginLeft="20dp"
                 android:id="@+id/UpdateText" />
 
@@ -137,7 +134,7 @@
         android:layout_height="wrap_content"
         android:text="Details"
         android:id="@+id/DetailButton"
-        android:background="#44d7cb"
+        android:background="@color/colorAccent"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
