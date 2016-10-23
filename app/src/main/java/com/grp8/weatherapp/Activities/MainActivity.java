@@ -19,11 +19,7 @@ import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
 
-
-
-
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private FrameLayout searchLayout;
     private boolean searchIsVisible = false;
@@ -110,12 +106,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             searchLayout.setLayoutParams(lp);
         }
         return true;
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-
     }
 
 }
