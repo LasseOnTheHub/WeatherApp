@@ -1,28 +1,23 @@
 package com.grp8.weatherapp.Activities;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
-import java.util.ArrayList;
 
 
 
@@ -30,36 +25,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    WeatherStations weatherStations;
-
-    /*
-            Hent vejrstationer med følgende.
-            WeatherStations weatherStations;
-            weatherStations = new WeatherStations();
-            weatherStations.createWeatherStations();
-
-            for (WeatherStation w: weatherStations.getWeatherStations())
-                {
-                }
-
-     */
-
     private FrameLayout searchLayout;
     private boolean searchIsVisible = false;
-    private Button mapButton;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        //For at hente test-data
-        weatherStations = WeatherStations.getInstance();
-        /*
-            Kald weatherStations.getWeatherstation, som returnere et array af weatherstation.
-         */
 
         setContentView(R.layout.activity_main);
 
@@ -70,20 +42,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * RestService.getDevices(user);
          */
 
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
-        ab.setTitle("Choose a station");
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setTitle("Choose a station");
+        }
 
-        // Dummy data
-        // ###################################################################################
-
-        final String[] devices = {
-                "Station 1","Station 2","Station 3","Station 4","Station 5",
-                "Station 6","Station 7", "Station 8","Station 9","Station 10", "Station 11"
-        };
-
-        // ###################################################################################
-
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, R.id.station_title, devices)
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, R.id.station_title, WeatherStations.getInstance().getWeatherStations())
         {
             @Override
             public View getView(int position, View cachedView, ViewGroup parent)
@@ -91,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 View     view         = super.getView(position, cachedView, parent);
                 TextView stationTitle = (TextView) view.findViewById(R.id.station_title);
 
-                stationTitle.setText(devices[position]);
+                stationTitle.setText(WeatherStations.getInstance().getWeatherStations().get(position).getTitle());
 
                 view.setOnClickListener(new View.OnClickListener()
                 {
@@ -113,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
         searchLayout.setLayoutParams(lp);
-
-        mapButton = (Button) findViewById(R.id.mapbutton);
-        mapButton.setOnClickListener(this);
     }
 
     // Menu bar
@@ -129,18 +90,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.search:
-                if (searchIsVisible) {
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
-                    searchLayout.setLayoutParams(lp);
-                } else {
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), (int) getResources().getDimension(R.dimen.search_frame_height));
-                    searchLayout.setLayoutParams(lp);
-                }
-                searchLayout.requestLayout();
+            case R.id.settings_menu:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
-            case R.id.add_station:
+            case R.id.map_menu:
+                startActivity(new Intent(MainActivity.this, MapOverviewActivity.class));
                 break;
+            case R.id.search:       break;
+            case R.id.add_station:  break;
+            case R.id.refresh_menu: break;
+            default:                break;
+        }
+
+        if (searchIsVisible) {
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
+            searchLayout.setLayoutParams(lp);
+        } else {
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), (int) getResources().getDimension(R.dimen.search_frame_height));
+            searchLayout.setLayoutParams(lp);
         }
         return true;
     }
@@ -148,11 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v)
     {
-        if(v == this.mapButton)
-        {
-            Intent intent = new Intent(MainActivity.this, MapOverviewActivity.class);
-            startActivity(intent);
-        }
+
     }
 
 }
