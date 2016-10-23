@@ -47,44 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ab.setTitle("Choose a station");
         }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter()
-
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, WeatherStations.getInstance().getWeatherStations())
-        {
-            @Override
-            public View getView(int position, View cachedView, ViewGroup parent)
-            {
-                View     view         = super.getView(position, cachedView, parent);
-
-                TextView stationTitle = (TextView) view.findViewById(R.id.title_label);
-                stationTitle.setText(WeatherStations.getInstance().getWeatherStations().get(position).getTitle());
-
-                TextView timeStamp = (TextView) view.findViewById(R.id.time_label);
-                Date date = new Date(WeatherStations.getInstance().getWeatherStations().get(position).getWeatherData().getTimeStamp());
-                timeStamp.setText(date.getHours()+ ":" + date.getMinutes());
-
-                TextView temp = (TextView) findViewById(R.id.temp_label);
-                temp.setText(WeatherStations.getInstance().getWeatherStations().get(position).getWeatherData().getAirTemp());
-
-                /*view.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-
-                        startActivity(new Intent(MainActivity.this, StationOverviewActivity.class));
-                    }
-                });*/
-
-                return view;
-            }
-
-            @Override
-            public boolean isEnabled(int position) {
-                return true;
-            }
-
-        };
+        WeatherStationAdapter adapter = new WeatherStationAdapter(this, R.layout.stationlistelement, WeatherStations.getInstance().getWeatherStations());
 
         list = (ListView) findViewById(R.id.stationslist);
         list.setAdapter(adapter);
