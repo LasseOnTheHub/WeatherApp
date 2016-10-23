@@ -67,70 +67,77 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        shouldShowSearchBar();
-
-        switch (item.getItemId())
-        {
-            case R.id.settings_menu:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                break;
-            case R.id.map_menu:
-                startActivity(new Intent(MainActivity.this, MapOverviewActivity.class));
-                break;
-            case R.id.search:
-                searchIsVisible = !searchIsVisible;
-                break;
-            case R.id.add_station:  break;
-            case R.id.refresh_menu: break;
-            default:                break;
+        if (item.getItemId() == R.id.search_menu) {
+            toggleSearch();
+        } else {
+            hideSearchBar();
+            switch (item.getItemId()) {
+                case R.id.settings_menu:
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    break;
+                case R.id.map_menu:
+                    startActivity(new Intent(MainActivity.this, MapOverviewActivity.class));
+                    break;
+                case R.id.add_station:
+                    break;
+                case R.id.refresh_menu:
+                    break;
+                default:
+                    break;
+            }
         }
-
         return true;
     }
 
-    private void shouldShowSearchBar()
-    {
-        final EditText searchField = (EditText) findViewById(R.id.search);
-
-        if (searchIsVisible)
-        {
-            searchLayout.setVisibility(RelativeLayout.GONE);
-            searchLayout.animate()
-                    .translationY(-1/2*searchLayout.getHeight())
-                    .setListener(new AnimatorListenerAdapter()
-                    {
-                        @Override
-                        public void onAnimationEnd(Animator animation)
-                        {
-                            super.onAnimationEnd(animation);
-                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-                        }
-                    });
-        } else
-        {
-            searchLayout.setVisibility(RelativeLayout.VISIBLE);
-            searchLayout.animate()
-                    .translationY(1/2*searchLayout.getHeight())
-                    .setListener(new AnimatorListenerAdapter()
-                    {
-                        @Override
-                        public void onAnimationEnd(Animator animation)
-                        {
-                            super.onAnimationEnd(animation);
-                            searchField.requestFocus();
-                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
-                        }
-                    });
+    private void toggleSearch() {
+        if (searchIsVisible) {
+            hideSearchBar();
+        } else {
+            showSearchBar();
         }
     }
 
     @Override
     public void onItemClick(AdapterView adapterView, View view, int position, long id)
     {
-        System.out.println("Pressed station " + (position+1));
+        hideSearchBar();
         startActivity(new Intent(MainActivity.this, StationOverviewActivity.class));
     }
 
+    private void hideSearchBar() {
+        if (searchIsVisible) {
+            searchLayout.setVisibility(RelativeLayout.GONE);
+            searchLayout.animate()
+                    .translationY(-1 / 2 * searchLayout.getHeight())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            EditText searchField = (EditText) findViewById(R.id.search);
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                        }
+                    });
+        }
+        searchIsVisible = !searchIsVisible;
+    }
+
+    private void showSearchBar() {
+        if (!searchIsVisible) {
+            searchLayout.setVisibility(RelativeLayout.VISIBLE);
+            searchLayout.animate()
+                    .translationY(1 / 2 * searchLayout.getHeight())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            EditText searchField = (EditText) findViewById(R.id.search);
+                            searchField.requestFocus();
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
+        }
+        searchIsVisible = !searchIsVisible;
+    }
 }
