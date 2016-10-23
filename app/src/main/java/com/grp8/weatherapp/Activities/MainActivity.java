@@ -2,26 +2,23 @@ package com.grp8.weatherapp.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStations;
-
-import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -93,14 +90,39 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void shouldShowSearchBar()
     {
-        if (searchIsVisible) {
+        final EditText searchField = (EditText) findViewById(R.id.search);
+
+        if (searchIsVisible)
+        {
             searchLayout.setVisibility(RelativeLayout.GONE);
             searchLayout.animate()
-                    .translationY(-1/2*searchLayout.getHeight());
-        } else {
+                    .translationY(-1/2*searchLayout.getHeight())
+                    .setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            super.onAnimationEnd(animation);
+                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                        }
+                    });
+        } else
+        {
             searchLayout.setVisibility(RelativeLayout.VISIBLE);
             searchLayout.animate()
-                    .translationY(1/2*searchLayout.getHeight());
+                    .translationY(1/2*searchLayout.getHeight())
+                    .setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            super.onAnimationEnd(animation);
+                            searchField.requestFocus();
+                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
         }
     }
 
