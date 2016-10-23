@@ -107,7 +107,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView adapterView, View view, int position, long id)
     {
-        System.out.println("Pressed station " + position+1);
+        System.out.println("Pressed station " + (position+1));
+        startActivity(new Intent(MainActivity.this, StationOverviewActivity.class));
     }
 
 }

@@ -8,37 +8,38 @@
     android:descendantFocusability="blocksDescendants"
     android:focusable="false">
 
-    <Space
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:focusable="false"
-        android:clickable="false"
-        android:layout_alignParentStart="true" />
-
-
-    <ImageView
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="10dp"
-        app:srcCompat="@drawable/clock"
-        android:id="@+id/time_image" />
-
-    <TextView
-        android:text="13:52"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/time_image"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="9dp"
-        android:id="@+id/time_label" />
+        android:layout_marginTop="10dp"
+
+        android:id="@+id/timeLayout">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="3dp"
+            app:srcCompat="@drawable/clock"
+            android:id="@+id/time_image" />
+
+        <TextView
+            android:text="13:52"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/time_label" />
+
+    </LinearLayout>
+
 
     <TextView
         android:text="København"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/time_image"
+        android:layout_below="@id/timeLayout"
         android:layout_marginLeft="3dp"
         android:layout_marginTop="5dp"
         android:textSize="20dp"
@@ -50,7 +51,7 @@
         android:layout_height="wrap_content"
         android:textSize="40dp"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_centerVertical="true"
         android:id="@+id/temp_label" />
 
     <Space
@@ -58,6 +59,6 @@
         android:focusable="false"
         android:clickable="false"
         android:layout_below="@+id/title_label"
-        android:layout_height="10dp" />
+        android:layout_height="15dp" />
 
 </RelativeLayout>
