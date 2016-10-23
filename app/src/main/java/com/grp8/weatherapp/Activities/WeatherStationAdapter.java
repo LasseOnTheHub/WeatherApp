@@ -48,7 +48,10 @@ public class WeatherStationAdapter extends ArrayAdapter {
         }
 
         viewHolder.stationTitle.setText(station.getTitle());
-        viewHolder.timeLabel.setText("13:52");
+        viewHolder.timeLabel.setText("11:52");
+        if (position%2==0) {
+            viewHolder.timeLabel.setText("13:52");
+        }
         viewHolder.tempLabel.setText(String.valueOf(station.getWeatherData().getAirTemp())+"º");
 
         return convertView;

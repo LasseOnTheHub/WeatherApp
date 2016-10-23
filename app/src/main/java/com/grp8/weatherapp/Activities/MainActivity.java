@@ -1,5 +1,7 @@
 package com.grp8.weatherapp.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +27,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private FrameLayout searchLayout;
-    private boolean searchIsVisible = true;
+    private boolean searchIsVisible = false;
     private ListView list;
 
     @Override
@@ -54,9 +56,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         list.setOnItemClickListener(this);
 
         searchLayout = (FrameLayout) findViewById(R.id.searchFrame);
-
-        shouldShowSearchBar();
-        searchIsVisible = !searchIsVisible;
+        searchLayout.setVisibility(RelativeLayout.GONE);
     }
 
     // Menu bar
@@ -93,15 +93,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void shouldShowSearchBar()
     {
-        RelativeLayout.LayoutParams lp;
-
         if (searchIsVisible) {
-            lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
+            searchLayout.setVisibility(RelativeLayout.GONE);
+            searchLayout.animate()
+                    .translationY(-1/2*searchLayout.getHeight());
         } else {
-            lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), (int) getResources().getDimension(R.dimen.search_frame_height));
+            searchLayout.setVisibility(RelativeLayout.VISIBLE);
+            searchLayout.animate()
+                    .translationY(1/2*searchLayout.getHeight());
         }
-
-        searchLayout.setLayoutParams(lp);
     }
 
     @Override
