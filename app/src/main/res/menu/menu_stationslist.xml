@@ -3,13 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Search"
-        android:id="@+id/search"
+        android:id="@+id/search_menu"
         android:icon="@drawable/search"
+        app:showAsAction="always"
+        />
+
+    <item android:title="Map"
+        android:id="@+id/map_menu"
+        android:icon="@drawable/map_icon"
         app:showAsAction="always"
         />
 
     <item android:title="Add station"
         android:id="@+id/add_station" />
+
+    <item android:title="Refresh"
+        android:id="@+id/refresh_menu" />
+
+    <item android:title="Settings"
+        android:id="@+id/settings_menu" />
 
 
 </menu>

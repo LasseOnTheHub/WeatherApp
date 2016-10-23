@@ -1,65 +1,36 @@
 package com.grp8.weatherapp.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
-import java.util.ArrayList;
 
-
-
-
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-    WeatherStations weatherStations;
-
-    /*
-            Hent vejrstationer med følgende.
-            WeatherStations weatherStations;
-            weatherStations = new WeatherStations();
-            weatherStations.createWeatherStations();
-
-            for (WeatherStation w: weatherStations.getWeatherStations())
-                {
-                }
-
-     */
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private FrameLayout searchLayout;
     private boolean searchIsVisible = false;
-    private Button mapButton;
-
-
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        //For at hente test-data
-        weatherStations = WeatherStations.getInstance();
-        /*
-            Kald weatherStations.getWeatherstation, som returnere et array af weatherstation.
-         */
 
         setContentView(R.layout.activity_main);
 
@@ -70,52 +41,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * RestService.getDevices(user);
          */
 
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
-        ab.setTitle("Choose a station");
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setTitle("Choose a station");
+        }
 
-        // Dummy data
-        // ###################################################################################
+        WeatherStationAdapter adapter = new WeatherStationAdapter(this, R.layout.stationlistelement, WeatherStations.getInstance().getWeatherStations());
 
-        final String[] devices = {
-                "Station 1","Station 2","Station 3","Station 4","Station 5",
-                "Station 6","Station 7", "Station 8","Station 9","Station 10", "Station 11"
-        };
-
-        // ###################################################################################
-
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, R.id.station_title, devices)
-        {
-            @Override
-            public View getView(int position, View cachedView, ViewGroup parent)
-            {
-                View     view         = super.getView(position, cachedView, parent);
-                TextView stationTitle = (TextView) view.findViewById(R.id.station_title);
-
-                stationTitle.setText(devices[position]);
-
-                view.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        startActivity(new Intent(MainActivity.this, StationOverviewActivity.class));
-                    }
-                });
-
-                return view;
-            }
-        };
-
-        ListView list = (ListView) findViewById(R.id.stationslist);
+        list = (ListView) findViewById(R.id.stationslist);
         list.setAdapter(adapter);
+        list.setOnItemClickListener(this);
 
         searchLayout = (FrameLayout) findViewById(R.id.searchFrame);
-
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
-        searchLayout.setLayoutParams(lp);
-
-        mapButton = (Button) findViewById(R.id.mapbutton);
-        mapButton.setOnClickListener(this);
+        searchLayout.setVisibility(RelativeLayout.GONE);
     }
 
     // Menu bar
@@ -127,32 +65,79 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-                if (searchIsVisible) {
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
-                    searchLayout.setLayoutParams(lp);
-                } else {
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), (int) getResources().getDimension(R.dimen.search_frame_height));
-                    searchLayout.setLayoutParams(lp);
-                }
-                searchLayout.requestLayout();
-                break;
-            case R.id.add_station:
-                break;
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.search_menu) {
+            toggleSearch();
+        } else {
+            hideSearchBar();
+            switch (item.getItemId()) {
+                case R.id.settings_menu:
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    break;
+                case R.id.map_menu:
+                    startActivity(new Intent(MainActivity.this, MapOverviewActivity.class));
+                    break;
+                case R.id.add_station:
+                    break;
+                case R.id.refresh_menu:
+                    break;
+                default:
+                    break;
+            }
         }
         return true;
     }
 
-    @Override
-    public void onClick(View v)
-    {
-        if(v == this.mapButton)
-        {
-            Intent intent = new Intent(MainActivity.this, MapOverviewActivity.class);
-            startActivity(intent);
+    private void toggleSearch() {
+        if (searchIsVisible) {
+            hideSearchBar();
+        } else {
+            showSearchBar();
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView adapterView, View view, int position, long id)
+    {
+        hideSearchBar();
+        startActivity(new Intent(MainActivity.this, StationOverviewActivity.class));
+    }
+
+    private void hideSearchBar() {
+        if (searchIsVisible) {
+            searchLayout.setVisibility(RelativeLayout.GONE);
+            searchLayout.animate()
+                    .translationY(-1 / 2 * searchLayout.getHeight())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            EditText searchField = (EditText) findViewById(R.id.search);
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                        }
+                    });
+        }
+        searchIsVisible = !searchIsVisible;
+    }
+
+    private void showSearchBar() {
+        if (!searchIsVisible) {
+            searchLayout.setVisibility(RelativeLayout.VISIBLE);
+            searchLayout.animate()
+                    .translationY(1 / 2 * searchLayout.getHeight())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            EditText searchField = (EditText) findViewById(R.id.search);
+                            searchField.requestFocus();
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
+        }
+        searchIsVisible = !searchIsVisible;
+    }
 }
