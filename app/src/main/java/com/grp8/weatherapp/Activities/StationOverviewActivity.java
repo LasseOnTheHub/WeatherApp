@@ -7,16 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.grp8.weatherapp.R;
 
 public class StationOverviewActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button DetailButton;
-    // maybe ill just directly source the images in the XML file since they're gonna be static anyway
-    private ImageView WeatherWindow, TempIcon, HumidityIcon, UpdateIcon;
     private TextView Temp, Humidity, Updated;
+    private TableLayout tableLayout;
 
 
     @Override
@@ -29,15 +28,15 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         Humidity = (TextView)findViewById(R.id.Humidity);
         Updated = (TextView)findViewById(R.id.Updated);
 
-        // Button declaration
-        DetailButton = (Button)findViewById(R.id.DetailButton);
+        // TableLayout declaration
+        tableLayout = (TableLayout)findViewById(R.id.tableLayoutt);
 
-        DetailButton.setOnClickListener(this);
+        tableLayout.setOnClickListener(this);
 
     }
 
     public void onClick(View v) {
-        if(v==DetailButton){
+        if(v==tableLayout){
             Intent i = new Intent(this, StationDetailsActivity.class);
             startActivity(i);
         }
