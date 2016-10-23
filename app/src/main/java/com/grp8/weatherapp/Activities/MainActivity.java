@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +19,14 @@ import android.widget.TextView;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
+import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private FrameLayout searchLayout;
-    private boolean searchIsVisible = false;
+    private boolean searchIsVisible = true;
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,36 +47,53 @@ public class MainActivity extends AppCompatActivity {
             ab.setTitle("Choose a station");
         }
 
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, R.id.station_title, WeatherStations.getInstance().getWeatherStations())
+        ArrayAdapter arrayAdapter = new ArrayAdapter()
+
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.stationlistelement, WeatherStations.getInstance().getWeatherStations())
         {
             @Override
             public View getView(int position, View cachedView, ViewGroup parent)
             {
                 View     view         = super.getView(position, cachedView, parent);
-                TextView stationTitle = (TextView) view.findViewById(R.id.station_title);
 
+                TextView stationTitle = (TextView) view.findViewById(R.id.title_label);
                 stationTitle.setText(WeatherStations.getInstance().getWeatherStations().get(position).getTitle());
 
-                view.setOnClickListener(new View.OnClickListener()
+                TextView timeStamp = (TextView) view.findViewById(R.id.time_label);
+                Date date = new Date(WeatherStations.getInstance().getWeatherStations().get(position).getWeatherData().getTimeStamp());
+                timeStamp.setText(date.getHours()+ ":" + date.getMinutes());
+
+                TextView temp = (TextView) findViewById(R.id.temp_label);
+                temp.setText(WeatherStations.getInstance().getWeatherStations().get(position).getWeatherData().getAirTemp());
+
+                /*view.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
+
                         startActivity(new Intent(MainActivity.this, StationOverviewActivity.class));
                     }
-                });
+                });*/
 
                 return view;
             }
+
+            @Override
+            public boolean isEnabled(int position) {
+                return true;
+            }
+
         };
 
-        ListView list = (ListView) findViewById(R.id.stationslist);
+        list = (ListView) findViewById(R.id.stationslist);
         list.setAdapter(adapter);
+        list.setOnItemClickListener(this);
 
         searchLayout = (FrameLayout) findViewById(R.id.searchFrame);
 
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
-        searchLayout.setLayoutParams(lp);
+        shouldShowSearchBar();
+        searchIsVisible = !searchIsVisible;
     }
 
     // Menu bar
@@ -84,28 +105,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        shouldShowSearchBar();
+
+        switch (item.getItemId())
+        {
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             case R.id.map_menu:
                 startActivity(new Intent(MainActivity.this, MapOverviewActivity.class));
                 break;
-            case R.id.search:       break;
+            case R.id.search:
+                searchIsVisible = !searchIsVisible;
+                break;
             case R.id.add_station:  break;
             case R.id.refresh_menu: break;
             default:                break;
         }
 
-        if (searchIsVisible) {
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
-            searchLayout.setLayoutParams(lp);
-        } else {
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), (int) getResources().getDimension(R.dimen.search_frame_height));
-            searchLayout.setLayoutParams(lp);
-        }
         return true;
+    }
+
+    private void shouldShowSearchBar()
+    {
+        RelativeLayout.LayoutParams lp;
+
+        if (searchIsVisible) {
+            lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), 0);
+        } else {
+            lp = new RelativeLayout.LayoutParams(searchLayout.getWidth(), (int) getResources().getDimension(R.dimen.search_frame_height));
+        }
+
+        searchLayout.setLayoutParams(lp);
+    }
+
+    @Override
+    public void onItemClick(AdapterView adapterView, View view, int position, long id)
+    {
+        System.out.println("Pressed station " + position+1);
     }
 
 }
