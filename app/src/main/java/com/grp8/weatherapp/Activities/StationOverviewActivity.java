@@ -2,8 +2,10 @@ package com.grp8.weatherapp.Activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.icu.text.DateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,10 +13,16 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.TestData.WeatherStation;
+import com.grp8.weatherapp.TestData.WeatherStations;
+
+import java.util.ArrayList;
 
 public class StationOverviewActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView Temp, Humidity, Updated;
+    WeatherStations weatherStations;
+    ArrayList<WeatherStation> weatherStationsArr;
+    private TextView temp,windSpeed,airP, humidity, updated;
     private TableLayout tableLayout;
 
 
@@ -24,15 +32,28 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_station_overview);
 
         // TextView declaration
-        Temp = (TextView)findViewById(R.id.Temp);
-        Humidity = (TextView)findViewById(R.id.Humidity);
-        Updated = (TextView)findViewById(R.id.Updated);
+        temp = (TextView)findViewById(R.id.temp);
+        windSpeed = (TextView)findViewById(R.id.windSpeed);
+        airP = (TextView)findViewById(R.id.airP);
+        humidity = (TextView)findViewById(R.id.humidity);
+        updated = (TextView)findViewById(R.id.updated);
 
         // TableLayout declaration
         tableLayout = (TableLayout)findViewById(R.id.tableLayoutt);
 
         tableLayout.setOnClickListener(this);
 
+        weatherStations = WeatherStations.getInstance();
+
+        ArrayList<WeatherStation> stationer = weatherStations.getWeatherStations();
+
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ab.setTitle(stationer.get(1).getTitle());
+        temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
+        windSpeed.setText(String.valueOf(stationer.get(1).getWeatherData().getWindSpeed())+" m/s");
+        airP.setText(String.valueOf(stationer.get(1).getWeatherData().getAirPressure()) + " bar");
+        humidity.setText(String.valueOf(stationer.get(1).getWeatherData().getAirHum())+" %");
+        updated.setText(String.valueOf(stationer.get(1).getWeatherData().getTimeStamp()));
     }
 
     public void onClick(View v) {
@@ -42,4 +63,6 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         }
 
     }
+
+   // weatherStations.getWeatherstation
 }
