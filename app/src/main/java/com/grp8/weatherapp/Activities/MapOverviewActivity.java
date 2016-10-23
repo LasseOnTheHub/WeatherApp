@@ -66,7 +66,7 @@ public class MapOverviewActivity extends FragmentActivity implements OnMapReadyC
 
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MapOverviewActivity.this, StationOverviewActivity.class);
                     intent.putExtra(Constants.KEY_USERID,w.getID());
                     startActivity(intent);
