@@ -76,16 +76,15 @@
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/TempIcon"
-                android:src="@drawable/temperature"/>
+                android:src="@drawable/wind"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/temperature"
+                android:text="@string/wind_speed"
                 android:layout_marginLeft="15dp"
-                android:id="@+id/TempText" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -93,7 +92,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
                 android:layout_marginLeft="30dp"
-                android:id="@+id/Temp" />
+                 />
         </TableRow>
 
         <TableRow
@@ -105,16 +104,15 @@
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/TempIcon"
-                android:src="@drawable/temperature"/>
+                android:src="@drawable/air_pressure"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/temperature"
+                android:text="@string/air_pressure"
                 android:layout_marginLeft="15dp"
-                android:id="@+id/TempText" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,7 +120,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
                 android:layout_marginLeft="30dp"
-                android:id="@+id/Temp" />
+               />
 
         </TableRow>
 
