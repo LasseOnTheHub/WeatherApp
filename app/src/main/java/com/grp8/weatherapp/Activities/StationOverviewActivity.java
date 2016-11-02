@@ -16,7 +16,9 @@ import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class StationOverviewActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -53,7 +55,12 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         windSpeed.setText(String.valueOf(stationer.get(1).getWeatherData().getWindSpeed())+" m/s");
         airP.setText(String.valueOf(stationer.get(1).getWeatherData().getAirPressure()) + " bar");
         humidity.setText(String.valueOf(stationer.get(1).getWeatherData().getAirHum())+" %");
-        updated.setText(String.valueOf(stationer.get(1).getWeatherData().getTimeStamp()));
+
+        Date date = new Date(stationer.get(1).getWeatherData().getTimeStamp());
+        SimpleDateFormat mdyFormat = new SimpleDateFormat("HH.mm");
+        String mdy = mdyFormat.format(date);
+
+        updated.setText(mdy);
     }
 
     public void onClick(View v) {
