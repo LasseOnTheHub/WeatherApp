@@ -22,17 +22,17 @@ public class WeatherData {
 
     public void generateRandomData()
     {
-        timeStamp = System.currentTimeMillis()/1000;
+        timeStamp = System.currentTimeMillis();
 
         Random r = new Random();
 
-        rainFall = r.nextInt(100-0)+0;
-        airHum = r.nextInt(100-0)+0;
-        windDir = r.nextInt(100-0)+0;
-        windSpeed=r.nextInt(100-0)+0;
-        lux = r.nextInt(100-0)+0;
-        airTemp = r.nextInt(100-0)+0;
-        airPressure = r.nextInt(100-0)+0;
+        rainFall = r.nextInt(50-0)+0;
+        airHum = r.nextInt(100-20)+20;
+        windDir = r.nextInt(4-0)+4;
+        windSpeed=r.nextInt(20-0)+0;
+        lux = r.nextInt(1200-0)+0;
+        airTemp = r.nextInt(50-0)+0;
+        airPressure = r.nextInt(20-0)+0;
     }
 
     public long getTimeStamp() {

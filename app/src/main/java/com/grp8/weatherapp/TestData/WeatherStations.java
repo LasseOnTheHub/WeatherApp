@@ -51,6 +51,4 @@ public final class WeatherStations {
         return weatherStationsArr;
     }
 
-
-
 }

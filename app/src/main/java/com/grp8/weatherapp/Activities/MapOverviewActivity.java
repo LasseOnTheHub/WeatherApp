@@ -3,6 +3,7 @@ package com.grp8.weatherapp.Activities;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -55,12 +56,25 @@ public class MapOverviewActivity extends FragmentActivity implements OnMapReadyC
 
         ArrayList<Marker> markers = new ArrayList<>();
 
-        for (WeatherStation w: weatherStations.getWeatherStations())
+        for (final WeatherStation w: weatherStations.getWeatherStations())
         {
             LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
             markers.add(marker);
+
+            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MapOverviewActivity.this, StationOverviewActivity.class);
+                    intent.putExtra(Constants.KEY_USERID,w.getID());
+                    startActivity(intent);
+                }
+            });
         }
+
+
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Marker marker : markers) {
@@ -70,6 +84,7 @@ public class MapOverviewActivity extends FragmentActivity implements OnMapReadyC
 
         int padding = 200; // offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        googleMap.animateCamera(cu);
+        //googleMap.animateCamera(cu);
+        googleMap.moveCamera(cu);
     }
 }
