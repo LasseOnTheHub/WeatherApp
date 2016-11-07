@@ -42,6 +42,10 @@
         <activity
             android:name=".Activities.MapOverviewActivity"
             android:label="@string/title_activity_map_overview" />
+        <activity
+            android:name=".Activities.MainActivityTab"
+            android:label="@string/title_activity_main_tab"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

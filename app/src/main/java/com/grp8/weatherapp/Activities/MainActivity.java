@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     startActivity(new Intent(MainActivity.this, MapOverviewActivity.class));
                     break;
                 case R.id.add_station:
+                    startActivity(new Intent(MainActivity.this, MainActivityTab.class));
                     break;
                 case R.id.refresh_menu:
                     break;
