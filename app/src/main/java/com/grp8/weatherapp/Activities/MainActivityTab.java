@@ -42,6 +42,7 @@ public class MainActivityTab extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_stationslist, menu);
+        System.out.print("Called inflater");
         return true;
     }
 
@@ -49,9 +50,16 @@ public class MainActivityTab extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case 0: break;
+            case R.id.refresh_menu:
+                System.out.print("Refresh");
+                break;
+            case R.id.settings_menu:
+                System.out.print("Settings");
+                break;
             default: break;
         }
+
+        System.out.print("Menu item");
 
         return true;
     }
