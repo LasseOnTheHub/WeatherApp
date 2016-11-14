@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.grp8.weatherapp.R;
 
@@ -20,11 +22,10 @@ public class MainFragment extends Fragment {
     private ListView list;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View mainFrag = inflater.inflate(R.layout.fragment_activity_main, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
 
-        list = (ListView) mainFrag.findViewById(R.id.stationslists);
+        list = (ListView) mainFrag.findViewById(R.id.stationlist);
         list.setAdapter(new WeatherStationsAdapter(getActivity()));
 
         return mainFrag;
