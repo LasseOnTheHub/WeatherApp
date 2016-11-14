@@ -1,5 +1,7 @@
 package com.grp8.weatherapp.Activities;
 
+import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +45,6 @@ public class MainActivityTab extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_stationslist, menu);
-        System.out.print("Called inflater");
         return true;
     }
 
@@ -51,15 +53,15 @@ public class MainActivityTab extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.refresh_menu:
-                System.out.print("Refresh");
+                Log.d("Refresh","...");
                 break;
             case R.id.settings_menu:
-                System.out.print("Settings");
+                startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
+            case R.id.search_menu:
+                Log.d("Show search bar","now");
             default: break;
         }
-
-        System.out.print("Menu item");
 
         return true;
     }

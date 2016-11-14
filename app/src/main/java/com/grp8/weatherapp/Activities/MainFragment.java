@@ -3,6 +3,7 @@ package com.grp8.weatherapp.Activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        System.out.print("Clicked on item " + position);
+        Log.d("Clicked on item",String.valueOf(position));
     }
 }
