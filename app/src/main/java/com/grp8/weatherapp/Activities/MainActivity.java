@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_activity_main);
 
         /*
          * Intent intent = getIntent();
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         WeatherStationAdapter adapter = new WeatherStationAdapter(this, R.layout.stationlistelement, WeatherStations.getInstance().getWeatherStations());
 
-        list = (ListView) findViewById(R.id.stationslist);
+        list = (ListView) findViewById(R.id.stationslists);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
 

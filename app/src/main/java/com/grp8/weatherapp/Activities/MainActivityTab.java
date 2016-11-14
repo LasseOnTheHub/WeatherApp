@@ -1,8 +1,6 @@
 package com.grp8.weatherapp.Activities;
 
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,8 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.grp8.weatherapp.R;
 
@@ -100,12 +97,19 @@ public class MainActivityTab extends AppCompatActivity {
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
+            System.out.print("newInstance called");
             return fragment;
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            if (savedInstanceState != null) {
+                if (savedInstanceState.getInt(ARG_SECTION_NUMBER) != -5) {
+                    System.out.print("onCreateView called");
+                }
+            }
+            System.out.print("onCreateView called");
             View rootView = inflater.inflate(R.layout.fragment_main_activity_tab, container, false);
             return rootView;
         }
@@ -123,8 +127,10 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+            if (position == 0) {
+                Fragment mainFrag = new MainFragment();
+                return mainFrag;
+            }
             return PlaceholderFragment.newInstance(position + 1);
         }
 

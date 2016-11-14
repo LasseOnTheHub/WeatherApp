@@ -39,6 +39,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_below="@+id/searchFrame"
-        android:id="@+id/stationslist"/>
+        android:id="@+id/stationslists"/>
 
 </RelativeLayout>
