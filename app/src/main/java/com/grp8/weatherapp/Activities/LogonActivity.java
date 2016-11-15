@@ -45,7 +45,7 @@ public class LogonActivity extends AppCompatActivity {
             if (authroizer.Authorize(userIdInt)) {
                 Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(LogonActivity.this,MainActivity.class);
+                Intent intent = new Intent(LogonActivity.this,MainActivityTab.class);
                 intent.putExtra(Constants.KEY_USERID,userId);
                 startActivity(intent);
             } else {
