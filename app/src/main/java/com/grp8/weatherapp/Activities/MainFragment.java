@@ -1,6 +1,9 @@
 package com.grp8.weatherapp.Activities;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
@@ -8,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -48,9 +53,32 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     public void toggleSearch(boolean shouldChange) {
         if (searchIsVisible) {
+            searchFrame.animate()
+                    .translationY(-1/2*searchFrame.getHeight())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            EditText searchField = (EditText) getView().findViewById(R.id.searchField);
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                         }
+                    });
             searchFrame.setVisibility(FrameLayout.GONE);
         } else {
             searchFrame.setVisibility(FrameLayout.VISIBLE);
+            searchFrame.animate()
+                    .translationY(1/2*searchFrame.getHeight())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            EditText searchField = (EditText) getView().findViewById(R.id.searchField);
+                            searchField.requestFocus();
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
         }
 
         if (shouldChange) {
