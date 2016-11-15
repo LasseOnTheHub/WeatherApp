@@ -61,11 +61,10 @@ public class MainActivityTab extends AppCompatActivity {
                 break;
             case R.id.search_menu:
                 mViewPager.setCurrentItem(0);
-                mainFrag.toggleSearch(true);
+                ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
                 break;
             default: break;
         }
-
         return true;
     }
 
@@ -96,8 +95,5 @@ public class MainActivityTab extends AppCompatActivity {
                 return "MAP";
             }
         }
-
-
-
     }
 }

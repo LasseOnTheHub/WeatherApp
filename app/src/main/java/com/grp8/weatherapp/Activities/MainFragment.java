@@ -5,7 +5,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +15,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+
 
 import com.grp8.weatherapp.R;
 
@@ -44,6 +42,14 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         searchIsVisible = false;
 
         return mainFrag;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (searchIsVisible) {
+            toggleSearch(true);
+        }
     }
 
     @Override
