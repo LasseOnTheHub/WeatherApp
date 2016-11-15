@@ -24,6 +24,7 @@ public class MainActivityTab extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private MainFragment mainFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,9 @@ public class MainActivityTab extends AppCompatActivity {
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
             case R.id.search_menu:
-                Log.d("Show search bar","now");
+                mViewPager.setCurrentItem(0);
+                mainFrag.toggleSearch(true);
+                break;
             default: break;
         }
 
@@ -74,7 +77,10 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return position == 0 ? new MainFragment() : new MainFragment();
+            if (mainFrag == null) {
+                mainFrag = new MainFragment();
+            }
+            return position == 0 ? mainFrag : new MainFragment();
         }
 
         @Override
@@ -90,5 +96,8 @@ public class MainActivityTab extends AppCompatActivity {
                 return "MAP";
             }
         }
+
+
+
     }
 }
