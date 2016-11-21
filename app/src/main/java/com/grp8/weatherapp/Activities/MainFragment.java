@@ -4,6 +4,7 @@ package com.grp8.weatherapp.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -55,6 +56,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("Clicked on item",String.valueOf(position));
+        startActivity(new Intent(getActivity(), StationOverviewActivity.class));
     }
 
     public void toggleSearch(boolean shouldChange) {
