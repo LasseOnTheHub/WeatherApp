@@ -25,6 +25,7 @@ public class MainActivityTab extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private MainFragment mainFrag;
+    private MapViewFragment mapViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,23 @@ public class MainActivityTab extends AppCompatActivity {
             if (mainFrag == null) {
                 mainFrag = new MainFragment();
             }
+            //return position == 0 ? mainFrag : new MainFragment();
+
+            if (mapViewFragment == null) {
+                mapViewFragment = new MapViewFragment();
+            }
+            //return position == 0 ? mainFrag : new MainFragment();
+
+            if (position==0)
+            {
+                return mainFrag;
+            }
+            if (position==1)
+            {
+                return mapViewFragment;
+            }
             return position == 0 ? mainFrag : new MainFragment();
+
         }
 
         @Override
