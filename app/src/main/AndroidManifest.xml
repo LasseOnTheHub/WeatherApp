@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity" />
+        <activity android:name=".Activities.MainActivityTab" />
         <activity android:name=".Activities.StationOverviewActivity" />
         <activity android:name=".Activities.StationDetailsActivity" />
         <activity android:name=".Activities.HistoryActivity" />
@@ -39,14 +39,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity
-            android:name=".Activities.MainActivityTab"
-            android:label="@string/title_activity_main_tab"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.SettingsActivity2"
-            android:label="@string/title_activity_settings2"></activity>
     </application>
 
 </manifest>
