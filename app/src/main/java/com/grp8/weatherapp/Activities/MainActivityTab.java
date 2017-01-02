@@ -50,6 +50,23 @@ public class MainActivityTab extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position == 1) {
+                    if (mainFrag.isSearchVisible()) {
+                        mainFrag.toggleSearch(true);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) { }
+
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
@@ -96,9 +113,6 @@ public class MainActivityTab extends AppCompatActivity {
                 if (mapViewFragment == null) {
                     mapViewFragment = new MapViewFragment();
                 }
-                if (mainFrag.isSearchVisible()) {
-                    mainFrag.toggleSearch(true);
-                }
                 return mapViewFragment;
             }
         }
@@ -110,11 +124,7 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0) {
-                return "LIST";
-            } else {
-                return "MAP";
-            }
+            return position == 0 ? "LIST" : "MAP";
         }
     }
 }
