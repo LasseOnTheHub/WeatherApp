@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">G08 CLAFIS WeatherApp</string>
+    <string name="app_name">GR8 CLAFIS WeatherApp</string>
     <string name="husk_mig">Husk mig</string>
     <string name="indtast_bruger_id">Indtast Bruger ID</string>
     <string name="indtast_password">Indtast Password</string>
@@ -13,7 +13,6 @@
     <string name="air_pressure">Air pressure</string>
     <string name="title_activity_main_tab">MainTabActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_settings2">Settings</string>
 
     <!-- Strings related to Settings -->
