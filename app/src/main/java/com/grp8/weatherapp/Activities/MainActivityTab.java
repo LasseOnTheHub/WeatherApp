@@ -87,26 +87,20 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (mainFrag == null) {
-                mainFrag = new MainFragment();
-            }
-            //return position == 0 ? mainFrag : new MainFragment();
-
-            if (mapViewFragment == null) {
-                mapViewFragment = new MapViewFragment();
-            }
-            //return position == 0 ? mainFrag : new MainFragment();
-
-            if (position==0)
-            {
+            if (position == 0) {
+                if (mainFrag == null) {
+                    mainFrag = new MainFragment();
+                }
                 return mainFrag;
-            }
-            if (position==1)
-            {
+            } else {
+                if (mapViewFragment == null) {
+                    mapViewFragment = new MapViewFragment();
+                }
+                if (mainFrag.isSearchVisible()) {
+                    mainFrag.toggleSearch(true);
+                }
                 return mapViewFragment;
             }
-            return position == 0 ? mainFrag : new MainFragment();
-
         }
 
         @Override
