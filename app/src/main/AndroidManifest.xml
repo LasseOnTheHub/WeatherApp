@@ -8,7 +8,7 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="Manifest.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="Manifest.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -43,7 +43,10 @@
         <activity
             android:name=".Activities.MainActivityTab"
             android:label="@string/title_activity_main_tab"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.SettingsActivity2"
+            android:label="@string/title_activity_settings2"></activity>
     </application>
 
 </manifest>
