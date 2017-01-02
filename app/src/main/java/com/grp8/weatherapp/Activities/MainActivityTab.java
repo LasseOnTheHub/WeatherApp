@@ -79,7 +79,6 @@ public class MainActivityTab extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.refresh_menu:
                 Log.d("Refresh","...");
