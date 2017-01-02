@@ -44,6 +44,10 @@
             android:name=".Activities.MainActivityTab"
             android:label="@string/title_activity_main_tab"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ac00acf6218c9fc3e412375222c342caee39d6b4" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
