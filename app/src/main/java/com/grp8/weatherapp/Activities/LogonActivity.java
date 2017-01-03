@@ -9,8 +9,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.grp8.weatherapp.BussinessLogic.Authorizer;
 import com.grp8.weatherapp.R;
+import io.fabric.sdk.android.Fabric;
 
 public class LogonActivity extends AppCompatActivity {
 
@@ -25,6 +27,7 @@ public class LogonActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_logon);
 
         passwordEditText = (EditText) findViewById(R.id.userPasswordText);
@@ -32,6 +35,11 @@ public class LogonActivity extends AppCompatActivity {
         authroizer = new Authorizer();
     }
 
+
+    //TODO skal fjernes ved release
+    public void forceCrash(View view) {
+        throw new RuntimeException("This is a crash");
+    }
 
     public void login(View view) {
         if (userIDEditText.getText().toString().matches(""))
@@ -44,14 +52,21 @@ public class LogonActivity extends AppCompatActivity {
             int userIdInt = Integer.parseInt(userId);
             if (authroizer.Authorize(userIdInt)) {
                 Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(LogonActivity.this,MainActivity.class);
+                logUser(userId);
+                Intent intent = new Intent(LogonActivity.this,MainActivityTab.class);
                 intent.putExtra(Constants.KEY_USERID,userId);
                 startActivity(intent);
+
             } else {
                 Toast.makeText(this, R.string.forkert_login, Toast.LENGTH_SHORT).show();
             }
 
         }
+    }
+    //Bruges til at logge brugeren til identifikation under nedbrudsrapportering
+    private void logUser(String userName) {
+        Crashlytics.setUserIdentifier(userName);
+        Crashlytics.setUserEmail("Ikke angivet");
+        Crashlytics.setUserName("Ikke angivet");
     }
 }

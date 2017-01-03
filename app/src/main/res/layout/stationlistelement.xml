@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-
         android:id="@+id/timeLayout">
 
         <ImageView
@@ -56,7 +55,6 @@
 
     <Space
         android:layout_width="match_parent"
-        android:focusable="false"
         android:clickable="false"
         android:layout_below="@+id/title_label"
         android:layout_height="15dp" />
