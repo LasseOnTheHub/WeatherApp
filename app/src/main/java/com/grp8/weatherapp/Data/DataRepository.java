@@ -3,23 +3,41 @@ package com.grp8.weatherapp.Data;
 import com.grp8.weatherapp.Data.API.IDataProvider;
 import com.grp8.weatherapp.Data.API.Requests.APIStationRequest;
 
+import com.grp8.weatherapp.Data.Mappers.IListableMapper;
+import com.grp8.weatherapp.Data.Mappers.IMapper;
+
+import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.Entities.User;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Thomas on 03-Jan-17.
  */
 public class DataRepository
 {
+    private User user;
+
+    private IMapper<User> userMapper;
+    private IListableMapper<Station>     stationMapper;
+    private IListableMapper<DataReading> readingMapper;
+
     private IDataProvider provider;
 
-    public DataRepository(IDataProvider provider)
+    public DataRepository(IDataProvider provider, IMapper<User> userMapper, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper)
     {
         this.provider = provider;
+
+        this.userMapper    = userMapper;
+        this.stationMapper = stationMapper;
+        this.readingMapper = readingMapper;
     }
 
-    public void setUser() //TODO: Add user entity as parameter
+    public void setUser(User user)
     {
-
+        this.user = user;
     }
 
     public boolean authorize(int userID)
@@ -28,28 +46,29 @@ public class DataRepository
     }
 
     /**
-     * Fetches all stations associated with the specified user
-     *
-     * @param userID CLAFIS user ID
+     * Fetches all stations associated with the current user
      */
-    public void getStations(int userID) //TODO: Replace return type with proper entity
+    public List<Station> getStations()
     {
-        String payload = this.provider.fetch(new APIStationRequest(userID));
+        String payload = this.provider.fetch(new APIStationRequest(this.user.getID()));
 
         System.out.println(payload);
+
+        return null; // TODO: Add return value
     }
 
     /**
-     * Fetches a specific station associated with the specified user and station ID
+     * Fetches a specific station associated with the current user and specified station ID
      *
-     * @param userID    CLAFIS user ID
      * @param stationID CLAFIS station ID
      */
-    public void getStation(int userID, int stationID) //TODO: Replace return type with proper entity
+    public Station getStation(int stationID)
     {
-        String payload = this.provider.fetch(new APIStationRequest(userID, stationID));
+        String payload = this.provider.fetch(new APIStationRequest(this.user.getID(), stationID));
 
         System.out.println(payload);
+
+        return null; // TODO: Add return value
     }
 
     /**
@@ -57,11 +76,10 @@ public class DataRepository
      *
      * @param stationID CLAFIS station ID
      */
-    public void getStationData(int stationID) //TODO: Replace return type with proper entity
+    public List<DataReading> getStationData(int stationID)
     {
-
+        return null; // TODO: Add return value
     }
-
 
     /**
      * TODO: What is this used for?
@@ -69,7 +87,7 @@ public class DataRepository
      * @param stationID CLAFIS
      * @param date
      */
-    public void getStationData(int stationID, Date date) //TODO: Replace return type with proper entity
+    public void getStationData(int stationID, Date date)
     {
 
     }
@@ -82,11 +100,13 @@ public class DataRepository
      * @param start     Beginning of date range
      * @param end       End of date range
      */
-    public void getStationData(int stationID, Date start, Date end) //TODO: Replace return type with proper entity
+    public List<DataReading> getStationData(int stationID, Date start, Date end)
     {
         if(start.compareTo(end) > 0)
         {
             throw new IllegalStateException("Start of date range cannot be after end of the range.");
         }
+
+        return null; // TODO: Add return value
     }
 }
