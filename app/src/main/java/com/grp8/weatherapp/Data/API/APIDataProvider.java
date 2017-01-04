@@ -39,7 +39,6 @@ public class APIDataProvider implements IDataProvider
 
             String line;
 
-
             while((line = reader.readLine()) != null)
             {
                 payload.append(line);
