@@ -1,7 +1,6 @@
 package com.grp8.weatherapp.Activities;
 
 import android.content.Intent;
-import android.media.audiofx.BassBoost;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,11 +11,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.grp8.weatherapp.R;
 
@@ -50,6 +47,23 @@ public class MainActivityTab extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position == 1) {
+                    if (mainFrag.isSearchVisible()) {
+                        mainFrag.toggleSearch(true);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) { }
+
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
@@ -68,11 +82,14 @@ public class MainActivityTab extends AppCompatActivity {
                 Log.d("Refresh","...");
                 break;
             case R.id.settings_menu:
-                startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
+                startActivity(new Intent(MainActivityTab.this, SettingsActivity2.class));
                 break;
             case R.id.search_menu:
                 mViewPager.setCurrentItem(0);
                 ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
+                break;
+            case android.R.id.home:
+                finish();
                 break;
             default: break;
         }
@@ -87,26 +104,17 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (mainFrag == null) {
-                mainFrag = new MainFragment();
-            }
-            //return position == 0 ? mainFrag : new MainFragment();
-
-            if (mapViewFragment == null) {
-                mapViewFragment = new MapViewFragment();
-            }
-            //return position == 0 ? mainFrag : new MainFragment();
-
-            if (position==0)
-            {
+            if (position == 0) {
+                if (mainFrag == null) {
+                    mainFrag = new MainFragment();
+                }
                 return mainFrag;
-            }
-            if (position==1)
-            {
+            } else {
+                if (mapViewFragment == null) {
+                    mapViewFragment = new MapViewFragment();
+                }
                 return mapViewFragment;
             }
-            return position == 0 ? mainFrag : new MainFragment();
-
         }
 
         @Override
@@ -116,11 +124,7 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0) {
-                return "LIST";
-            } else {
-                return "MAP";
-            }
+            return position == 0 ? "LIST" : "MAP";
         }
     }
 }
