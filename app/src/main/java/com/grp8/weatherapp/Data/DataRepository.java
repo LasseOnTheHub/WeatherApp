@@ -62,7 +62,7 @@ public class DataRepository
     {
         String payload = this.provider.fetch(new APIStationRequest(this.user.getID(), stationID));
 
-        return (Station) this.stationMapper.map(payload); // TODO: Add caching
+        return (Station) this.stationMapper.map(this.split(payload)); // TODO: Add caching
     }
 
     /**
@@ -92,7 +92,7 @@ public class DataRepository
             counter++;
         }
 
-        return (DataReading) this.readingMapper.map(payload); // TODO: Add caching
+        return (DataReading) this.readingMapper.map(this.split(payload)); // TODO: Add caching
     }
 
     /**

@@ -7,5 +7,5 @@ import java.util.List;
  */
 
 public interface IListableMapper<T>{
-    public List<T> map(List<String> json);
+    public List<T> map(String[] json);
 }
