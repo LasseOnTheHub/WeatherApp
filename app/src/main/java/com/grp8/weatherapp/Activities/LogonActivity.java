@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.grp8.weatherapp.BussinessLogic.Authorizer;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Utils;
+
 import io.fabric.sdk.android.Fabric;
 
 public class LogonActivity extends AppCompatActivity {
@@ -29,8 +31,7 @@ public class LogonActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
-        if (!EMULATOR) {
+        if (!Utils.isEmulator()) {
             Fabric.with(this, new Crashlytics());
         }
         setContentView(R.layout.activity_logon);
@@ -57,7 +58,10 @@ public class LogonActivity extends AppCompatActivity {
             int userIdInt = Integer.parseInt(userId);
             if (authroizer.Authorize(userIdInt)) {
                 Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-                logUser(userId);
+                if (!Utils.isEmulator()) {
+                    logUser(userId);
+                }
+
                 Intent intent = new Intent(LogonActivity.this,MainActivityTab.class);
                 intent.putExtra(Constants.KEY_USERID,userId);
                 startActivity(intent);
