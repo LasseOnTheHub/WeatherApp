@@ -34,7 +34,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View stationOverview = inflater.inflate(R.layout.activity_station_overview, container, false);
+        View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
 
         // TextView declaration
         temp = (TextView)stationOverview.findViewById(R.id.temp);
