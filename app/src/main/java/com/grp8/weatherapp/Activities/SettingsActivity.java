@@ -33,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         bar.setDisplayHomeAsUpEnabled(true);
+        bar.setTitle("Settings");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
