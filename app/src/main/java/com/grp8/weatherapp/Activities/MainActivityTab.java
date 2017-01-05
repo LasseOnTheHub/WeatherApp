@@ -81,7 +81,7 @@ public class MainActivityTab extends AppCompatActivity {
                 Log.d("Refresh","...");
                 break;
             case R.id.settings_menu:
-                startActivity(new Intent(MainActivityTab.this, SettingsActivity2.class));
+                startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
             case R.id.search_menu:
                 mViewPager.setCurrentItem(0);
