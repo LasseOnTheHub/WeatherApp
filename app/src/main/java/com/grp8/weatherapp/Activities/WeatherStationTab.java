@@ -61,7 +61,7 @@ public class WeatherStationTab extends AppCompatActivity {
                 Log.d("Refresh","...");
                 break;
             case R.id.settings_menu:
-                startActivity(new Intent(WeatherStationTab.this, SettingsActivity2.class));
+                startActivity(new Intent(WeatherStationTab.this, SettingsActivity.class));
                 break;
             case android.R.id.home:
                 finish();

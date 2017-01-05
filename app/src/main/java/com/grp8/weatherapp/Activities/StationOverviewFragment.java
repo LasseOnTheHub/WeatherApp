@@ -36,10 +36,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stationOverview = inflater.inflate(R.layout.activity_station_overview, container, false);
 
-        // setting toolbar as action bar
-        Toolbar toolbar = (Toolbar) stationOverview.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
         // TextView declaration
         temp = (TextView)stationOverview.findViewById(R.id.temp);
         windSpeed = (TextView)stationOverview.findViewById(R.id.windSpeed);
