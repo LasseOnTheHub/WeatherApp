@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,9 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_overview);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // TextView declaration
         temp = (TextView)findViewById(R.id.temp);
         windSpeed = (TextView)findViewById(R.id.windSpeed);
@@ -49,8 +53,10 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
 
         ArrayList<WeatherStation> stationer = weatherStations.getWeatherStations();
 
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
-        ab.setTitle(stationer.get(1).getTitle());
+        // android.support.v7.app.ActionBar ab = getSupportActionBar();
+       //  ab.setTitle(stationer.get(1).getTitle());
+        //getSupportActionBar().setTitle(stationer.get(1).getTitle());
+
         temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
         windSpeed.setText(String.valueOf(stationer.get(1).getWeatherData().getWindSpeed())+" m/s");
         airP.setText(String.valueOf(stationer.get(1).getWeatherData().getAirPressure()) + " bar");
