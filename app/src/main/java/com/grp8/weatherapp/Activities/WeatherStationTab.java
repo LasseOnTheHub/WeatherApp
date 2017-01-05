@@ -11,18 +11,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.grp8.weatherapp.Fragments.StationDetailsAirFragment;
+import com.grp8.weatherapp.Fragments.StationDetailsRainFragment;
+import com.grp8.weatherapp.Fragments.StationDetailsTemperatureFragment;
 import com.grp8.weatherapp.Fragments.StationOverviewFragment;
 import com.grp8.weatherapp.R;
 
-public class WeatherStationTab extends AppCompatActivity {
-
+public class WeatherStationTab extends AppCompatActivity
+{
     private StationOverviewFragment stationOverviewFragment;
-    /*private Graf1 graf1;   //Omdøb til de faktiske navne af fragmenterne
-    private Graf2 graf2;   //Omdøb til de faktiske navne af fragmenterne
-    private Graf3 graf3;   //Omdøb til de faktiske navne af fragmenterne*/
+
+    private StationDetailsAirFragment         airFragment;
+    private StationDetailsRainFragment        rainFragment;
+    private StationDetailsTemperatureFragment temperatureFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
 
@@ -47,64 +52,62 @@ public class WeatherStationTab extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-            if (item.getItemId() == android.R.id.home) {
-                finish();
-            }
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home)
+        {
+            finish();
+        }
+
         return true;
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        public SectionsPagerAdapter(FragmentManager fm) {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter
+    {
+        public SectionsPagerAdapter(FragmentManager fm)
+        {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int position) {
-
-                if (stationOverviewFragment == null) {
-                    stationOverviewFragment = new StationOverviewFragment();
-                }
-                return stationOverviewFragment;
-
-            /*if (position == 0) {
-                if (stationOverviewFragment == null) {
-                    stationOverviewFragment = new StationOverviewFragment();
-                }
-                return stationOverviewFragment;
-            } else if(position ==1) {
-                if (graf1 == null) {
-                    graf1 = new Graf1();
-                }
-                return graf1;
-            } else if(position ==2) {
-                if(graf2 ==null){
-                    graf2 = new Graf2();
+        public Fragment getItem(int position)
+        {
+            switch(position)
+            {
+                case 0:
+                    return stationOverviewFragment = new StationOverviewFragment();
+                case 1:
+                    return temperatureFragment = new StationDetailsTemperatureFragment();
+                case 2:
+                    return airFragment = new StationDetailsAirFragment();
+                case 3:
+                    return rainFragment = new StationDetailsRainFragment();
+                default:
+                    return null;
             }
-                return graf2;
-            }
-            else{
-                if(graf3 ==null){
-                    graf3 = new Graf3();
-                }
-                return graf3;
-            }*/
         }
 
         @Override
-        public int getCount() {
-            return 1;
+        public int getCount()
+        {
+            return 4;
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(int position)
+        {
             switch (position)
             {
-                case 0 : return "Oversigt";
-                case 1 : return "Graf";
-                case 2 : return "Graf";
-                case 3 : return "Graf";
-                default:return "?";
+                case 0 :
+                    return "Overview";
+                case 1 :
+                    return "Temp";
+                case 2 :
+                    return "Air";
+                case 3 :
+                    return "Rain";
+                default:
+                    return "?";
             }
         }
     }
