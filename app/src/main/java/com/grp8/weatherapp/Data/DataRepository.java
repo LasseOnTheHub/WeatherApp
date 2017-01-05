@@ -8,7 +8,6 @@ import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
-import com.grp8.weatherapp.Entities.User;
 
 import java.util.Date;
 import java.util.List;
@@ -18,14 +17,17 @@ import java.util.List;
  */
 public class DataRepository
 {
-    private User user;
+    private int userID;
 
     private IListableMapper<Station>     stationMapper;
     private IListableMapper<DataReading> readingMapper;
 
     private IDataProvider provider;
 
-    public DataRepository(IDataProvider provider, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper)
+    /*
+     * Constructor is made package-local
+     */
+    DataRepository(IDataProvider provider, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper)
     {
         this.provider = provider;
 
@@ -33,9 +35,9 @@ public class DataRepository
         this.readingMapper = readingMapper;
     }
 
-    public void setUser(User user)
+    public void setUserID(int userID)
     {
-        this.user = user;
+        this.userID = userID;
     }
 
     public boolean authorize(int userID)
@@ -44,23 +46,23 @@ public class DataRepository
     }
 
     /**
-     * Fetches all stations associated with the current user
+     * Fetches all stations associated with the current userID
      */
     public List<Station> getStations()
     {
-        String payload = this.provider.fetch(new APIStationRequest(this.user.getID()));
+        String payload = this.provider.fetch(new APIStationRequest(this.userID));
 
         return this.stationMapper.map(this.split(payload)); // TODO: Add caching
     }
 
     /**
-     * Fetches a specific station associated with the current user and specified station ID
+     * Fetches a specific station associated with the current userID and specified station ID
      *
      * @param stationID CLAFIS station ID
      */
     public Station getStation(int stationID)
     {
-        String payload = this.provider.fetch(new APIStationRequest(this.user.getID(), stationID));
+        String payload = this.provider.fetch(new APIStationRequest(this.userID, stationID));
 
         return (Station) this.stationMapper.map(this.split(payload)); // TODO: Add caching
     }
@@ -72,7 +74,7 @@ public class DataRepository
      */
     public DataReading getStationData(int stationID)
     {
-        APIDataReadingRequest request = new APIDataReadingRequest(this.user.getID(), stationID);
+        APIDataReadingRequest request = new APIDataReadingRequest(this.userID, stationID);
 
         int celling = 3;
         int counter = 1;
@@ -96,12 +98,6 @@ public class DataRepository
     }
 
     /**
-     * @param stationID CLAFIS
-     * @param date
-     */
-    //public void getStationData(int stationID, Date date) {}
-
-    /**
      * Fetches all data reading with the specified date range associated with the
      * specified station ID
      *
@@ -116,7 +112,7 @@ public class DataRepository
             throw new IllegalStateException("Start of date range cannot be after end of the range.");
         }
 
-        String payload = this.provider.fetch(new APIDataReadingRequest(this.user.getID(), stationID, start, end));
+        String payload = this.provider.fetch(new APIDataReadingRequest(this.userID, stationID, start, end));
 
         return this.readingMapper.map(this.split(payload));
     }
