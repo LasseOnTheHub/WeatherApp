@@ -19,19 +19,27 @@ import android.preference.RingtonePreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.grp8.weatherapp.R;
 
 import java.util.List;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        list = (ListView) findViewById(R.id.settingList);
+        list.setAdapter(new SettingsAdapter(this));
+        list.setOnItemClickListener(this);
         setupActionBar();
     }
 
@@ -61,5 +69,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("Clicked on item",String.valueOf(position));
+    }
 }
