@@ -49,25 +49,10 @@ public class WeatherStationTab extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_stationslist, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.refresh_menu:
-                Log.d("Refresh","...");
-                break;
-            case R.id.settings_menu:
-                startActivity(new Intent(WeatherStationTab.this, SettingsActivity.class));
-                break;
-            case android.R.id.home:
+            if (item.getItemId() == android.R.id.home) {
                 finish();
-                break;
-            default: break;
-        }
+            }
         return true;
     }
 
