@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Activities;
+package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.grp8.weatherapp.Activities.Constants;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;

@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 
+import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
 import com.grp8.weatherapp.R;
 
 /**
