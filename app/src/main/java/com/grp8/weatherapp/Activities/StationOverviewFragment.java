@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class StationOverviewFragment extends Fragment implements View.OnClickListener {
+public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
 
     WeatherStations weatherStations;
     ArrayList<WeatherStation> weatherStationsArr;
@@ -73,12 +73,8 @@ public class StationOverviewFragment extends Fragment implements View.OnClickLis
         return stationOverview;
     }
 
+
+    @Override
     public void onClick(View v) {
-        if(v==tableLayout){
-            Intent i = new Intent(this, StationDetailsActivity.class);
-            startActivity(i);
-        }
-
     }
-
 }

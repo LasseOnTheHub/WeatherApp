@@ -19,9 +19,9 @@ import com.grp8.weatherapp.R;
 public class WeatherStationTab extends AppCompatActivity {
 
     private StationOverviewFragment stationOverviewFragment;
-    private Graf1 graf1;   //Omdøb til de faktiske navne af fragmenterne
+    /*private Graf1 graf1;   //Omdøb til de faktiske navne af fragmenterne
     private Graf2 graf2;   //Omdøb til de faktiske navne af fragmenterne
-    private Graf3 graf3;   //Omdøb til de faktiske navne af fragmenterne
+    private Graf3 graf3;   //Omdøb til de faktiske navne af fragmenterne*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,13 @@ public class WeatherStationTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
+
+                if (stationOverviewFragment == null) {
+                    stationOverviewFragment = new StationOverviewFragment();
+                }
+                return stationOverviewFragment;
+
+            /*if (position == 0) {
                 if (stationOverviewFragment == null) {
                     stationOverviewFragment = new StationOverviewFragment();
                 }
@@ -99,12 +105,12 @@ public class WeatherStationTab extends AppCompatActivity {
                     graf3 = new Graf3();
                 }
                 return graf3;
-            }
+            }*/
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 1;
         }
 
         @Override

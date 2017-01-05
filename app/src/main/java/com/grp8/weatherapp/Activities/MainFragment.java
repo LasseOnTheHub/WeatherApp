@@ -56,7 +56,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("Clicked on item",String.valueOf(position));
-        startActivity(new Intent(getActivity(), StationOverviewActivity.class));
+        startActivity(new Intent(getActivity(), WeatherStationTab.class));
     }
 
     public void toggleSearch(boolean shouldChange) {
