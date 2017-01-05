@@ -14,10 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
 import com.grp8.weatherapp.Fragments.MapViewFragment;
-import com.grp8.weatherapp.R;
 
 public class MainActivityTab extends AppCompatActivity {
 
@@ -84,7 +84,7 @@ public class MainActivityTab extends AppCompatActivity {
                 Log.d("Refresh","...");
                 break;
             case R.id.settings_menu:
-                startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
+                startActivity(new Intent(MainActivityTab.this, SettingsActivity2.class));
                 break;
             case R.id.search_menu:
                 mViewPager.setCurrentItem(0);
