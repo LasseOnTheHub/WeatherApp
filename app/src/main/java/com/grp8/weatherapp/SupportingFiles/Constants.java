@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Activities;
+package com.grp8.weatherapp.SupportingFiles;
 
 /**
  * Created by lbirk on 02-10-2016.

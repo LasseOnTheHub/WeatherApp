@@ -1,7 +1,6 @@
 package com.grp8.weatherapp.Activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.grp8.weatherapp.BussinessLogic.Authorizer;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import io.fabric.sdk.android.Fabric;

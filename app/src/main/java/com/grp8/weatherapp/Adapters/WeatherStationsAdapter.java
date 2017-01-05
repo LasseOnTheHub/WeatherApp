@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Activities;
+package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
