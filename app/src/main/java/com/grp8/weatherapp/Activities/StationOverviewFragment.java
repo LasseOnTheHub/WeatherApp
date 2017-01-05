@@ -1,13 +1,16 @@
 package com.grp8.weatherapp.Activities;
 
 import android.app.ActionBar;
+import android.app.Fragment;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -21,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class StationOverviewActivity extends AppCompatActivity implements View.OnClickListener {
+public class StationOverviewFragment extends Fragment implements View.OnClickListener {
 
     WeatherStations weatherStations;
     ArrayList<WeatherStation> weatherStationsArr;
@@ -30,23 +33,22 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_station_overview);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View stationOverview = inflater.inflate(R.layout.activity_station_overview, container, false);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // setting toolbar as action bar
+        Toolbar toolbar = (Toolbar) stationOverview.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         // TextView declaration
-        temp = (TextView)findViewById(R.id.temp);
-        windSpeed = (TextView)findViewById(R.id.windSpeed);
-        airP = (TextView)findViewById(R.id.airP);
-        humidity = (TextView)findViewById(R.id.humidity);
-        updated = (TextView)findViewById(R.id.updated);
+        temp = (TextView)stationOverview.findViewById(R.id.temp);
+        windSpeed = (TextView)stationOverview.findViewById(R.id.windSpeed);
+        airP = (TextView)stationOverview.findViewById(R.id.airP);
+        humidity = (TextView)stationOverview.findViewById(R.id.humidity);
+        updated = (TextView)stationOverview.findViewById(R.id.updated);
 
         // TableLayout declaration
-        tableLayout = (TableLayout)findViewById(R.id.tableLayoutt);
-
+        tableLayout = (TableLayout)stationOverview.findViewById(R.id.tableLayoutt);
         tableLayout.setOnClickListener(this);
 
         weatherStations = WeatherStations.getInstance();
@@ -54,9 +56,10 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         ArrayList<WeatherStation> stationer = weatherStations.getWeatherStations();
 
         // android.support.v7.app.ActionBar ab = getSupportActionBar();
-       //  ab.setTitle(stationer.get(1).getTitle());
+        //  ab.setTitle(stationer.get(1).getTitle());
         //getSupportActionBar().setTitle(stationer.get(1).getTitle());
 
+        // setting text
         temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
         windSpeed.setText(String.valueOf(stationer.get(1).getWeatherData().getWindSpeed())+" m/s");
         airP.setText(String.valueOf(stationer.get(1).getWeatherData().getAirPressure()) + " bar");
@@ -67,6 +70,7 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
         String mdy = mdyFormat.format(date);
 
         updated.setText(mdy);
+        return stationOverview;
     }
 
     public void onClick(View v) {
@@ -77,5 +81,4 @@ public class StationOverviewActivity extends AppCompatActivity implements View.O
 
     }
 
-   // weatherStations.getWeatherstation
 }
