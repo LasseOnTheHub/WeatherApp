@@ -93,4 +93,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
             searchIsVisible = !searchIsVisible;
         }
     }
+
+    public boolean isSearchVisible() {
+        return searchIsVisible;
+    }
 }

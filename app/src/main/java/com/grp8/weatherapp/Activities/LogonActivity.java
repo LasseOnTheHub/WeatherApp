@@ -1,6 +1,7 @@
 package com.grp8.weatherapp.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.grp8.weatherapp.BussinessLogic.Authorizer;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Utils;
+
 import io.fabric.sdk.android.Fabric;
 
 public class LogonActivity extends AppCompatActivity {
@@ -27,7 +30,10 @@ public class LogonActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+
+        if (!Utils.isEmulator()) {
+            Fabric.with(this, new Crashlytics());
+        }
         setContentView(R.layout.activity_logon);
 
         passwordEditText = (EditText) findViewById(R.id.userPasswordText);
@@ -52,7 +58,10 @@ public class LogonActivity extends AppCompatActivity {
             int userIdInt = Integer.parseInt(userId);
             if (authroizer.Authorize(userIdInt)) {
                 Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-                logUser(userId);
+                if (!Utils.isEmulator()) {
+                    logUser(userId);
+                }
+
                 Intent intent = new Intent(LogonActivity.this,MainActivityTab.class);
                 intent.putExtra(Constants.KEY_USERID,userId);
                 startActivity(intent);
