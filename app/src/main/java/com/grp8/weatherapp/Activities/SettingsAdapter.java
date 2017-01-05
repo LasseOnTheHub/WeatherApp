@@ -19,12 +19,11 @@ import java.util.Map;
 
 public class SettingsAdapter extends BaseAdapter {
 
-        //private String[] settings = Constants.settings;
+        private String[] settings = Constants.SETTINGS;
         private LayoutInflater inflater;
 
-        public SettingsAdapter(Activity activity, Map<String,Object> settings) {
+        public SettingsAdapter(Activity activity) {
             super();
-            //this.settings = settings;
             inflater = activity.getLayoutInflater();
         }
 
