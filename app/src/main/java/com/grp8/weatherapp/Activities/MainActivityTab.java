@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.grp8.weatherapp.Fragments.MainFragment;
+import com.grp8.weatherapp.Fragments.MapViewFragment;
 import com.grp8.weatherapp.R;
 
 public class MainActivityTab extends AppCompatActivity {

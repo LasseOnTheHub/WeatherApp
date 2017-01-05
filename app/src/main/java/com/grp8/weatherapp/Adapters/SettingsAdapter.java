@@ -4,18 +4,12 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.grp8.weatherapp.Activities.Constants;
+import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.TestData.WeatherStation;
-import com.grp8.weatherapp.TestData.WeatherStations;
-
-import java.util.Map;
 
 /**
  * Created by Frederik on 05/01/2017.

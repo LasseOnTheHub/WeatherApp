@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Activities;
+package com.grp8.weatherapp.Fragments;
 
 import android.app.ActionBar;
 import android.app.Fragment;

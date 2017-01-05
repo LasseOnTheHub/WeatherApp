@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Activities;
+package com.grp8.weatherapp.Fragments;
 
 
 import android.animation.Animator;
@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 
+import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
 import com.grp8.weatherapp.R;
 
