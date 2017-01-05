@@ -29,7 +29,7 @@
         <activity android:name=".Activities.StationOverviewActivity" />
         <activity android:name=".Activities.StationDetailsActivity" />
         <activity android:name=".Activities.HistoryActivity" />
-        <activity android:name=".Activities.SettingsActivity2" />
+        <activity android:name=".Activities.SettingsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
