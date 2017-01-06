@@ -2,10 +2,7 @@ package com.grp8.weatherapp.Fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.grp8.weatherapp.R;
 
@@ -34,18 +31,4 @@ public class SettingsFragment extends PreferenceFragment {
             getActivity().finish();
             return true;
         }
-
-    /*private void setupActionBar() {
-            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            ActionBar bar = getSupportActionBar();
-            bar.setDisplayHomeAsUpEnabled(true);
-            bar.setTitle("Settings");
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
-        }*/
     }

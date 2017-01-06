@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.grp8.weatherapp.Adapters.SettingsAdapter;
+import com.grp8.weatherapp.Fragments.SettingsFragment;
 import com.grp8.weatherapp.R;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -21,7 +22,8 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsActivity2.WeatherPreferenceFragment()).commit();
+        setupActionBar();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
     private void setupActionBar() {
