@@ -19,8 +19,6 @@ public class SettingsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_weatherapp);
-        // setHasOptionsMenu(true); ??
-
         bindPreferenceSummaryToValue(findPreference("temp_unit"));
         bindPreferenceSummaryToValue(findPreference("pressure_unit"));
         bindPreferenceSummaryToValue(findPreference("windspeed_unit"));
