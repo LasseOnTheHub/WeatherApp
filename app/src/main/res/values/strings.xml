@@ -87,6 +87,39 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
 
+    <string name="temp">Temperature unit</string>
+
+    <string-array name="temp_options_titles">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+    </string-array>
+
+    <string name="pressure">Pressure unit</string>
+
+    <string-array name="pressure_options">
+        <item>hPa</item>
+        <item>bar</item>
+        <item>atm</item>
+        <item>mmHg</item>
+    </string-array>
+
+    <string name="windspeed">Wind speed unit</string>
+
+    <string-array name="windspeed_options">
+        <item>meters/second</item>
+        <item>meters/hour</item>
+        <item>kilometers/second</item>
+        <item>kilometers/hour</item>
+        <item>miles/hour</item>
+    </string-array>
+
+    <string name="langauge">Language</string>
+
+    <string-array name="language_options">
+        <item>Danish</item>
+        <item>English</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

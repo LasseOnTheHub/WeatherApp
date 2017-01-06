@@ -174,9 +174,7 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
      */
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+                || WeatherPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -208,6 +206,28 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public static class WeatherPreferenceFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_weatherapp);
+            // setHasOptionsMenu(true); ??
+
+            bindPreferenceSummaryToValue(findPreference("temp_unit"));
+            bindPreferenceSummaryToValue(findPreference("pressure_unit"));
+            bindPreferenceSummaryToValue(findPreference("windspeed_unit"));
+            bindPreferenceSummaryToValue(findPreference("app_language"));
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            getActivity().finish();
+            return true;
+        }
+
     }
 
     /**
