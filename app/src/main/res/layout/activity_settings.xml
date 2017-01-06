@@ -6,29 +6,15 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar">
+    </include>
+    
+    <FrameLayout
+        android:id="@+id/settings_content"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include layout="@layout/toolbar"
-            android:id="@+id/toolbar"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:id="@+id/settingList"/>
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="80dp"
-            android:clickable="true" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content">
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
