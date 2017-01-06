@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.grp8.weatherapp.Fragments.GraphTemperatureFragment;
 import com.grp8.weatherapp.Fragments.StationDetailsAirFragment;
 import com.grp8.weatherapp.Fragments.StationDetailsRainFragment;
 import com.grp8.weatherapp.Fragments.StationDetailsTemperatureFragment;
@@ -24,6 +25,7 @@ public class WeatherStationTab extends AppCompatActivity
     private StationDetailsAirFragment         airFragment;
     private StationDetailsRainFragment        rainFragment;
     private StationDetailsTemperatureFragment temperatureFragment;
+    private GraphTemperatureFragment            temperatureGraphFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +79,7 @@ public class WeatherStationTab extends AppCompatActivity
                 case 0:
                     return stationOverviewFragment = new StationOverviewFragment();
                 case 1:
-                    return temperatureFragment = new StationDetailsTemperatureFragment();
+                    return temperatureGraphFragment = new GraphTemperatureFragment();
                 case 2:
                     return airFragment = new StationDetailsAirFragment();
                 case 3:

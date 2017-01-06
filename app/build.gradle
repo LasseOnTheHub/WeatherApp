@@ -48,4 +48,5 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:24.2.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.json:json:20140107'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 }
