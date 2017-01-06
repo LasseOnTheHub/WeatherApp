@@ -14,10 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
 import com.grp8.weatherapp.Fragments.MapViewFragment;
-import com.grp8.weatherapp.R;
 
 public class MainActivityTab extends AppCompatActivity {
 
@@ -61,7 +61,6 @@ public class MainActivityTab extends AppCompatActivity {
     private void setupActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
