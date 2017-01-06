@@ -21,11 +21,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        list = (ListView) findViewById(R.id.settingList);
-        list.setAdapter(new SettingsAdapter(this));
-        list.setOnItemClickListener(this);
-        setupActionBar();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsActivity2.WeatherPreferenceFragment()).commit();
     }
 
     private void setupActionBar() {

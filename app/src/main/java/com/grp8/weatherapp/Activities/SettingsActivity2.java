@@ -131,9 +131,6 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
         setupActionBar();
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
     private void setupActionBar() {
         ViewGroup rootView = (ViewGroup)findViewById(R.id.action_bar_root); //id from appcompat
 
@@ -177,10 +174,33 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
                 || WeatherPreferenceFragment.class.getName().equals(fragmentName);
     }
 
+    public static class WeatherPreferenceFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_weatherapp);
+            // setHasOptionsMenu(true); ??
+
+            bindPreferenceSummaryToValue(findPreference("temp_unit"));
+            bindPreferenceSummaryToValue(findPreference("pressure_unit"));
+            bindPreferenceSummaryToValue(findPreference("windspeed_unit"));
+            bindPreferenceSummaryToValue(findPreference("app_language"));
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            getActivity().finish();
+            return true;
+        }
+
+    }
+
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
+    /*
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
@@ -206,34 +226,13 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    public static class WeatherPreferenceFragment extends PreferenceFragment {
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_weatherapp);
-            // setHasOptionsMenu(true); ??
-
-            bindPreferenceSummaryToValue(findPreference("temp_unit"));
-            bindPreferenceSummaryToValue(findPreference("pressure_unit"));
-            bindPreferenceSummaryToValue(findPreference("windspeed_unit"));
-            bindPreferenceSummaryToValue(findPreference("app_language"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            getActivity().finish();
-            return true;
-        }
-
-    }
+    } */
 
     /**
      * This fragment shows notification preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
+    /*
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class NotificationPreferenceFragment extends PreferenceFragment {
         @Override
@@ -258,12 +257,13 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
-    }
+    } */
 
     /**
      * This fragment shows data and sync preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
+    /*
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class DataSyncPreferenceFragment extends PreferenceFragment {
         @Override
@@ -288,5 +288,5 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
-    }
+    } */
 }
