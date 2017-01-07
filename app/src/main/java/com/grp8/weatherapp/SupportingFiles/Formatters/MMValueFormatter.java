@@ -12,7 +12,7 @@ public class MMValueFormatter implements IValueFormatter
     private DecimalFormat mFormat;
     
     public MMValueFormatter() {
-        mFormat = new DecimalFormat("###.0");
+        mFormat = new DecimalFormat("###.#");
     }
 
     @Override

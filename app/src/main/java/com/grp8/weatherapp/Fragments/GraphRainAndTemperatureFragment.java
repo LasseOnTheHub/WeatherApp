@@ -84,7 +84,7 @@ public class GraphRainAndTemperatureFragment extends Fragment {
         xAxis.setAxisMaximum(data.getXMax() + 0.25f);
 
         mChart.setData(data);
-        mChart.invalidate();
+        //mChart.invalidate();
 
         return view;
     }
@@ -136,17 +136,18 @@ public class GraphRainAndTemperatureFragment extends Fragment {
 
         ArrayList<BarEntry> rainVals = new ArrayList<BarEntry>();
 
-        rainVals.add(new BarEntry(1f,1,2d));
-        rainVals.add(new BarEntry(2f,1,0d));
-        rainVals.add(new BarEntry(2f,2,0d));
-        rainVals.add(new BarEntry(2f,3,0d));
-        rainVals.add(new BarEntry(3f,0,5d));
-        rainVals.add(new BarEntry(4f,1,0d));
-        rainVals.add(new BarEntry(5f,5,9d));
-        rainVals.add(new BarEntry(6f,2,0d));
-        rainVals.add(new BarEntry(7f,1,7d));
-        rainVals.add(new BarEntry(8f,1,5d));
-        rainVals.add(new BarEntry(9f,1,2d));
+        rainVals.add(new BarEntry(1,1.2f));
+        rainVals.add(new BarEntry(2,1.0f));
+        rainVals.add(new BarEntry(2f,2.0f));
+        rainVals.add(new BarEntry(2f,3.0f));
+        rainVals.add(new BarEntry(3f,0.5f));
+        rainVals.add(new BarEntry(4f,1.0f));
+        rainVals.add(new BarEntry(5f,5.9f));
+        rainVals.add(new BarEntry(6f,2.0f));
+        rainVals.add(new BarEntry(7f,1.7f));
+        rainVals.add(new BarEntry(8f,1.5f));
+        rainVals.add(new BarEntry(9f,1.2f));
+
 
 /*        rainVals.add(new BarEntry(1451660400,1,2));
         rainVals.add(new BarEntry(1451685600,1,6));
