@@ -76,7 +76,8 @@ public class WeatherStationsAdapter extends BaseAdapter {
         }
 
         String tempUnit = PreferenceManager.getDefaultSharedPreferences(activity).getString(Constants.KEY_TEMP_UNIT,"");
-        viewHolder.tempLabel.setText(String.valueOf(station.getWeatherData().getAirTemp())+tempUnit);
+        String temp = String.valueOf(station.getWeatherData().getAirTemp())+tempUnit;
+        viewHolder.tempLabel.setText(temp);
 
         return convertView;
     }
@@ -92,6 +93,11 @@ public class WeatherStationsAdapter extends BaseAdapter {
             time = date.toString().substring(4,16);
         }
         return time;
+    }
+
+    private boolean isOldContent(Date date) {
+        Date threshold = new Date(System.currentTimeMillis()-1800000);
+        return date.compareTo(threshold) == 0 || date.compareTo(threshold) == 1;
     }
 
     @Override
