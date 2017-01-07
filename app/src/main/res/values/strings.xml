@@ -10,6 +10,7 @@
     <string name="wind_speed">Wind speed</string>
     <string name="air_pressure">Air pressure</string>
     <string name="action_settings">Settings</string>
+    <string name="outdated_content">Content may be outdated</string>
 
     <!-- Activity titles -->
     <string name="title_mainActivity">Stations</string>
