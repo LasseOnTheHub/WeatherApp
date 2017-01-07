@@ -1,41 +1,72 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="60dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:animateLayoutChanges="true"
-    android:paddingTop="0dp">
+    android:paddingBottom="?attr/actionBarSize">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:id="@+id/searchFrame">
-
-        <EditText
-            android:id="@+id/searchField"
-            android:hint="Search..."
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"/>
-
-        <ImageView
-            android:id="@+id/searchBtn"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="17dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/search" />
-    </FrameLayout>
-
-    <ListView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/searchFrame"
-        android:layout_marginTop="9dp"
-        android:id="@+id/stationlist"/>
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:animateLayoutChanges="true"
+        android:paddingTop="0dp">
 
-</RelativeLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/searchFrame">
+
+            <EditText
+                android:id="@+id/searchField"
+                android:hint="@string/searchHint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"/>
+
+            <ImageView
+                android:id="@+id/searchBtn"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="17dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/search" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_layout">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/spinner" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_text"
+                android:layout_below="@id/spinner"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:text="@string/loadingText1"/>
+
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="gone"
+            android:layout_below="@id/searchFrame"
+            android:layout_marginTop="9dp"
+            android:id="@+id/stationlist"/>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

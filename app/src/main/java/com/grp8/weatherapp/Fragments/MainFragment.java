@@ -6,6 +6,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,11 +18,15 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
 import com.grp8.weatherapp.R;
+
+import static android.view.View.VISIBLE;
 
 /**
  * Created by Frederik on 14/11/2016.
@@ -29,22 +35,51 @@ import com.grp8.weatherapp.R;
 public class MainFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView list;
+    private View mainFrag;
+    private TextView spinnerText;
+
     private FrameLayout searchFrame;
+    private RelativeLayout spinnerFrame;
+
     private boolean searchIsVisible;
+    private long delay = 5000;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
+        mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
 
-        list = (ListView) mainFrag.findViewById(R.id.stationlist);
-        list.setAdapter(new WeatherStationsAdapter(getActivity()));
-        list.setOnItemClickListener(this);
-
+        spinnerFrame = (RelativeLayout) mainFrag.findViewById(R.id.spinner_layout);
+        spinnerText = (TextView) mainFrag.findViewById(R.id.spinner_text);
         searchFrame = (FrameLayout) mainFrag.findViewById(R.id.searchFrame);
         searchFrame.setVisibility(FrameLayout.GONE);
         searchIsVisible = false;
 
+        load();
+
         return mainFrag;
+    }
+
+    public void load() {
+
+        if (list == null) {
+            list = (ListView) mainFrag.findViewById(R.id.stationlist);
+            list.setOnItemClickListener(this);
+        }
+
+        if (list.getVisibility() == View.VISIBLE) {
+            list.setVisibility(View.GONE);
+            spinnerFrame.setVisibility(RelativeLayout.VISIBLE);
+        }
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateList();
+            }
+        }, delay);
+
+        updateLoadingText();
     }
 
     @Override
@@ -52,6 +87,34 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         super.onPause();
         if (searchIsVisible) {
             toggleSearch(true);
+        }
+    }
+
+    private void updateList() {
+        spinnerFrame.setVisibility(RelativeLayout.GONE);
+        list.setVisibility(View.VISIBLE);
+        list.setAdapter(new WeatherStationsAdapter(getActivity()));
+    }
+
+    private void updateLoadingText() {
+        Handler handler = new Handler();
+
+        for (long i = 0; i < delay; i += 1000) {
+            final long timer = i;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (timer == 0) {
+                        spinnerText.setText(R.string.loadingText);
+                    } else if (timer % 3000 == 1000) {
+                        spinnerText.setText(R.string.loadingText1);
+                    } else if (timer % 3000 == 2000) {
+                        spinnerText.setText(R.string.loadingText2);
+                    } else if (timer % 3000 == 0) {
+                        spinnerText.setText(R.string.loadingText3);
+                    }
+                }
+            }, i);
         }
     }
 
@@ -76,7 +139,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
                     });
             searchFrame.setVisibility(FrameLayout.GONE);
         } else {
-            searchFrame.setVisibility(FrameLayout.VISIBLE);
+            searchFrame.setVisibility(VISIBLE);
             searchFrame.animate()
                     .translationY(1/2*searchFrame.getHeight())
                     .setListener(new AnimatorListenerAdapter() {
@@ -99,4 +162,5 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     public boolean isSearchVisible() {
         return searchIsVisible;
     }
+
 }
