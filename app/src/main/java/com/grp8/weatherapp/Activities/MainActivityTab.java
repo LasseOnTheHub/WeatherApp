@@ -67,7 +67,7 @@ public class MainActivityTab extends AppCompatActivity {
                 finish();
             }
         });
-        getSupportActionBar().setTitle("Stations");
+        getSupportActionBar().setTitle(R.string.title_mainActivity);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return position == 0 ? "LIST" : "MAP";
+            return position == 0 ? getString(R.string.ListTab) : getString(R.string.MapTab);
         }
     }
 }

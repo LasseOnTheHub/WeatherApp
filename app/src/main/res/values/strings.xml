@@ -23,6 +23,10 @@
     <string name="title_activity_map_overview">Map</string>
     <string name="title_activity_maps">Map</string>
 
+    <!-- Tabs titles -->
+    <string name="ListTab">LIST</string>
+    <string name="MapTab">MAP</string>
+
     <!-- Settings strings and arrays -->
 
     <string name="temp">Temperature unit</string>
