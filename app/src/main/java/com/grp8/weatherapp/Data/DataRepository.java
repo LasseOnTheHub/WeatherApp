@@ -31,8 +31,8 @@ public class DataRepository
     private IDataProvider  provider;
     private Database       database;
 
-    private Map<Integer, Station> stations = new HashMap<>();
-    private Map<Integer, Map<Date, DataReading>> readings = new HashMap<>();
+    private Map<Integer, Station>           stations = new HashMap<>();
+    private Map<Integer, List<DataReading>> readings = new HashMap<>();
 
     /*
      * Constructor is made package-local
@@ -176,7 +176,7 @@ public class DataRepository
 
         if(!this.readings.isEmpty() && this.readings.containsKey(station))
         {
-            List<DataReading> collection = new ArrayList<>(this.readings.get(station).values());
+            List<DataReading> collection = this.readings.get(station);
 
             if(collection.size() == 1)
             {
@@ -254,14 +254,14 @@ public class DataRepository
 
         if(!this.readings.isEmpty() && this.readings.containsKey(station))
         {
-            Map<Date, DataReading> collection = this.readings.get(station);
-            List<DataReading>      results    = new ArrayList<>();
+            List<DataReading> collection = this.readings.get(station);
+            List<DataReading> results    = new ArrayList<>();
 
-            for(Map.Entry<Date, DataReading> entry : collection.entrySet())
+            for(DataReading entry : collection)
             {
-                if(entry.getKey().compareTo(start) > 0 || entry.getKey().compareTo(end) < 0)
+                if(entry.getTimestamp().compareTo(start) > 0 || entry.getTimestamp().compareTo(end) < 0)
                 {
-                    results.add(entry.getValue());
+                    results.add(entry);
                 }
             }
 
@@ -286,14 +286,15 @@ public class DataRepository
 
             if(!this.readings.containsKey(station))
             {
-                this.readings.put(station, new HashMap<Date, DataReading>());
+                this.readings.put(station, new ArrayList<DataReading>());
             }
 
             for(int index = 0; index < results.size(); index++)
             {
                 DataReading result = results.get(index);
 
-                this.readings.get(station).put(result.getTimestamp(), result);
+                this.readings.get(station).add(result);
+
                 DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items[index]);
             }
         }
