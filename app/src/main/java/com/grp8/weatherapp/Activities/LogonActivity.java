@@ -65,6 +65,7 @@ public class LogonActivity extends AppCompatActivity {
                 Intent intent = new Intent(LogonActivity.this,MainActivityTab.class);
                 intent.putExtra(Constants.KEY_USERID,userId);
                 startActivity(intent);
+                finish();
 
             } else {
                 Toast.makeText(this, R.string.forkert_login, Toast.LENGTH_SHORT).show();
