@@ -11,11 +11,21 @@
     <string name="air_pressure">Air pressure</string>
     <string name="action_settings">Settings</string>
 
+    <string name="searchHint">Search...</string>
+    <string name="loadingText">Loading stations</string>
+    <string name="loadingText1">Loading stations .</string>
+    <string name="loadingText2">Loading stations . .</string>
+    <string name="loadingText3">Loading stations . . .</string>
+
     <!-- Activity titles -->
     <string name="title_mainActivity">Stations</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_map_overview">Map</string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- Tabs titles -->
+    <string name="ListTab">LIST</string>
+    <string name="MapTab">MAP</string>
 
     <!-- Settings strings and arrays -->
 
