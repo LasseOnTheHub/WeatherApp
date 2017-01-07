@@ -71,7 +71,7 @@
         android:id="@+id/title_label" />
 
     <TextView
-        android:text="26º"
+        android:text="26°"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="40sp"
