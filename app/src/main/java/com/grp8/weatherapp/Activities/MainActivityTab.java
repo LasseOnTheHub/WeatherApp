@@ -95,6 +95,9 @@ public class MainActivityTab extends AppCompatActivity {
                 mViewPager.setCurrentItem(0);
                 ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
                 break;
+            case R.id.logout_menu:
+                //TODO
+                break;
             case android.R.id.home:
                 finish();
                 break;
@@ -145,7 +148,6 @@ public class MainActivityTab extends AppCompatActivity {
             return;
         }
         else { exitToast.show(); }
-
         backPressed = System.currentTimeMillis();
     }
 

@@ -23,6 +23,15 @@ public class SettingsFragment extends PreferenceFragment {
         bindPreferenceSummaryToValue(findPreference("pressure_unit"));
         bindPreferenceSummaryToValue(findPreference("windspeed_unit"));
         bindPreferenceSummaryToValue(findPreference("app_language"));
+
+        Preference button = (Preference)findPreference(getString(R.string.app_logout));
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                //TODO
+                return true;
+            }
+        });
     }
 
     @Override

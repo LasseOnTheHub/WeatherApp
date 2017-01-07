@@ -5,6 +5,9 @@
     <string name="indtast_password">Indtast Password</string>
     <string name="forkert_login">Forkert Login</string>
     <string name="toast_exit">Pres back again to exit</string>
+    <string name="app_logout">Click here to log out</string>
+    <string name="logout_button">Log out</string>
+
     <string name="last_updated">Last updated</string>
     <string name="temperature">Temperature</string>
     <string name="humidity">Humidity</string>
