@@ -27,7 +27,7 @@ public class MainActivityTab extends AppCompatActivity {
     private ViewPager mViewPager;
     private MainFragment mainFrag;
     private MapViewFragment mapViewFragment;
-    private static final int TIME_INTERVAL = 3000;
+    private static final int TIME_INTERVAL = 3000; // // milliseconds, time passed between two back presses.
     private long backPressed;
     private Toast exitToast;
 
@@ -138,10 +138,9 @@ public class MainActivityTab extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        exitToast = Toast.makeText(getApplicationContext(), "Pres back again to exit", Toast.LENGTH_SHORT);
+        exitToast = Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT);
         if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
         {
-            exitToast.cancel();
             super.onBackPressed();
             return;
         }
