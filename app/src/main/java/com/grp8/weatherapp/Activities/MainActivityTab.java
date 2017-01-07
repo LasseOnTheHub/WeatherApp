@@ -27,7 +27,7 @@ public class MainActivityTab extends AppCompatActivity {
     private ViewPager mViewPager;
     private MainFragment mainFrag;
     private MapViewFragment mapViewFragment;
-    private static final int TIME_INTERVAL = 30000;
+    private static final int TIME_INTERVAL = 3000;
     private long backPressed;
     private Toast exitToast;
 
