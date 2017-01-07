@@ -14,5 +14,7 @@
     <item android:title="Settings"
         android:id="@+id/settings_menu" />
 
+    <item android:title="Log out"
+        android:id="@+id/logout_menu" />
 
 </menu>
