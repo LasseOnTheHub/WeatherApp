@@ -94,6 +94,10 @@ public class WeatherStationsAdapter extends BaseAdapter {
         return time;
     }
 
+    private boolean isOldContent(Date date) {
+        return false;
+    }
+
     @Override
     public int getViewTypeCount() {
         return 1;
