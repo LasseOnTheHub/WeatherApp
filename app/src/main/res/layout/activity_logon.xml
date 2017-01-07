@@ -43,10 +43,10 @@
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
         android:textSize="50px"
-        android:layout_below="@+id/rememberMeCheckbox"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:onClick="login"/>
+        android:onClick="login"
+        android:layout_below="@+id/userPasswordText" />
 
     <Button
         android:layout_height="wrap_content"
