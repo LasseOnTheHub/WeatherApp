@@ -8,7 +8,8 @@ import java.util.Date;
  */
 public class DataReading
 {
-    private int  id;
+    private int id;
+    private int device;
     private Date date;
 
     private double rain;
@@ -17,10 +18,11 @@ public class DataReading
     private Wind wind;
     private Soil soil;
 
-    public DataReading(int id, int timestamp, double rain, Air air, Wind wind, Soil soil)
+    public DataReading(int id, int device, int timestamp, double rain, Air air, Wind wind, Soil soil)
     {
-        this.id   = id;
-        this.date = new Date((long) timestamp * 1000);
+        this.id     = id;
+        this.device = device;
+        this.date   = new Date((long) timestamp * 1000);
 
         this.rain = rain;
         this.air  = air;
@@ -31,6 +33,11 @@ public class DataReading
     public int getID()
     {
         return this.id;
+    }
+
+    public int getDeviceID()
+    {
+        return this.device;
     }
 
     public Date getTimestamp()

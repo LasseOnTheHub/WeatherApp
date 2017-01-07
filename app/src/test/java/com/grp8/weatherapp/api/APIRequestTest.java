@@ -104,10 +104,10 @@ public class APIRequestTest
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date start = df.parse("2016-11-01 00:00:00");
-        Date end   = df.parse("2016-12-01 00:00:00");
+        Date end   = df.parse("2016-11-14 00:00:00");
 
         APIRequest request = new APIDataReadingRequest(USER_ID, 1, start, end);
 
-        assertEquals(BASE_URL + "/weather-station/1?endDate=2016-12-01%2000:00:00&startDate=2016-11-01%2000:00:00", request.build());
+        assertEquals(BASE_URL + "/weather-station/1?endDate=2016-11-14%2000:00:00&startDate=2016-11-01%2000:00:00", request.build());
     }
 }
