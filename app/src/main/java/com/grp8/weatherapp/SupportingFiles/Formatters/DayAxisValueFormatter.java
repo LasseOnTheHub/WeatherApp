@@ -1,5 +1,6 @@
-package com.grp8.weatherapp.SupportingFiles;
+package com.grp8.weatherapp.SupportingFiles.Formatters;
 
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
@@ -12,9 +13,9 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
     };
 
-    private LineChart chart;
+    private CombinedChart chart;
 
-    public DayAxisValueFormatter(LineChart chart) {
+    public DayAxisValueFormatter(CombinedChart chart) {
         this.chart = chart;
     }
 
@@ -37,31 +38,6 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
             int dayOfMonth = determineDayOfMonth(days, month + 12 * (year - 2016));
 
             String appendix = "";
-
-            switch (dayOfMonth) {
-                case 1:
-                    appendix = "";
-                    break;
-                case 2:
-                    appendix = "";
-                    break;
-                case 3:
-                    appendix = "";
-                    break;
-                case 21:
-                    appendix = "";
-                    break;
-                case 22:
-                    appendix = "";
-                    break;
-                case 23:
-                    appendix = "";
-                    break;
-                case 31:
-                    appendix = "";
-                    break;
-            }
-
             return dayOfMonth == 0 ? "" : dayOfMonth + appendix + " " + monthName;
         }
     }
