@@ -17,9 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,6 +61,17 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     public void load() {
+
+        if (list == null) {
+            list = (ListView) mainFrag.findViewById(R.id.stationlist);
+            list.setOnItemClickListener(this);
+        }
+
+        if (list.getVisibility() == View.VISIBLE) {
+            list.setVisibility(View.GONE);
+            spinnerFrame.setVisibility(RelativeLayout.VISIBLE);
+        }
+
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -83,11 +92,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private void updateList() {
         spinnerFrame.setVisibility(RelativeLayout.GONE);
-
-        if (list == null) {
-            list = (ListView) mainFrag.findViewById(R.id.stationlist);
-            list.setOnItemClickListener(this);
-        }
         list.setVisibility(View.VISIBLE);
         list.setAdapter(new WeatherStationsAdapter(getActivity()));
     }
