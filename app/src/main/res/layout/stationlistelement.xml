@@ -27,9 +27,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:id="@+id/time_label" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/old_content"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/warning"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="@string/outdated_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -40,16 +65,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/timeLayout"
         android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="5dp"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:id="@+id/title_label" />
 
     <TextView
-        android:text="26º"
+        android:text="26°"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:id="@+id/temp_label" />
 

@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Constants;
 
 /**
  * Created by Frederik on 06/01/2017.
@@ -19,10 +20,11 @@ public class SettingsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_weatherapp);
-        bindPreferenceSummaryToValue(findPreference("temp_unit"));
-        bindPreferenceSummaryToValue(findPreference("pressure_unit"));
-        bindPreferenceSummaryToValue(findPreference("windspeed_unit"));
-        bindPreferenceSummaryToValue(findPreference("app_language"));
+
+        bindPreferenceSummaryToValue(findPreference(Constants.KEY_TEMP_UNIT));
+        bindPreferenceSummaryToValue(findPreference(Constants.KEY_PRESS_UNIT));
+        bindPreferenceSummaryToValue(findPreference(Constants.KEY_WS_UNIT));
+        bindPreferenceSummaryToValue(findPreference(Constants.KEY_LANG));
 
         Preference button = (Preference)findPreference(getString(R.string.app_logout));
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
