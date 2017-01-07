@@ -39,6 +39,7 @@ public class DataReadingMapper implements IListableMapper<DataReading>
             main = new JSONObject(json);
 
             int id        = main.getInt("id");
+            int device    = main.getInt("deviceID");
             int timestamp = main.getInt("timestamp");
 
             double rainfall = main.getDouble("rainfall");
@@ -70,7 +71,7 @@ public class DataReadingMapper implements IListableMapper<DataReading>
             temperature[2] = main.getInt("soilTemperatureThree");
             temperature[3] = main.getInt("soilTemperatureFour");
 
-            return new DataReading(id, timestamp, rainfall, air, wind, new Soil(moisture, temperature));
+            return new DataReading(id, device, timestamp, rainfall, air, wind, new Soil(moisture, temperature));
         }
         catch(JSONException e)
         {
