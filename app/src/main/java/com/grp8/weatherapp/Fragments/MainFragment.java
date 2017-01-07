@@ -38,14 +38,12 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private ListView list;
     private View mainFrag;
-    private ProgressBar spinner;
     private TextView spinnerText;
 
     private FrameLayout searchFrame;
     private RelativeLayout spinnerFrame;
 
     private boolean searchIsVisible;
-
     private long delay = 5000;
 
 
@@ -54,9 +52,17 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
 
         spinnerFrame = (RelativeLayout) mainFrag.findViewById(R.id.spinner_layout);
-        spinner = (ProgressBar) mainFrag.findViewById(R.id.spinner);
         spinnerText = (TextView) mainFrag.findViewById(R.id.spinner_text);
+        searchFrame = (FrameLayout) mainFrag.findViewById(R.id.searchFrame);
+        searchFrame.setVisibility(FrameLayout.GONE);
+        searchIsVisible = false;
 
+        load();
+
+        return mainFrag;
+    }
+
+    public void load() {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -65,12 +71,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         }, delay);
 
         updateLoadingText();
-
-        searchFrame = (FrameLayout) mainFrag.findViewById(R.id.searchFrame);
-        searchFrame.setVisibility(FrameLayout.GONE);
-        searchIsVisible = false;
-
-        return mainFrag;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         }
     }
 
-    public void updateList() {
+    private void updateList() {
         spinnerFrame.setVisibility(RelativeLayout.GONE);
 
         if (list == null) {

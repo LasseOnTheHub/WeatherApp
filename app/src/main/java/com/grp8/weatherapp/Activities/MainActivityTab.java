@@ -81,6 +81,7 @@ public class MainActivityTab extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refresh_menu:
                 Log.d("Refresh","...");
+                mainFrag.load();
                 break;
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
