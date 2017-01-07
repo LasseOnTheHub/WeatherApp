@@ -7,5 +7,8 @@ public class Constants {
     public static final String KEY_USERID = "userid";
     public static final String KEY_WEATHERSTATIONARR = "weatherStationArray";
     public static final String KEY_SELECTED_STATION = "selected_station";
-    public static final String[] SETTINGS = {"Temperature","Pressure","Wind speed","Language"};
+    public static final String KEY_TEMP_UNIT = "temp_unit";
+    public static final String KEY_PRESS_UNIT = "pressure_unit";
+    public static final String KEY_WS_UNIT = "windspeed_unit";
+    public static final String KEY_LANG = "app_language";
 }

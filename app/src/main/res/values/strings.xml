@@ -10,7 +10,7 @@
     <string name="wind_speed">Wind speed</string>
     <string name="air_pressure">Air pressure</string>
     <string name="action_settings">Settings</string>
-    <string name="outdated_content">Content may be outdated</string>
+    <string name="outdated_content">Old</string>
 
     <string name="searchHint">Search...</string>
     <string name="loadingText">Loading stations</string>
@@ -34,6 +34,11 @@
     <string-array name="temp_options_titles">
         <item>Celsius</item>
         <item>Fahrenheit</item>
+    </string-array>
+
+    <string-array name="temp_options_values">
+        <item>°C</item>
+        <item>°F</item>
     </string-array>
 
     <string name="pressure">Pressure unit</string>
