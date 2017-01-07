@@ -47,12 +47,14 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory>
-
+    <PreferenceCategory
+        android:title="Account">
+        <!--Logout -->
         <Preference
-            android:title="Sign out">
-        </Preference>
-
+            android:title="@string/logout_button"
+            android:summary="@string/app_logout"
+            android:key="@string/app_logout"
+        />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
@@ -25,6 +27,9 @@ public class MainActivityTab extends AppCompatActivity {
     private ViewPager mViewPager;
     private MainFragment mainFrag;
     private MapViewFragment mapViewFragment;
+    private static final int TIME_INTERVAL = 3000; // // milliseconds, time passed between two back presses.
+    private long backPressed;
+    private Toast exitToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +95,9 @@ public class MainActivityTab extends AppCompatActivity {
                 mViewPager.setCurrentItem(0);
                 ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
                 break;
+            case R.id.logout_menu:
+                //TODO
+                break;
             case android.R.id.home:
                 finish();
                 break;
@@ -129,4 +137,18 @@ public class MainActivityTab extends AppCompatActivity {
             return position == 0 ? getString(R.string.ListTab) : getString(R.string.MapTab);
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        exitToast = Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT);
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            super.onBackPressed();
+            return;
+        }
+        else { exitToast.show(); }
+        backPressed = System.currentTimeMillis();
+    }
+
 }

@@ -20,10 +20,20 @@ public class SettingsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_weatherapp);
+
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_TEMP_UNIT));
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_PRESS_UNIT));
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_WS_UNIT));
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_LANG));
+
+        Preference button = (Preference)findPreference(getString(R.string.app_logout));
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                //TODO
+                return true;
+            }
+        });
     }
 
     @Override
