@@ -95,7 +95,8 @@ public class WeatherStationsAdapter extends BaseAdapter {
     }
 
     private boolean isOldContent(Date date) {
-        return false;
+        Date threshold = new Date(System.currentTimeMillis()-1800000);
+        return date.compareTo(threshold) == 0 || date.compareTo(threshold) == 1;
     }
 
     @Override
