@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import static android.view.View.VISIBLE;
 
@@ -55,7 +56,9 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         searchFrame.setVisibility(FrameLayout.GONE);
         searchIsVisible = false;
 
-        load();
+        if (!Utils.isEmulator()) {
+            load();
+        }
 
         return mainFrag;
     }
@@ -70,6 +73,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         if (list.getVisibility() == View.VISIBLE) {
             list.setVisibility(View.GONE);
             spinnerFrame.setVisibility(RelativeLayout.VISIBLE);
+            spinnerText.setText(R.string.loadingText);
         }
 
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -78,8 +82,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
                 updateList();
             }
         }, delay);
-
-        updateLoadingText();
     }
 
     @Override
@@ -94,28 +96,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         spinnerFrame.setVisibility(RelativeLayout.GONE);
         list.setVisibility(View.VISIBLE);
         list.setAdapter(new WeatherStationsAdapter(getActivity()));
-    }
-
-    private void updateLoadingText() {
-        Handler handler = new Handler();
-
-        for (long i = 0; i < delay; i += 1000) {
-            final long timer = i;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (timer == 0) {
-                        spinnerText.setText(R.string.loadingText);
-                    } else if (timer % 3000 == 1000) {
-                        spinnerText.setText(R.string.loadingText1);
-                    } else if (timer % 3000 == 2000) {
-                        spinnerText.setText(R.string.loadingText2);
-                    } else if (timer % 3000 == 0) {
-                        spinnerText.setText(R.string.loadingText3);
-                    }
-                }
-            }, i);
-        }
     }
 
     @Override

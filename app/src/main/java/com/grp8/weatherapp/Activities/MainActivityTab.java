@@ -25,11 +25,8 @@ public class MainActivityTab extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private MainFragment mainFrag;
-    private MapViewFragment mapViewFragment;
     private static final int TIME_INTERVAL = 3000; // // milliseconds, time passed between two back presses.
     private long backPressed;
-    private Toast exitToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +43,8 @@ public class MainActivityTab extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == 1) {
-                    if (mainFrag.isSearchVisible()) {
-                        mainFrag.toggleSearch(true);
+                    if (((MainFragment) mSectionsPagerAdapter.getItem(0)).isSearchVisible()) {
+                        ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
                     }
                 }
             }
@@ -66,12 +63,6 @@ public class MainActivityTab extends AppCompatActivity {
     private void setupActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         getSupportActionBar().setTitle(R.string.title_mainActivity);
     }
 
@@ -86,7 +77,7 @@ public class MainActivityTab extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refresh_menu:
                 Log.d("Refresh","...");
-                mainFrag.load();
+                ((MainFragment) mSectionsPagerAdapter.getItem(0)).load();
                 break;
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
@@ -97,9 +88,6 @@ public class MainActivityTab extends AppCompatActivity {
                 break;
             case R.id.logout_menu:
                 //TODO
-                break;
-            case android.R.id.home:
-                finish();
                 break;
             default: break;
         }
@@ -114,17 +102,7 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
-                if (mainFrag == null) {
-                    mainFrag = new MainFragment();
-                }
-                return mainFrag;
-            } else {
-                if (mapViewFragment == null) {
-                    mapViewFragment = new MapViewFragment();
-                }
-                return mapViewFragment;
-            }
+            return position == 0 ? new MainFragment() : new MapViewFragment();
         }
 
         @Override
@@ -141,13 +119,12 @@ public class MainActivityTab extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        exitToast = Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT);
-        if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
-        {
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()) {
             super.onBackPressed();
             return;
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT).show();
         }
-        else { exitToast.show(); }
         backPressed = System.currentTimeMillis();
     }
 

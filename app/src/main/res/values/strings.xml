@@ -17,10 +17,7 @@
     <string name="outdated_content">Old</string>
 
     <string name="searchHint">Search...</string>
-    <string name="loadingText">Loading stations</string>
-    <string name="loadingText1">Loading stations .</string>
-    <string name="loadingText2">Loading stations . .</string>
-    <string name="loadingText3">Loading stations . . .</string>
+    <string name="loadingText">Loading stations...</string>
 
     <!-- Activity titles -->
     <string name="title_mainActivity">Stations</string>
