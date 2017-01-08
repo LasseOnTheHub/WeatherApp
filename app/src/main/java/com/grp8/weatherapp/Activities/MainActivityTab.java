@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.MapView;
 import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
@@ -25,11 +26,8 @@ public class MainActivityTab extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private MainFragment mainFrag;
-    private MapViewFragment mapViewFragment;
     private static final int TIME_INTERVAL = 3000; // // milliseconds, time passed between two back presses.
     private long backPressed;
-    private Toast exitToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +44,9 @@ public class MainActivityTab extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == 1) {
-                    if (mainFrag.isSearchVisible()) {
-                        mainFrag.toggleSearch(true);
+
+                    if (getMainFragment().isSearchVisible()) {
+                        getMainFragment().toggleSearch(true);
                     }
                 }
             }
@@ -66,12 +65,6 @@ public class MainActivityTab extends AppCompatActivity {
     private void setupActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         getSupportActionBar().setTitle(R.string.title_mainActivity);
     }
 
@@ -86,24 +79,42 @@ public class MainActivityTab extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refresh_menu:
                 Log.d("Refresh","...");
-                mainFrag.load();
+                getMainFragment().load();
+                // getMapFragment.update();
                 break;
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
             case R.id.search_menu:
                 mViewPager.setCurrentItem(0);
-                ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
+                getMainFragment().toggleSearch(true);
                 break;
             case R.id.logout_menu:
                 //TODO
                 break;
-            case android.R.id.home:
-                finish();
-                break;
             default: break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT).show();
+        }
+        backPressed = System.currentTimeMillis();
+    }
+
+    private MainFragment getMainFragment() {
+        return (MainFragment) getSupportFragmentManager().getFragments().get(0);
+    }
+
+    private MapViewFragment getMapFragment() {
+        return (MapViewFragment) getSupportFragmentManager().getFragments().get(0);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -114,17 +125,7 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
-                if (mainFrag == null) {
-                    mainFrag = new MainFragment();
-                }
-                return mainFrag;
-            } else {
-                if (mapViewFragment == null) {
-                    mapViewFragment = new MapViewFragment();
-                }
-                return mapViewFragment;
-            }
+            return position == 0 ? new MainFragment() : new MapViewFragment();
         }
 
         @Override
@@ -138,17 +139,5 @@ public class MainActivityTab extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        exitToast = Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT);
-        if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
-        {
-            super.onBackPressed();
-            return;
-        }
-        else { exitToast.show(); }
-        backPressed = System.currentTimeMillis();
-    }
 
 }

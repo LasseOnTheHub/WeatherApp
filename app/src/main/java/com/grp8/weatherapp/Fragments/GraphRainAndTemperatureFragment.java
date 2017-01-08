@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.Legend;
@@ -36,11 +39,16 @@ public class GraphRainAndTemperatureFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_graph_temperature_and_rain, container, false);
+        //View view = inflater.inflate(R.layout.fragment_graph_temperature_and_rain, container, false);
 
-        super.onCreate(savedInstanceState);
+        //Generere et layout og sætter grafen til at fylde hele RelativeLayout
+        RelativeLayout view = new RelativeLayout(getActivity());
+        ViewGroup.LayoutParams lpView = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mChart = new CombinedChart(getActivity());
+        mChart.setLayoutParams(lpView);
+        view.addView(mChart);
+
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
-        mChart = (CombinedChart) view.findViewById(R.id.chart1);
         mChart.getDescription().setEnabled(false);
         mChart.setBackgroundColor(Color.WHITE);
         mChart.setDrawGridBackground(false);
@@ -72,7 +80,7 @@ public class GraphRainAndTemperatureFragment extends Fragment {
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setAxisMinimum(0f);
-        xAxis.setGranularity(1f);
+        xAxis.setGranularity(0f);
         xAxis.setValueFormatter(new DayAxisValueFormatter(mChart));
 
         CombinedData data = new CombinedData();

@@ -15,8 +15,8 @@ public class DataRepositoryFactoryTest
     @Test
     public void canCreateAndRetainInstance() throws Exception
     {
-        DataRepository first  = DataRepositoryFactory.build();
-        DataRepository second = DataRepositoryFactory.build();
+        DataRepository first  = DataRepositoryFactory.build(null);
+        DataRepository second = DataRepositoryFactory.build(null);
 
         assertEquals(first, second);
     }

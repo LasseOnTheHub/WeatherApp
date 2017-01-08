@@ -28,7 +28,7 @@ public class DataReadingMapperTest
 
         String payload = "{\"id\":1,\"timestamp\":946684800,\"rfaddress\":1,\"rainfall\":0.0,\"relativeAirHumidity\":10,\"windDirection\":0,\"windSpeed\":0.0,\"lux\":0.0,\"airTemp\":10,\"deviceID\":1,\"airPressure\":1000,\"soilMoistureOne\":0,\"soilMoistureTwo\":0,\"soilMoistureThree\":0,\"soilMoistureFour\":0,\"soilTemperatureOne\":0,\"soilTemperatureTwo\":0,\"soilTemperatureThree\":0,\"soilTemperatureFour\":0,\"leafWetness\":0}";
 
-        DataReading expected = new DataReading(1, 946684800, 0.0, new Air(1000, 10, 10), new Wind(0.0, 0), new Soil(new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}));
+        DataReading expected = new DataReading(1, 1, 946684800, 0.0, new Air(1000, 10, 10), new Wind(0.0, 0), new Soil(new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}));
         DataReading result   = mapper.map(payload);
 
         assertEquals(expected.getID(),        result.getID());

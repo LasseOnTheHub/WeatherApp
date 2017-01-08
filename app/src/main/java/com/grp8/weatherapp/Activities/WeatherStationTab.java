@@ -8,19 +8,25 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 
+import com.grp8.weatherapp.Fragments.GraphEarthAndAirMoist;
+import com.grp8.weatherapp.Fragments.GraphLuxFragment;
+import com.grp8.weatherapp.Fragments.GraphPressureFragment;
 import com.grp8.weatherapp.Fragments.GraphRainAndTemperatureFragment;
-import com.grp8.weatherapp.Fragments.StationDetailsAirFragment;
-import com.grp8.weatherapp.Fragments.StationDetailsRainFragment;
 import com.grp8.weatherapp.Fragments.StationOverviewFragment;
 import com.grp8.weatherapp.R;
 
 public class WeatherStationTab extends AppCompatActivity
 {
+    private StationOverviewFragment stationOverviewFragment;
+
+    private GraphEarthAndAirMoist           earthAndAirMoist;
+    private GraphLuxFragment                luxFragment;
+    private GraphPressureFragment           pressureFragment;
+    private GraphRainAndTemperatureFragment rainAndTemperatureFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -30,6 +36,7 @@ public class WeatherStationTab extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,17 +74,16 @@ public class WeatherStationTab extends AppCompatActivity
         @Override
         public Fragment getItem(int position)
         {
-            Log.d("getting item",String.valueOf(position));
             switch(position)
             {
                 case 0:
-                    return new StationOverviewFragment();
+                    return stationOverviewFragment = new StationOverviewFragment();
                 case 1:
-                    return new GraphRainAndTemperatureFragment();
+                    return rainAndTemperatureFragment = new GraphRainAndTemperatureFragment();
                 case 2:
-                    return new StationDetailsAirFragment();
+                    return earthAndAirMoist = new GraphEarthAndAirMoist();
                 case 3:
-                    return new StationDetailsRainFragment();
+                    return luxFragment = new GraphLuxFragment();
                 default:
                     return null;
             }

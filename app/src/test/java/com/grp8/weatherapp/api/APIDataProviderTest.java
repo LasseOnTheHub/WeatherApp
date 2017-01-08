@@ -8,10 +8,9 @@ import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
+/*
  * Created by Thomas on 03-Jan-17.
  */
-
 public class APIDataProviderTest
 {
     @Test
