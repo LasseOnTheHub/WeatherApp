@@ -11,7 +11,7 @@ public class MMAxisValueFormatter implements IAxisValueFormatter
     private DecimalFormat mFormat;
 
     public MMAxisValueFormatter() {
-        mFormat = new DecimalFormat("###,###,###,###.#");
+        mFormat = new DecimalFormat("###.#");
     }
 
     @Override

@@ -11,10 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.grp8.weatherapp.Fragments.GraphEarthAndAirMoist;
+import com.grp8.weatherapp.Fragments.GraphLuxFragment;
+import com.grp8.weatherapp.Fragments.GraphPressureFragment;
 import com.grp8.weatherapp.Fragments.GraphRainAndTemperatureFragment;
-import com.grp8.weatherapp.Fragments.StationDetailsAirFragment;
-import com.grp8.weatherapp.Fragments.StationDetailsRainFragment;
-import com.grp8.weatherapp.Fragments.StationDetailsTemperatureFragment;
 import com.grp8.weatherapp.Fragments.StationOverviewFragment;
 import com.grp8.weatherapp.R;
 
@@ -22,10 +22,10 @@ public class WeatherStationTab extends AppCompatActivity
 {
     private StationOverviewFragment stationOverviewFragment;
 
-    private StationDetailsAirFragment         airFragment;
-    private StationDetailsRainFragment        rainFragment;
-    private StationDetailsTemperatureFragment temperatureFragment;
-    private GraphRainAndTemperatureFragment temperatureGraphFragment;
+    private GraphEarthAndAirMoist           earthAndAirMoist;
+    private GraphLuxFragment                luxFragment;
+    private GraphPressureFragment           pressureFragment;
+    private GraphRainAndTemperatureFragment rainAndTemperatureFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -79,11 +79,11 @@ public class WeatherStationTab extends AppCompatActivity
                 case 0:
                     return stationOverviewFragment = new StationOverviewFragment();
                 case 1:
-                    return temperatureGraphFragment = new GraphRainAndTemperatureFragment();
+                    return rainAndTemperatureFragment = new GraphRainAndTemperatureFragment();
                 case 2:
-                    return airFragment = new StationDetailsAirFragment();
+                    return earthAndAirMoist = new GraphEarthAndAirMoist();
                 case 3:
-                    return rainFragment = new StationDetailsRainFragment();
+                    return luxFragment = new GraphLuxFragment();
                 default:
                     return null;
             }
