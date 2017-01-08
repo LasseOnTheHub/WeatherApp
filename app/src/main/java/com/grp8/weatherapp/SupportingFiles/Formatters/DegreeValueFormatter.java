@@ -12,7 +12,7 @@ public class DegreeValueFormatter implements IValueFormatter
     private DecimalFormat mFormat;
 
     public DegreeValueFormatter() {
-        mFormat = new DecimalFormat("#####0.0");
+        mFormat = new DecimalFormat("###.#");
     }
 
     @Override

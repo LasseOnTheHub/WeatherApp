@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.grp8.weatherapp.Fragments.GraphEarthAndAirMoist;
 import com.grp8.weatherapp.Fragments.GraphRainAndTemperatureFragment;
 import com.grp8.weatherapp.Fragments.StationDetailsAirFragment;
 import com.grp8.weatherapp.Fragments.StationDetailsRainFragment;
@@ -22,7 +23,7 @@ public class WeatherStationTab extends AppCompatActivity
 {
     private StationOverviewFragment stationOverviewFragment;
 
-    private StationDetailsAirFragment         airFragment;
+    private GraphEarthAndAirMoist         airFragment;
     private StationDetailsRainFragment        rainFragment;
     private StationDetailsTemperatureFragment temperatureFragment;
     private GraphRainAndTemperatureFragment temperatureGraphFragment;
@@ -81,7 +82,7 @@ public class WeatherStationTab extends AppCompatActivity
                 case 1:
                     return temperatureGraphFragment = new GraphRainAndTemperatureFragment();
                 case 2:
-                    return airFragment = new StationDetailsAirFragment();
+                    return airFragment = new GraphEarthAndAirMoist();
                 case 3:
                     return rainFragment = new StationDetailsRainFragment();
                 default:

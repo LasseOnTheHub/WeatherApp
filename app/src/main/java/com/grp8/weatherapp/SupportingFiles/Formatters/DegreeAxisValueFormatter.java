@@ -11,7 +11,7 @@ public class DegreeAxisValueFormatter implements IAxisValueFormatter
     private DecimalFormat mFormat;
 
     public DegreeAxisValueFormatter() {
-        mFormat = new DecimalFormat("###,###,###,###.#");
+        mFormat = new DecimalFormat("###.#");
     }
 
     @Override
