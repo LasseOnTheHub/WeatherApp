@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.grp8.weatherapp.BussinessLogic.Authorizer;
+import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.SupportingFiles.Utils;
@@ -65,6 +66,7 @@ public class LogonActivity extends AppCompatActivity {
                 Intent intent = new Intent(LogonActivity.this,MainActivityTab.class);
                 intent.putExtra(Constants.KEY_USERID,userId);
                 startActivity(intent);
+                SettingsManager.setupSettings(getApplicationContext());
                 finish();
 
             } else {
