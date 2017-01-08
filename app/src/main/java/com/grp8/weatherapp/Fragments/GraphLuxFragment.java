@@ -13,7 +13,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -73,16 +72,16 @@ public class GraphLuxFragment extends Fragment{
     private void setData() {
 
         ArrayList<Entry> luxVals = new ArrayList<Entry>();
-        luxVals.add(new Entry(1,6));
-        luxVals.add(new Entry(2,8));
-        luxVals.add(new Entry(2,9));
-        luxVals.add(new Entry(3,10));
-        luxVals.add(new Entry(4,10));
-        luxVals.add(new Entry(5,5));
-        luxVals.add(new Entry(6,-0));
-        luxVals.add(new Entry(7,-5));
-        luxVals.add(new Entry(8,-5));
-        luxVals.add(new Entry(9,0));
+        luxVals.add(new Entry(1,10));
+        luxVals.add(new Entry(2,20));
+        luxVals.add(new Entry(2,30));
+        luxVals.add(new Entry(3,40));
+        luxVals.add(new Entry(4,0));
+        luxVals.add(new Entry(5,-10));
+        luxVals.add(new Entry(6,20));
+        luxVals.add(new Entry(7,5));
+        luxVals.add(new Entry(8,10));
+        luxVals.add(new Entry(9,20));
 
         LineDataSet set1;
 
@@ -99,7 +98,7 @@ public class GraphLuxFragment extends Fragment{
             set1.setCubicIntensity(0.1f);
             set1.setDrawCircles(true);
 
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            //set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
             set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);
