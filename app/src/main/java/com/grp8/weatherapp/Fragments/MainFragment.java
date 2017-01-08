@@ -36,7 +36,6 @@ import static android.view.View.VISIBLE;
 public class MainFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView list;
-    private View mainFrag;
     private TextView spinnerText;
 
     private FrameLayout searchFrame;
@@ -44,20 +43,31 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private boolean searchIsVisible;
     private long delay = 5000;
+    private static int count = 0;
+
+    public MainFragment() {
+        super();
+        count++;
+        Log.d("New instance created","Count is: "+String.valueOf(count));
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
+        View mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
 
         spinnerFrame = (RelativeLayout) mainFrag.findViewById(R.id.spinner_layout);
         spinnerText = (TextView) mainFrag.findViewById(R.id.spinner_text);
         searchFrame = (FrameLayout) mainFrag.findViewById(R.id.searchFrame);
         searchFrame.setVisibility(FrameLayout.GONE);
         searchIsVisible = false;
+        list = (ListView) mainFrag.findViewById(R.id.stationlist);
+        list.setOnItemClickListener(this);
 
         if (!Utils.isEmulator()) {
             load();
+        } else {
+            updateList();
         }
 
         return mainFrag;
@@ -66,7 +76,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     public void load() {
 
         if (list == null) {
-            list = (ListView) mainFrag.findViewById(R.id.stationlist);
+            list = (ListView) getView().findViewById(R.id.stationlist);
             list.setOnItemClickListener(this);
         }
 

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.MapView;
 import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
@@ -43,8 +44,9 @@ public class MainActivityTab extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == 1) {
-                    if (((MainFragment) mSectionsPagerAdapter.getItem(0)).isSearchVisible()) {
-                        ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
+
+                    if (getMainFragment().isSearchVisible()) {
+                        getMainFragment().toggleSearch(true);
                     }
                 }
             }
@@ -77,14 +79,15 @@ public class MainActivityTab extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refresh_menu:
                 Log.d("Refresh","...");
-                ((MainFragment) mSectionsPagerAdapter.getItem(0)).load();
+                getMainFragment().load();
+                // getMapFragment.update();
                 break;
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
             case R.id.search_menu:
                 mViewPager.setCurrentItem(0);
-                ((MainFragment) mSectionsPagerAdapter.getItem(0)).toggleSearch(true);
+                getMainFragment().toggleSearch(true);
                 break;
             case R.id.logout_menu:
                 //TODO
@@ -92,6 +95,26 @@ public class MainActivityTab extends AppCompatActivity {
             default: break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT).show();
+        }
+        backPressed = System.currentTimeMillis();
+    }
+
+    private MainFragment getMainFragment() {
+        return (MainFragment) getSupportFragmentManager().getFragments().get(0);
+    }
+
+    private MapViewFragment getMapFragment() {
+        return (MapViewFragment) getSupportFragmentManager().getFragments().get(0);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -116,16 +139,5 @@ public class MainActivityTab extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()) {
-            super.onBackPressed();
-            return;
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT).show();
-        }
-        backPressed = System.currentTimeMillis();
-    }
 
 }
