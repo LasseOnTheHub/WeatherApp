@@ -43,13 +43,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private boolean searchIsVisible;
     private long delay = 5000;
-    private static int count = 0;
-
-    public MainFragment() {
-        super();
-        count++;
-        Log.d("New instance created","Count is: "+String.valueOf(count));
-    }
 
 
     @Override
