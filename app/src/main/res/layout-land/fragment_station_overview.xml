@@ -11,187 +11,200 @@
     android:background="#FFFFFF"
     tools:context="com.grp8.weatherapp.Activities.StationOverviewActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/firstLayout"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/relativeLayout">
-
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/secondView"
+        android:orientation="vertical">
         <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/WeatherWindow"
-            android:src="@mipmap/mockup"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </RelativeLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/relativeLayout"
-        android:fillViewport="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentBottom="true">
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:clickable="true"
-        android:focusable="true"
-        android:id="@+id/tableLayoutt">
-
-        <TableRow
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:layout_height="100dp"
+            android:id="@+id/WeatherWindow"
+            android:src="@mipmap/mockup" />
+    </LinearLayout>
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/TempIcon"
-                android:src="@drawable/temperature"/>
+    <View
+        android:id="@+id/secondView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/temperature"
-                android:layout_marginLeft="15dp"
-                android:id="@+id/TempText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:layout_marginLeft="30dp"
-                android:id="@+id/temp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:src="@drawable/wind"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/wind_speed"
-                android:layout_marginLeft="15dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:layout_marginLeft="30dp"
-                android:id="@+id/windSpeed" />
-        </TableRow>
-
-        <TableRow
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:src="@drawable/air_pressure"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/air_pressure"
-                android:layout_marginLeft="15dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:layout_marginLeft="30dp"
-                android:id="@+id/airP" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
+    <LinearLayout
+        android:id="@+id/thirdLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/secondView"
+        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_weight="0.75">
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:visibility="visible"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/tableLayoutt">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/HumidityIcon"
-                android:src="@drawable/humidity"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/humidity"
-                android:layout_marginLeft="15dp"
-                android:id="@+id/HumidityText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:layout_marginLeft="30dp"
-                android:id="@+id/humidity" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
+            <TableRow
+                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/UpdateIcon"
-                android:src="@drawable/clock" />
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/TempIcon"
+                    android:src="@drawable/temperature"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/temperature"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/TempText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/temp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/wind"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/wind_speed"
+                    android:layout_marginLeft="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/windSpeed" />
+            </TableRow>
+
+            <TableRow
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/air_pressure"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/air_pressure"
+                    android:layout_marginLeft="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/airP" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/last_updated"
-                android:layout_marginLeft="15dp"
-                android:id="@+id/UpdateText" />
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/HumidityIcon"
+                    android:src="@drawable/humidity"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/humidity"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/HumidityText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/humidity" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:layout_marginLeft="30dp"
-                android:id="@+id/updated" />
+                android:gravity="center">
 
-        </TableRow>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/UpdateIcon"
+                    android:src="@drawable/clock" />
 
-    </TableLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/last_updated"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/UpdateText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/updated" />
+
+            </TableRow>
+
+        </TableLayout>
     </ScrollView>
+
+    </LinearLayout>
+
+
+
+
 </RelativeLayout>
