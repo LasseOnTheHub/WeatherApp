@@ -114,7 +114,7 @@ public class MainActivityTab extends AppCompatActivity {
     }
 
     private MapViewFragment getMapFragment() {
-        return (MapViewFragment) getSupportFragmentManager().getFragments().get(0);
+        return (MapViewFragment) getSupportFragmentManager().getFragments().get(1);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
