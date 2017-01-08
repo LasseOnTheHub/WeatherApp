@@ -52,7 +52,7 @@
                 android:layout_below="@id/spinner"
                 android:layout_marginTop="10dp"
                 android:layout_centerHorizontal="true"
-                android:text="@string/loadingText1"/>
+                android:text="@string/loadingText"/>
 
         </RelativeLayout>
 
