@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.grp8.weatherapp.Fragments.GraphRainAndTemperatureFragment;
 import com.grp8.weatherapp.Fragments.StationDetailsAirFragment;
@@ -20,13 +21,6 @@ import com.grp8.weatherapp.R;
 
 public class WeatherStationTab extends AppCompatActivity
 {
-    private StationOverviewFragment stationOverviewFragment;
-
-    private StationDetailsAirFragment         airFragment;
-    private StationDetailsRainFragment        rainFragment;
-    private GraphRainAndTemperatureFragment temperatureGraphFragment;
-    private View datepicker;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -47,29 +41,9 @@ public class WeatherStationTab extends AppCompatActivity
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d("Position",String.valueOf(position));
-                Log.d("Position offset",String.valueOf(positionOffset));
-                Log.d("PositionOffsetPixels",String.valueOf(positionOffsetPixels));
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-        datepicker = findViewById(R.id.datepicker);
     }
 
     @Override
@@ -97,25 +71,13 @@ public class WeatherStationTab extends AppCompatActivity
             switch(position)
             {
                 case 0:
-                    if (stationOverviewFragment == null) {
-                        stationOverviewFragment = new StationOverviewFragment();
-                    }
-                    return stationOverviewFragment;
+                    return new StationOverviewFragment();
                 case 1:
-                    if (temperatureGraphFragment == null) {
-                        temperatureGraphFragment = new GraphRainAndTemperatureFragment();
-                    }
-                    return temperatureGraphFragment;
+                    return new GraphRainAndTemperatureFragment();
                 case 2:
-                    if (airFragment == null) {
-                        airFragment = new StationDetailsAirFragment();
-                    }
-                    return airFragment;
+                    return new StationDetailsAirFragment();
                 case 3:
-                    if (rainFragment == null) {
-                        rainFragment = new StationDetailsRainFragment();
-                    }
-                    return rainFragment;
+                    return new StationDetailsRainFragment();
                 default:
                     return null;
             }
@@ -143,18 +105,6 @@ public class WeatherStationTab extends AppCompatActivity
                 default:
                     return "?";
             }
-        }
-    }
-
-    public void showDatePicker() {
-        if (datepicker != null) {
-            datepicker.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void hideDatePicker() {
-        if (datepicker != null) {
-            datepicker.setVisibility(View.GONE);
         }
     }
 }
