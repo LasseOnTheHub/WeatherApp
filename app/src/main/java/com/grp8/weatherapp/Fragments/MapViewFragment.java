@@ -16,8 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.SupportingFiles.Constants;
-import com.grp8.weatherapp.Activities.StationOverviewActivity;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;
@@ -81,7 +81,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
                             //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), StationOverviewActivity.class);
+                            Intent intent = new Intent(getActivity(), WeatherStationTab.class);
                             intent.putExtra(Constants.KEY_USERID, w.getID());
                             startActivity(intent);
                         }
