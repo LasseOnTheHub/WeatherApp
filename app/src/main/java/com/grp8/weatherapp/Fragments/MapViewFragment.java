@@ -16,6 +16,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.Activities.StationOverviewActivity;
 import com.grp8.weatherapp.R;
@@ -32,12 +35,16 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
     MapView mMapView;
     private GoogleMap googleMap;
     WeatherStations weatherStations;
+    DataRepository dataRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_overview, container, false);
 
         weatherStations = WeatherStations.getInstance();
+        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
+        dataRepository.setUser(5);
+
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -71,9 +78,9 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
 
                 ArrayList<Marker> markers = new ArrayList<>();
 
-                for (final WeatherStation w : weatherStations.getWeatherStations()) {
+                for (final Station w : dataRepository.getStations()) {
                     LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getNotes()));
                     markers.add(marker);
 
                     googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -82,7 +89,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
                         public void onInfoWindowClick(Marker marker) {
                             //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getActivity(), StationOverviewActivity.class);
-                            intent.putExtra(Constants.KEY_USERID, w.getID());
+                            intent.putExtra(Constants.KEY_USERID, w.getId());
                             startActivity(intent);
                         }
                     });
