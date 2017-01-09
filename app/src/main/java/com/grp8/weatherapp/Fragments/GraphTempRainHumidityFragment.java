@@ -31,6 +31,7 @@ import com.grp8.weatherapp.SupportingFiles.Formatters.MMAxisValueFormatter;
 import com.grp8.weatherapp.SupportingFiles.Formatters.MMValueFormatter;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by lbirk on 08-01-2017.
@@ -219,7 +220,7 @@ public class GraphTempRainHumidityFragment extends Fragment {
             set1.setValueFormatter(new PercentFormatter());
 
             // create a dataset and give it a type
-            set2 = new LineDataSet(airVals, "Luftfugtighed 2");
+            set2 = new LineDataSet(airVals, "Luftfugtighed");
             set2.setAxisDependency(YAxis.AxisDependency.RIGHT);
             set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set2.setCubicIntensity(0.1f);
@@ -249,7 +250,19 @@ public class GraphTempRainHumidityFragment extends Fragment {
 
         ArrayList<Entry> tempVals = new ArrayList<Entry>();
 
-        tempVals.add(new Entry(1,6));
+        Random r = new Random();
+        int low = 15;
+        int high = 25;
+
+        for (int i=1;i<50;i++)
+        {
+            if(i<30)
+            tempVals.add(new Entry(i,i));
+            else
+                tempVals.add(new Entry(i,50-i));
+        }
+
+/*        tempVals.add(new Entry(1,6));
         tempVals.add(new Entry(2,8));
         tempVals.add(new Entry(2,9));
         tempVals.add(new Entry(3,10));
@@ -258,7 +271,7 @@ public class GraphTempRainHumidityFragment extends Fragment {
         tempVals.add(new Entry(6,-0));
         tempVals.add(new Entry(7,-5));
         tempVals.add(new Entry(8,-5));
-        tempVals.add(new Entry(9,0));
+        tempVals.add(new Entry(9,0));*/
 
 /*        tempVals.add(new Entry(1451660400,6));
         tempVals.add(new Entry(1451685600,8));
@@ -290,8 +303,8 @@ public class GraphTempRainHumidityFragment extends Fragment {
 
         ArrayList<BarEntry> rainVals = new ArrayList<BarEntry>();
 
-        rainVals.add(new BarEntry(1,1.2f));
-        rainVals.add(new BarEntry(2,1.0f));
+        rainVals.add(new BarEntry(1f,1.2f));
+        rainVals.add(new BarEntry(2f,1.0f));
         rainVals.add(new BarEntry(2f,2.0f));
         rainVals.add(new BarEntry(2f,3.0f));
         rainVals.add(new BarEntry(3f,0.5f));
