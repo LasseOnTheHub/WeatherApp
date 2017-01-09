@@ -26,9 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.MainActivityTab" />
-        <activity android:name=".Activities.StationOverviewActivity" />
-        <activity android:name=".Activities.StationDetailsActivity" />
-        <activity android:name=".Activities.HistoryActivity" />
+        <activity android:name=".Activities.Deprecated.StationDetailsActivity" />
         <activity android:name=".Activities.SettingsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -12,6 +12,10 @@ import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,7 +57,12 @@ public class DataRepository
 
     public boolean authorize(int id)
     {
-        return id == 5;
+        if(id == 5)
+        {
+            this.setUser(id);
+            return true;
+        }
+        return false;
     }
 
     public void test()
@@ -115,8 +124,17 @@ public class DataRepository
         {
             String payload;
 
-            payload  = this.provider.fetch(new APIStationRequest(this.user));
-            stations = this.stationMapper.map(this.split(payload));
+            payload = this.provider.fetch(new APIStationRequest(this.user));
+
+            try
+            {
+                stations = this.stationMapper.map(new JSONArray(payload));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
 
             for(Station station : stations)
             {
@@ -143,7 +161,7 @@ public class DataRepository
 
         if(this.stations.containsKey(id))
         {
-            this.stations.get(id);
+            return this.stations.get(id);
         }
 
         Station station = StationDatabaseHelper.fetch(this.database, id);
@@ -153,7 +171,16 @@ public class DataRepository
             String payload;
 
             payload = this.provider.fetch(new APIStationRequest(this.user, id));
-            station = this.stationMapper.map(payload);
+
+            try
+            {
+                station = this.stationMapper.map(new JSONObject(payload));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
 
             this.stations.put(station.getId(), station);
             StationDatabaseHelper.add(this.database, station);
@@ -226,7 +253,15 @@ public class DataRepository
                 counter++;
             }
 
-            reading = (DataReading) this.readingMapper.map(this.split(payload));
+            try
+            {
+                reading = this.readingMapper.map(new JSONObject(payload));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         return reading;
@@ -272,14 +307,24 @@ public class DataRepository
 
         if(results.size() < 1)
         {
-            String   payload;
-            String[] items;
+            String    payload;
+            JSONArray items;
 
             payload = this.provider.fetch(new APIDataReadingRequest(this.user, station, start, end));
-            items   = this.split(payload);
-            results = this.readingMapper.map(items);
 
-            if(items.length != results.size())
+            try
+            {
+                items   = new JSONArray(payload);
+                results = this.readingMapper.map(items);
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+
+                return new ArrayList<>();
+            }
+
+            if(items.length() != results.size())
             {
                 throw new RuntimeException("Cannot cache data readings due to mismatch in collection item count");
             }
@@ -295,7 +340,14 @@ public class DataRepository
 
                 this.readings.get(station).add(result);
 
-                DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items[index]);
+                try
+                {
+                    DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items.getString(index));
+                }
+                catch(JSONException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
 

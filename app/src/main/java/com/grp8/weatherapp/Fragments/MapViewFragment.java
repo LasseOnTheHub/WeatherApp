@@ -1,8 +1,6 @@
 package com.grp8.weatherapp.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +16,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.Activities.WeatherStationTab;
+
 import com.grp8.weatherapp.SupportingFiles.Constants;
-import com.grp8.weatherapp.Activities.StationOverviewActivity;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by lasse on 11/21/16.
@@ -38,14 +36,12 @@ import java.util.Objects;
 public class MapViewFragment extends android.support.v4.app.Fragment {
     MapView mMapView;
     private GoogleMap googleMap;
-    WeatherStations weatherStations;
     DataRepository dataRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_overview, container, false);
 
-        weatherStations = WeatherStations.getInstance();
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
         dataRepository.setUser(5);
 
@@ -131,6 +127,35 @@ catch (Exception e)
     e.printStackTrace();
 }
 
+
+                for (final WeatherStation w : weatherStations.getWeatherStations()) {
+                    LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
+                    markers.add(marker);
+
+                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), WeatherStationTab.class);
+                            intent.putExtra(Constants.KEY_USERID, w.getID());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (Marker marker : markers) {
+                    builder.include(marker.getPosition());
+                }
+                LatLngBounds bounds = builder.build();
+
+                int padding = 200; // offset from edges of the map in pixels
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                //googleMap.animateCamera(cu);
+                googleMap.moveCamera(cu);
+>>>>>>>>> Temporary merge branch 2
             }
         });
 

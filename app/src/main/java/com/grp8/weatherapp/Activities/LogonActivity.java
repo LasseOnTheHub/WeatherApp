@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.grp8.weatherapp.BussinessLogic.Authorizer;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Constants;
@@ -57,7 +58,7 @@ public class LogonActivity extends AppCompatActivity {
         {
             String userId = userIDEditText.getText().toString();
             int userIdInt = Integer.parseInt(userId);
-            if (authroizer.Authorize(userIdInt)) {
+            if (DataRepositoryFactory.build(getApplicationContext()).authorize(userIdInt)) {
                 Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                 if (!Utils.isEmulator()) {
                     logUser(userId);
