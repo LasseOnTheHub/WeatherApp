@@ -1,6 +1,8 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,8 @@ import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by lasse on 11/21/16.
@@ -58,7 +62,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap mMap) {
+            public void onMapReady(final GoogleMap mMap) {
                 googleMap = mMap;
 
 
@@ -75,36 +79,58 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
                 //  return;
                 //}
                 //googleMap.setMyLocationEnabled(true);
+try {
+    new AsyncTask() {
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            try {
+                return dataRepository.getStations();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
 
-                ArrayList<Marker> markers = new ArrayList<>();
+        @Override
+        protected void onPostExecute(Object s) {
+            if (s == null)
+                return;
+            ArrayList<Marker> markers = new ArrayList<>();
+            for (final Station w : (List<Station>) s) {
+                LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
+                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getNotes()));
+                markers.add(marker);
 
-                for (final Station w : dataRepository.getStations()) {
-                    LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getNotes()));
-                    markers.add(marker);
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
-                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), StationOverviewActivity.class);
+                        intent.putExtra(Constants.KEY_USERID, w.getId());
+                        startActivity(intent);
+                    }
+                });
+            }
 
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
-                            //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), StationOverviewActivity.class);
-                            intent.putExtra(Constants.KEY_USERID, w.getId());
-                            startActivity(intent);
-                        }
-                    });
-                }
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (Marker marker : markers) {
+                builder.include(marker.getPosition());
+            }
+            LatLngBounds bounds = builder.build();
 
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                for (Marker marker : markers) {
-                    builder.include(marker.getPosition());
-                }
-                LatLngBounds bounds = builder.build();
+            int padding = 200; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            //googleMap.animateCamera(cu);
+            googleMap.moveCamera(cu);
+        }
+    }.execute();
+}
+catch (Exception e)
+{
+    e.printStackTrace();
+}
 
-                int padding = 200; // offset from edges of the map in pixels
-                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                //googleMap.animateCamera(cu);
-                googleMap.moveCamera(cu);
             }
         });
 
@@ -135,3 +161,4 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
         mMapView.onLowMemory();
     }
 }
+
