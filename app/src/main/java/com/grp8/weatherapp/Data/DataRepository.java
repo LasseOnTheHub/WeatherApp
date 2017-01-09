@@ -11,6 +11,7 @@ import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.SupportingFiles.Environment;
 import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import org.json.JSONArray;
@@ -64,20 +65,6 @@ public class DataRepository
             return true;
         }
         return false;
-    }
-
-    public void test()
-    {
-        Station station = StationDatabaseHelper.fetch(this.database, 2);
-
-        if(station == null)
-        {
-            System.out.println("No station with the specified id");
-        }
-        else
-        {
-            System.out.println(station.getId());
-        }
     }
 
     /**
@@ -202,6 +189,11 @@ public class DataRepository
             throw new RuntimeException("Missing user ID.");
         }
 
+        if(Utils.isEmulator())
+        {
+            System.out.println("[API DEBUG]: Attempting to fetch latest data reading from station: " + station);
+        }
+
         if(!this.readings.isEmpty() && this.readings.containsKey(station))
         {
             List<DataReading> collection = this.readings.get(station);
@@ -230,6 +222,11 @@ public class DataRepository
             return current;
         }
 
+        if(Utils.isEmulator())
+        {
+            System.out.println("[API DEBUG]: Couldn't find matching data reading in object cache. Trying local database");
+        }
+
         DataReading reading = DataReadingDatabaseHelper.latest(this.database, this.readingMapper, station);
 
         if(reading == null)
@@ -241,7 +238,7 @@ public class DataRepository
 
             APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
 
-            int ceiling = 3;
+            int ceiling = Environment.API_MAXIMUM_NUMBER_OF_RETRIES;
             int counter = 0;
 
             String    payload;
