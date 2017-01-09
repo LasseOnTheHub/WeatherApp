@@ -97,18 +97,6 @@ public class MainActivityTab extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()) {
-            super.onBackPressed();
-            return;
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT).show();
-        }
-        backPressed = System.currentTimeMillis();
-    }
-
     private MainFragment getMainFragment() {
         return (MainFragment) getSupportFragmentManager().getFragments().get(0);
     }
@@ -150,7 +138,7 @@ public class MainActivityTab extends AppCompatActivity {
             startActivity(homeIntent);
             return;
         }
-        else { Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT);.show(); }
+        else { Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT).show(); }
         backPressed = System.currentTimeMillis();
     }
 
