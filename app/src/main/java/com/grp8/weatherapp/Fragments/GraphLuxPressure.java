@@ -63,6 +63,8 @@ public class GraphLuxPressure extends Fragment {
         //Definere tryk's Y-akse
         YAxis PressureYLeftAxis = pressureChart.getAxisLeft();
         PressureYLeftAxis.setTypeface(mTfLight);
+        pressureChart.getAxisRight().setDrawLabels(false);
+        pressureChart.getAxisRight().setDrawGridLines(false);
         PressureYLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
         PressureYLeftAxis.setAxisMaximum(100);
         PressureYLeftAxis.setAxisMinimum(0f);
@@ -96,6 +98,8 @@ public class GraphLuxPressure extends Fragment {
 
         //Definere lux's Y-akse
         YAxis luxLeftAxis = luxChart.getAxisLeft();
+        luxChart.getAxisRight().setDrawLabels(false);
+        luxChart.getAxisRight().setDrawGridLines(false);
         luxLeftAxis.setTypeface(mTfLight);
         luxLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
         luxLeftAxis.setAxisMaximum(100);
