@@ -1,10 +1,15 @@
 package com.grp8.weatherapp.Data.API;
 
+import android.util.Log;
+
+import com.grp8.weatherapp.Data.API.Exceptions.APIException;
+import com.grp8.weatherapp.Data.API.Exceptions.APINetworkException;
 import com.grp8.weatherapp.Data.API.Requests.APIRequest;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.URL;
 
 /**
@@ -12,6 +17,8 @@ import java.net.URL;
  */
 public class APIDataProvider implements IDataProvider
 {
+    private final static String TAG = "APIDataProvider";
+
     public String fetch(APIRequest request)
     {
         HttpURLConnection connection;
@@ -24,11 +31,11 @@ public class APIDataProvider implements IDataProvider
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
-            System.out.println("[API DEBUG]: Sending GET request to: " + url.toString());
+            Log.d(TAG, "[API DEBUG]: Sending GET request to: " + url.toString());
 
             int responseCode = connection.getResponseCode();
 
-            System.out.println("[API DEBUG]: Response code: " + responseCode);
+            Log.d(TAG, "Response code: " + responseCode);
 
             if(responseCode != 200)
             {
@@ -45,6 +52,10 @@ public class APIDataProvider implements IDataProvider
             }
 
             reader.close();
+        }
+        catch(SocketException ex)
+        {
+            throw new APINetworkException(ex);
         }
         catch(Exception ex)
         {

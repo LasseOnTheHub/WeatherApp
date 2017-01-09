@@ -1,5 +1,7 @@
 package com.grp8.weatherapp.Data.API.Requests;
 
+import android.util.Log;
+
 import com.grp8.weatherapp.SupportingFiles.Environment;
 import com.grp8.weatherapp.SupportingFiles.Utils;
 
@@ -53,7 +55,7 @@ public class APIDataReadingRequest extends APIRequest
 
         if(Utils.isEmulator())
         {
-            System.out.println("[API DEBUG]: Increasing backwards reading interval to: -" + this.backwardsReadingDateInterval + " hours");
+            Log.d(TAG, "Increasing backwards reading interval to: -" + this.backwardsReadingDateInterval + " hours");
         }
 
         Calendar cal = Calendar.getInstance();

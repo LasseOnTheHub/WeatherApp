@@ -7,7 +7,7 @@ import com.grp8.weatherapp.Data.Database.Database;
 import com.grp8.weatherapp.Data.Mappers.DataReadingMapper;
 import com.grp8.weatherapp.Data.Mappers.StationMapper;
 
-/**
+/*
  * Created by t_bit on 05-01-2017.
  */
 public class DataRepositoryFactory
@@ -18,7 +18,7 @@ public class DataRepositoryFactory
     {
         if(instance == null)
         {
-            instance = new DataRepository(new APIDataProvider(), new Database(appContext), new StationMapper(), new DataReadingMapper());
+            instance = new DataRepository(new APIDataProvider(), new Database(appContext), new StationMapper(), new DataReadingMapper(), appContext);
         }
 
         return instance;

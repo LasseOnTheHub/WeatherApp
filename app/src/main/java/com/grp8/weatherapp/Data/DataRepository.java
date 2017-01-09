@@ -1,5 +1,9 @@
 package com.grp8.weatherapp.Data;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.grp8.weatherapp.Data.API.Exceptions.APINetworkException;
 import com.grp8.weatherapp.Data.API.Requests.APIDataReadingRequest;
 import com.grp8.weatherapp.Data.API.Requests.APIStationRequest;
 import com.grp8.weatherapp.Data.API.IDataProvider;
@@ -29,6 +33,8 @@ import java.util.Map;
  */
 public class DataRepository
 {
+    private final static String TAG = "DataRepository";
+
     private int user;
 
     private IListableMapper<Station>     stationMapper;
@@ -40,16 +46,20 @@ public class DataRepository
     private Map<Integer, Station>           stations = new HashMap<>();
     private Map<Integer, List<DataReading>> readings = new HashMap<>();
 
+    private Context context;
+
     /*
      * Constructor is made package-local
      */
-    DataRepository(IDataProvider provider, Database database, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper)
+    DataRepository(IDataProvider provider, Database database, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper, Context context)
     {
         this.provider = provider;
         this.database = database;
 
         this.stationMapper = stationMapper;
         this.readingMapper = readingMapper;
+
+        this.context = context;
     }
 
     public void setUser(int user)
@@ -110,6 +120,18 @@ public class DataRepository
 
         if(stations.size() < 1)
         {
+            Log.d(TAG, "Fetching weather stations from remote API");
+
+            if(!Utils.isNetworkAvailable(this.context))
+            {
+                if(Utils.isEmulator())
+                {
+                    Log.e(TAG, "Cannot access remote API", new APINetworkException());
+                }
+
+                return null;
+            }
+
             String payload;
 
             payload = this.provider.fetch(new APIStationRequest(this.user));
@@ -191,7 +213,7 @@ public class DataRepository
 
         if(Utils.isEmulator())
         {
-            System.out.println("[API DEBUG]: Attempting to fetch latest data reading from station: " + station);
+            Log.d(TAG, "Attempting to fetch latest data reading from station: " + station);
         }
 
         if(!this.readings.isEmpty() && this.readings.containsKey(station))
@@ -224,7 +246,7 @@ public class DataRepository
 
         if(Utils.isEmulator())
         {
-            System.out.println("[API DEBUG]: Couldn't find matching data reading in object cache. Trying local database");
+            Log.d(TAG, "Couldn't find matching data reading in object cache. Trying local database");
         }
 
         DataReading reading = DataReadingDatabaseHelper.latest(this.database, this.readingMapper, station);
@@ -233,7 +255,17 @@ public class DataRepository
         {
             if(Utils.isEmulator())
             {
-                System.out.println("[API DEBUG]: Couldn't find matching data reading in local database. Trying remote API");
+                Log.d(TAG, "Couldn't find matching data reading in local database. Trying remote API");
+            }
+
+            if(!Utils.isNetworkAvailable(this.context))
+            {
+                if(Utils.isEmulator())
+                {
+                    Log.e(TAG, "Cannot access remote API", new APINetworkException());
+                }
+
+                return null;
             }
 
             APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
@@ -263,7 +295,7 @@ public class DataRepository
                     break;
                 }
 
-                System.out.println("[API DEBUG]: No data returned");
+                Log.d(TAG, "No data returned");
 
                 request.increaseBackwardsReadingDateInterval();
                 counter++;
@@ -273,7 +305,7 @@ public class DataRepository
             {
                 if(Utils.isEmulator())
                 {
-                    System.out.println("[API DEBUG]: Reached maximum number of incremental retries. Returning null");
+                    Log.w(TAG, "Reached maximum number of incremental retries. Returning null");
                 }
 
                 return null;

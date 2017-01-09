@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Data.API;
+package com.grp8.weatherapp.Data.API.Exceptions;
 
 /**
  * Created by Thomas on 03-Jan-17.
