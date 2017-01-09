@@ -11,6 +11,7 @@ import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -233,29 +234,57 @@ public class DataRepository
 
         if(reading == null)
         {
+            if(Utils.isEmulator())
+            {
+                System.out.println("[API DEBUG]: Couldn't find matching data reading in local database. Trying remote API");
+            }
+
             APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
 
             int ceiling = 3;
             int counter = 0;
 
-            String payload = "[]";
+            String    payload;
+            JSONArray json = null;
 
-            while(payload.equals("[]") && counter < ceiling)
+            while(counter < ceiling)
             {
                 payload = this.provider.fetch(request);
 
-                if(!payload.equals("[]"))
+                try
+                {
+                    json = new JSONArray(payload);
+                }
+                catch(JSONException e)
+                {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                if(json.length() > 0)
                 {
                     break;
                 }
+
+                System.out.println("[API DEBUG]: No data returned");
 
                 request.increaseBackwardsReadingDateInterval();
                 counter++;
             }
 
+            if(counter == ceiling || json == null)
+            {
+                if(Utils.isEmulator())
+                {
+                    System.out.println("[API DEBUG]: Reached maximum number of incremental retries. Returning null");
+                }
+
+                return null;
+            }
+
             try
             {
-                reading = this.readingMapper.map(new JSONObject(payload));
+                reading = this.readingMapper.map(json.getJSONObject(0));
             }
             catch(JSONException e)
             {
@@ -352,30 +381,5 @@ public class DataRepository
         }
 
         return results;
-    }
-
-    /**
-     * Splits a JSON payload into separate array elements.
-     *
-     * @param payload A JSON payload
-     */
-    private String[] split(String payload)
-    {
-        if(payload.length() < 1)
-        {
-            return new String[0];
-        }
-
-        String[] elements = payload.substring(1, payload.length() - 1).split(",\\{$");
-
-        for(int index = 0; index < elements.length; index++)
-        {
-            if(!elements[index].substring(0, 1).equals("{"))
-            {
-                elements[index] = "{" + elements[index];
-            }
-        }
-
-        return elements;
     }
 }

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.grp8.weatherapp.Data.Database.tables.StationsTable;
 import com.grp8.weatherapp.Data.Database.tables.ReadingsTable;
+import com.grp8.weatherapp.SupportingFiles.Utils;
 
 /*
  * Created by Thomas on 07-Jan-17.
@@ -31,6 +32,12 @@ public class Database extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase database)
     {
         System.out.println("Creating SQLite database " + DATABASE_NAME + ", version: " + DATABASE_VERSION);
+
+        if(Utils.isEmulator())
+        {
+            System.out.println(StationsTable.CREATE_QUERY);
+            System.out.println(ReadingsTable.CREATE_QUERY);
+        }
 
         database.execSQL(StationsTable.CREATE_QUERY);
         database.execSQL(ReadingsTable.CREATE_QUERY);

@@ -49,6 +49,8 @@ public class APIDataReadingRequest extends APIRequest
          */
         this.backwardsReadingDateInterval = (this.backwardsReadingDateInterval * 2);
 
+        System.out.println("[API DEBUG]: Increasing backwards reading interval to: -" + this.backwardsReadingDateInterval + " hours");
+
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, -this.backwardsReadingDateInterval);
 
