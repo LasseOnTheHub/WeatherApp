@@ -1,10 +1,13 @@
 package com.grp8.weatherapp.Data.Mappers;
 
+import android.text.TextUtils;
+
 import com.grp8.weatherapp.Entities.Data.Air;
 import com.grp8.weatherapp.Entities.Data.Soil;
 import com.grp8.weatherapp.Entities.Data.Wind;
 import com.grp8.weatherapp.Entities.DataReading;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,40 +22,73 @@ public class DataReadingMapper implements IListableMapper<DataReading>
     @Override
     public List<DataReading> map(String[] collection)
     {
+        try
+        {
+            return this.map(new JSONArray(TextUtils.join(",", collection)));
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    @Override
+    public DataReading map(String json)
+    {
+        try
+        {
+            return this.map(new JSONObject(json));
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    @Override
+    public List<DataReading> map(JSONArray collection)
+    {
         List<DataReading> results = new ArrayList<>();
 
-        for(String item : collection)
+        for(int index = 0; index < collection.length(); index++)
         {
-            results.add(this.map(item));
+            try
+            {
+                results.add(this.map(collection.getJSONObject(index)));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return results;
     }
 
     @Override
-    public DataReading map(String json)
+    public DataReading map(JSONObject json)
     {
-        JSONObject main;
-
         try
         {
-            main = new JSONObject(json);
+            int id        = json.getInt("id");
+            int device    = json.getInt("deviceID");
+            int timestamp = json.getInt("timestamp");
 
-            int id        = main.getInt("id");
-            int device    = main.getInt("deviceID");
-            int timestamp = main.getInt("timestamp");
-
-            double rainfall = main.getDouble("rainfall");
+            double rainfall = json.getDouble("rainfall");
 
             Air air = new Air(
-                main.getInt("airPressure"),
-                main.getInt("relativeAirHumidity"),
-                main.getDouble("airTemp")
+                json.getInt("airPressure"),
+                json.getInt("relativeAirHumidity"),
+                json.getDouble("airTemp")
             );
 
             Wind wind = new Wind(
-                main.getDouble("windSpeed"),
-                main.getInt("windDirection")
+                json.getDouble("windSpeed"),
+                json.getInt("windDirection")
             );
 
             /*
@@ -61,15 +97,15 @@ public class DataReadingMapper implements IListableMapper<DataReading>
             int[] moisture    = new int[4];
             int[] temperature = new int[4];
 
-            moisture[0] = main.getInt("soilMoistureOne");
-            moisture[1] = main.getInt("soilMoistureTwo");
-            moisture[2] = main.getInt("soilMoistureThree");
-            moisture[3] = main.getInt("soilMoistureFour");
+            moisture[0] = json.getInt("soilMoistureOne");
+            moisture[1] = json.getInt("soilMoistureTwo");
+            moisture[2] = json.getInt("soilMoistureThree");
+            moisture[3] = json.getInt("soilMoistureFour");
 
-            temperature[0] = main.getInt("soilTemperatureOne");
-            temperature[1] = main.getInt("soilTemperatureTwo");
-            temperature[2] = main.getInt("soilTemperatureThree");
-            temperature[3] = main.getInt("soilTemperatureFour");
+            temperature[0] = json.getInt("soilTemperatureOne");
+            temperature[1] = json.getInt("soilTemperatureTwo");
+            temperature[2] = json.getInt("soilTemperatureThree");
+            temperature[3] = json.getInt("soilTemperatureFour");
 
             return new DataReading(id, device, timestamp, rainfall, air, wind, new Soil(moisture, temperature));
         }
