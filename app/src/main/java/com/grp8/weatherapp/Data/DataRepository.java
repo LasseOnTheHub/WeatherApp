@@ -361,6 +361,11 @@ public class DataRepository
      */
     private String[] split(String payload)
     {
+        if(payload.length() < 1)
+        {
+            return new String[0];
+        }
+
         String[] elements = payload.substring(1, payload.length() - 1).split(",\\{$");
 
         for(int index = 0; index < elements.length; index++)
