@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Fragments;
+package com.grp8.weatherapp.Skrald;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
