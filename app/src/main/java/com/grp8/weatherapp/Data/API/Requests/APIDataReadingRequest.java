@@ -1,13 +1,15 @@
 package com.grp8.weatherapp.Data.API.Requests;
 
+import com.grp8.weatherapp.SupportingFiles.Environment;
+import com.grp8.weatherapp.SupportingFiles.Utils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
+/*
  * Created by Thomas on 03-Jan-17.
  */
-
 public class APIDataReadingRequest extends APIRequest
 {
     private int backwardsReadingDateInterval = 1;
@@ -15,8 +17,8 @@ public class APIDataReadingRequest extends APIRequest
     /**
      * Fetches the latest data reading from the specified station
      *
-     * @param userID
-     * @param stationID
+     * @param userID    CLAFIS user ID
+     * @param stationID CLAFIS station ID
      */
     public APIDataReadingRequest(int userID, int stationID)
     {
@@ -27,10 +29,10 @@ public class APIDataReadingRequest extends APIRequest
      * Fetches all data readings from the specified station within the
      * specified date range.
      *
-     * @param userID
-     * @param stationID
-     * @param start
-     * @param end
+     * @param userID    CLAFIS user ID
+     * @param stationID CLAFIS station ID
+     * @param start     Start date of date range
+     * @param end       End date of date range
      */
     public APIDataReadingRequest(int userID, int stationID, Date start, Date end)
     {
@@ -47,9 +49,12 @@ public class APIDataReadingRequest extends APIRequest
         /*
          * This assumes the starting interval was -1 hour when called for the first time.
          */
-        this.backwardsReadingDateInterval = (this.backwardsReadingDateInterval * 2);
+        this.backwardsReadingDateInterval = (this.backwardsReadingDateInterval * Environment.API_RETRY_MULTIPLICATION_FACTOR);
 
-        System.out.println("[API DEBUG]: Increasing backwards reading interval to: -" + this.backwardsReadingDateInterval + " hours");
+        if(Utils.isEmulator())
+        {
+            System.out.println("[API DEBUG]: Increasing backwards reading interval to: -" + this.backwardsReadingDateInterval + " hours");
+        }
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, -this.backwardsReadingDateInterval);
