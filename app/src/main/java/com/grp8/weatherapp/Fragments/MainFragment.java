@@ -24,8 +24,12 @@ import android.widget.TextView;
 
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Utils;
+
+import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 import static android.view.View.VISIBLE;
 
@@ -55,6 +59,23 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         searchFrame.setVisibility(FrameLayout.GONE);
         searchIsVisible = false;
         list = (ListView) mainFrag.findViewById(R.id.stationlist);
+        DataRepositoryFactory.build(getActivity().getApplicationContext()).setUser(5);
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object... arg0) {
+                try {
+                    DataRepositoryFactory.build(getActivity().getApplicationContext()).getStations();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                    return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object result) {
+                updateList();
+            }
+        }.execute();
         list.setOnItemClickListener(this);
 
         if (!Utils.isEmulator()) {
@@ -78,13 +99,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
             spinnerFrame.setVisibility(RelativeLayout.VISIBLE);
             spinnerText.setText(R.string.loadingText);
         }
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateList();
-            }
-        }, delay);
     }
 
     @Override
@@ -98,7 +112,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     private void updateList() {
         spinnerFrame.setVisibility(RelativeLayout.GONE);
         list.setVisibility(View.VISIBLE);
-        list.setAdapter(new WeatherStationsAdapter(getActivity()));
+        list.setAdapter(new WeatherStationsAdapter(getActivity(), list));
     }
 
     @Override
