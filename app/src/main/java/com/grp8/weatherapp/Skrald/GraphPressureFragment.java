@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Fragments;
+package com.grp8.weatherapp.Skrald;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,9 +13,11 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.grp8.weatherapp.SupportingFiles.Formatters.DayAxisValueFormatter;
 
@@ -25,7 +27,7 @@ import java.util.ArrayList;
  * Created by lbirk on 07-01-2017.
  */
 
-public class GraphLuxFragment extends Fragment{
+public class GraphPressureFragment extends Fragment{
     private LineChart mChart;
     Typeface mTfLight;
 
@@ -71,34 +73,34 @@ public class GraphLuxFragment extends Fragment{
 
     private void setData() {
 
-        ArrayList<Entry> luxVals = new ArrayList<Entry>();
-        luxVals.add(new Entry(1,10));
-        luxVals.add(new Entry(2,20));
-        luxVals.add(new Entry(2,30));
-        luxVals.add(new Entry(3,40));
-        luxVals.add(new Entry(4,0));
-        luxVals.add(new Entry(5,-10));
-        luxVals.add(new Entry(6,20));
-        luxVals.add(new Entry(7,5));
-        luxVals.add(new Entry(8,10));
-        luxVals.add(new Entry(9,20));
+        ArrayList<Entry> pressureVals = new ArrayList<Entry>();
+        pressureVals.add(new Entry(1,6));
+        pressureVals.add(new Entry(2,8));
+        pressureVals.add(new Entry(2,9));
+        pressureVals.add(new Entry(3,10));
+        pressureVals.add(new Entry(4,10));
+        pressureVals.add(new Entry(5,5));
+        pressureVals.add(new Entry(6,-0));
+        pressureVals.add(new Entry(7,-5));
+        pressureVals.add(new Entry(8,-5));
+        pressureVals.add(new Entry(9,0));
 
         LineDataSet set1;
 
         if (mChart.getData() != null &&
                 mChart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
-            set1.setValues(luxVals);
+            set1.setValues(pressureVals);
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(luxVals, "Lux");
+            set1 = new LineDataSet(pressureVals, "Tryk");
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set1.setCubicIntensity(0.1f);
             set1.setDrawCircles(true);
 
-            //set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
             set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);

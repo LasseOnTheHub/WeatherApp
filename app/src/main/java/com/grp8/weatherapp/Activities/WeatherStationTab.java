@@ -11,21 +11,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.grp8.weatherapp.Fragments.GraphEarthAndAirMoist;
-import com.grp8.weatherapp.Fragments.GraphLuxFragment;
-import com.grp8.weatherapp.Fragments.GraphPressureFragment;
-import com.grp8.weatherapp.Fragments.GraphRainAndTemperatureFragment;
+
+import com.grp8.weatherapp.Fragments.GraphLuxPressure;
+import com.grp8.weatherapp.Fragments.GraphTempRainHumidityFragment;
 import com.grp8.weatherapp.Fragments.StationOverviewFragment;
 import com.grp8.weatherapp.R;
 
-public class WeatherStationTab extends AppCompatActivity
+public class    WeatherStationTab extends AppCompatActivity
 {
     private StationOverviewFragment stationOverviewFragment;
 
-    private GraphEarthAndAirMoist           earthAndAirMoist;
-    private GraphLuxFragment                luxFragment;
-    private GraphPressureFragment           pressureFragment;
-    private GraphRainAndTemperatureFragment rainAndTemperatureFragment;
+    private GraphLuxPressure                luxPressureFragment;
+    private GraphTempRainHumidityFragment   tempRainHumidityFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -81,11 +78,9 @@ public class WeatherStationTab extends AppCompatActivity
                 case 0:
                     return stationOverviewFragment = new StationOverviewFragment();
                 case 1:
-                    return rainAndTemperatureFragment = new GraphRainAndTemperatureFragment();
+                    return tempRainHumidityFragment = new GraphTempRainHumidityFragment();
                 case 2:
-                    return earthAndAirMoist = new GraphEarthAndAirMoist();
-                case 3:
-                    return luxFragment = new GraphLuxFragment();
+                    return luxPressureFragment = new GraphLuxPressure();
                 default:
                     return null;
             }
@@ -94,7 +89,7 @@ public class WeatherStationTab extends AppCompatActivity
         @Override
         public int getCount()
         {
-            return 4;
+            return 3;
         }
 
         @Override
@@ -105,11 +100,9 @@ public class WeatherStationTab extends AppCompatActivity
                 case 0 :
                     return "Overview";
                 case 1 :
-                    return "Temp";
+                    return "Temp+Rain";
                 case 2 :
-                    return "Air";
-                case 3 :
-                    return "Rain";
+                    return "Pressure+Lux";
                 default:
                     return "?";
             }

@@ -17,10 +17,7 @@
     <string name="outdated_content">Old</string>
 
     <string name="searchHint">Search...</string>
-    <string name="loadingText">Loading stations</string>
-    <string name="loadingText1">Loading stations .</string>
-    <string name="loadingText2">Loading stations . .</string>
-    <string name="loadingText3">Loading stations . . .</string>
+    <string name="loadingText">Loading stations...</string>
 
     <!-- Activity titles -->
     <string name="title_mainActivity">Stations</string>
@@ -61,11 +58,18 @@
         <item>kilometers/hour</item>
         <item>miles/hour</item>
     </string-array>
+    <string-array name="windspeed_values">
+        <item>m/s</item>
+        <item>m/h</item>
+        <item>km/s</item>
+        <item>km/h</item>
+        <item>mph</item>
+    </string-array>
 
     <string name="langauge">Language</string>
     <string-array name="language_options">
-        <item>Danish</item>
         <item>English</item>
+        <item>Danish</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
