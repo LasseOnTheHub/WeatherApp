@@ -140,6 +140,8 @@ public class GraphTempRainHumidityFragment extends Fragment {
         //Definere fugtigheds venstre Y-akses udseende
         YAxis HumidityYleftAxis = humidityChart.getAxisLeft();
         HumidityYleftAxis.setTypeface(mTfLight);
+        humidityChart.getAxisRight().setDrawLabels(false);
+        humidityChart.getAxisRight().setDrawGridLines(false);
         HumidityYleftAxis.setTextColor(ColorTemplate.getHoloBlue());
         HumidityYleftAxis.setAxisMaximum(100);
         HumidityYleftAxis.setAxisMinimum(0f);
