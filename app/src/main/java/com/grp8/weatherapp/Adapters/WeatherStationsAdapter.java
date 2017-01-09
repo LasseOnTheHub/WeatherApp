@@ -1,16 +1,20 @@
 package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
@@ -29,15 +33,13 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private Activity activity;
-    private int id;
-    private int count;
-    private Station item;
+    private ListView list;
 
-    public WeatherStationsAdapter(Activity activity) {
+    public WeatherStationsAdapter(Activity activity, ListView list) {
         super();
         inflater = activity.getLayoutInflater();
         this.activity = activity;
-        DataRepositoryFactory.build(activity.getApplicationContext()).setUser(5);
+        this.list = list;
     }
 
     private static class ViewHolder {
@@ -45,12 +47,37 @@ public class WeatherStationsAdapter extends BaseAdapter {
         TextView timeLabel;
         TextView tempLabel;
         LinearLayout oldContent;
+        ProgressBar tempSpinner;
+        ProgressBar timeSpinner;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
-        Station station = (Station) getItem(position);
+        final Station station = (Station) getItem(position);
+
+        if (station != null) {
+            new AsyncTask() {
+                private int id;
+                @Override
+                protected Object doInBackground(Object... arg0) {
+                    try {
+                        id = position;
+                        return DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+                    if (result != null) {
+                        updateListItem(position, (DataReading) result);
+                    }
+                }
+            }.execute();
+        }
 
         ViewHolder viewHolder;
 
@@ -61,6 +88,8 @@ public class WeatherStationsAdapter extends BaseAdapter {
             viewHolder.timeLabel = (TextView) convertView.findViewById(R.id.time_label);
             viewHolder.tempLabel = (TextView) convertView.findViewById(R.id.temp_label);
             viewHolder.oldContent = (LinearLayout) convertView.findViewById(R.id.old_content);
+            viewHolder.tempSpinner = (ProgressBar) convertView.findViewById(R.id.spinner_temp);
+            viewHolder.timeSpinner = (ProgressBar) convertView.findViewById(R.id.spinner_time);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -74,18 +103,30 @@ public class WeatherStationsAdapter extends BaseAdapter {
         if (position % 2 == 0) {
             Date date = new Date(System.currentTimeMillis()-2760000);
             viewHolder.timeLabel.setText(formatDate(date));
-            viewHolder.oldContent.setVisibility(LinearLayout.VISIBLE);
+            if (isOldContent(date)) {
+                viewHolder.oldContent.setVisibility(LinearLayout.VISIBLE);
+            }
         } else {
             Date date = new Date();
             viewHolder.timeLabel.setText(formatDate(date));
             viewHolder.oldContent.setVisibility(LinearLayout.GONE);
         }
 
-        String tempUnit = SettingsManager.getTempUnit(activity.getApplicationContext());
-        String temp = /*String.valueOf(station.getWeatherData().getAirTemp())+*/tempUnit;
-        viewHolder.tempLabel.setText(temp);
-
         return convertView;
+    }
+
+    private void updateListItem(int index, DataReading reading) {
+        View element = list.getChildAt(index);
+        if (element != null) {
+            ViewHolder viewHolder = (ViewHolder) element.getTag();
+            viewHolder.tempSpinner.setVisibility(View.GONE);
+            viewHolder.timeSpinner.setVisibility(View.GONE);
+            viewHolder.timeLabel.setVisibility(View.VISIBLE);
+            viewHolder.tempLabel.setVisibility(View.VISIBLE);
+            String temp = String.valueOf(reading.getAirReadings().getTemperature()) + SettingsManager.getTempUnit(activity.getApplicationContext());
+            viewHolder.tempLabel.setText(temp);
+            viewHolder.timeLabel.setText(formatDate(reading.getTimestamp()));
+        }
     }
 
     private String formatDate(Date date) {
@@ -113,71 +154,17 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(final int position) {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... arg0) {
-                try {
-                    return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position).getId();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Object result) {
-                if (result != null) {
-                    id = (int) result;
-                }
-            }
-        }.execute();
-        return id;
+        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position).getId();
     }
 
     @Override
     public int getCount() {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... arg0) {
-                try {
-                    return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().size();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Object result) {
-                if (result != null) {
-                    count = (int) result;
-                }
-            }
-        }.execute();
-        return count;
+        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().size();
     }
 
     @Override
     public Object getItem(final int position) {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... arg0) {
-                try {
-                    return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Object result) {
-                if (result != null) {
-                    item = (Station) result;
-                }
-            }
-        }.execute();
-        return item;
+        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position);
     }
 
 }
