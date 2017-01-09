@@ -38,14 +38,12 @@ import java.util.Objects;
 public class MapViewFragment extends android.support.v4.app.Fragment {
     MapView mMapView;
     private GoogleMap googleMap;
-    WeatherStations weatherStations;
     DataRepository dataRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_overview, container, false);
-
-        weatherStations = WeatherStations.getInstance();
+        
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
         dataRepository.setUser(5);
 
