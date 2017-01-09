@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Activities;
+package com.grp8.weatherapp.Activities.Deprecated;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

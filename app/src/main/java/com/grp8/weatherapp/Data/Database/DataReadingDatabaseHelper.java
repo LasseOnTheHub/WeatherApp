@@ -7,6 +7,10 @@ import com.grp8.weatherapp.Data.Database.tables.ReadingsTable;
 import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Entities.DataReading;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +56,15 @@ public class DataReadingDatabaseHelper
 
         String json = cursor.getString(ReadingsTable.COLUMN_POSITION_JSON);
 
-        return mapper.map(json);
+        try
+        {
+            return mapper.map(new JSONObject(json));
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -76,7 +88,16 @@ public class DataReadingDatabaseHelper
 
         String json = cursor.getString(ReadingsTable.COLUMN_POSITION_JSON);
 
-        return mapper.map(json);
+        try
+        {
+            return mapper.map(new JSONObject(json));
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 
     /**
@@ -147,16 +168,27 @@ public class DataReadingDatabaseHelper
             return new ArrayList<>();
         }
 
-        String[] results = new String[size];
+        String results = "[";
 
         for(int index = 0; index < size; index++)
         {
             cursor.moveToNext();
-            results[index] = cursor.getString(ReadingsTable.COLUMN_POSITION_JSON);
+            results += cursor.getString(ReadingsTable.COLUMN_POSITION_JSON);
         }
 
         cursor.close();
 
-        return mapper.map(results);
+        results += "]";
+
+        try
+        {
+            return mapper.map(new JSONArray(results));
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+
+            return new ArrayList<>();
+        }
     }
 }

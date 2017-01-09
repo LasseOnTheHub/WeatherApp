@@ -1,5 +1,8 @@
 package com.grp8.weatherapp.Data.Mappers;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /*
@@ -7,6 +10,8 @@ import java.util.List;
  */
 public interface IListableMapper<T>
 {
+    public List<T> map(String[] collection); // FIXME: Remove before release
+
     /**
      * Maps multiple instances of the specified type into a list.
      *
@@ -14,7 +19,9 @@ public interface IListableMapper<T>
      *
      * @return A list of instances of the specified type.
      */
-    public List<T> map(String[] collection);
+    public List<T> map(JSONArray collection);
+
+    public T map(String json); // FIXME: Remove before release
 
     /**
      * Maps a single instance of the specified type.
@@ -23,5 +30,5 @@ public interface IListableMapper<T>
      *
      * @return An instance of the specified type.
      */
-    public T map(String json);
+    public T map(JSONObject json);
 }
