@@ -139,5 +139,19 @@ public class MainActivityTab extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed()
+{
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory( Intent.CATEGORY_HOME );
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            return;
+        }
+        else { Toast.makeText(getApplicationContext(), R.string.toast_exit, Toast.LENGTH_SHORT);.show(); }
+        backPressed = System.currentTimeMillis();
+    }
 
 }

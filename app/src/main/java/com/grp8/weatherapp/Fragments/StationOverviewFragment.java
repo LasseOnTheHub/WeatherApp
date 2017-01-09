@@ -45,15 +45,10 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         // TableLayout declaration
         tableLayout = (TableLayout)stationOverview.findViewById(R.id.tableLayoutt);
-        tableLayout.setOnClickListener(this);
 
         weatherStations = WeatherStations.getInstance();
 
         ArrayList<WeatherStation> stationer = weatherStations.getWeatherStations();
-
-        // android.support.v7.app.ActionBar ab = getSupportActionBar();
-        //  ab.setTitle(stationer.get(1).getTitle());
-        //getSupportActionBar().setTitle(stationer.get(1).getTitle());
 
         // setting text
         temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
@@ -68,7 +63,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         updated.setText(mdy);
         return stationOverview;
     }
-
 
     @Override
     public void onClick(View v) {
