@@ -22,6 +22,14 @@
             app:srcCompat="@drawable/clock"
             android:id="@+id/time_image" />
 
+        <ProgressBar
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/spinner_time"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp" />
+
         <TextView
             android:text="13:52"
             android:layout_width="wrap_content"
@@ -30,6 +38,7 @@
             android:textSize="15sp"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
+            android:visibility="invisible"
             android:id="@+id/time_label" />
 
         <LinearLayout
@@ -78,7 +87,19 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:visibility="invisible"
         android:id="@+id/temp_label" />
+
+    <ProgressBar
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/spinner_temp"
+        android:layout_alignStart="@+id/temp_label"
+        android:layout_alignLeft="@+id/temp_label"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_alignTop="@+id/temp_label"
+        android:layout_marginTop="15dp"/>
 
     <Space
         android:layout_width="match_parent"

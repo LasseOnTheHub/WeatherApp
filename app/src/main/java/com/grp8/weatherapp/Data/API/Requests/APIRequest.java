@@ -1,6 +1,6 @@
 package com.grp8.weatherapp.Data.API.Requests;
 
-import com.grp8.weatherapp.Data.API.APIException;
+import com.grp8.weatherapp.Data.API.Exceptions.APIException;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -16,6 +16,8 @@ import java.util.Map;
  */
 public abstract class APIRequest
 {
+    protected final static String TAG = "APIRequest";
+
     private static final String SERVER_ADDRESS = "130.226.195.167";
     private static final int    SERVER_PORT    = 8080;
 

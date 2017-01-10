@@ -1,5 +1,9 @@
 package com.grp8.weatherapp.Data;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.grp8.weatherapp.Data.API.Exceptions.APINetworkException;
 import com.grp8.weatherapp.Data.API.Requests.APIDataReadingRequest;
 import com.grp8.weatherapp.Data.API.Requests.APIStationRequest;
 import com.grp8.weatherapp.Data.API.IDataProvider;
@@ -11,6 +15,12 @@ import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.SupportingFiles.Environment;
+import com.grp8.weatherapp.SupportingFiles.Utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +33,8 @@ import java.util.Map;
  */
 public class DataRepository
 {
+    private final static String TAG = "DataRepository";
+
     private int user;
 
     private IListableMapper<Station>     stationMapper;
@@ -34,16 +46,20 @@ public class DataRepository
     private Map<Integer, Station>           stations = new HashMap<>();
     private Map<Integer, List<DataReading>> readings = new HashMap<>();
 
+    private Context context;
+
     /*
      * Constructor is made package-local
      */
-    DataRepository(IDataProvider provider, Database database, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper)
+    DataRepository(IDataProvider provider, Database database, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper, Context context)
     {
         this.provider = provider;
         this.database = database;
 
         this.stationMapper = stationMapper;
         this.readingMapper = readingMapper;
+
+        this.context = context;
     }
 
     public void setUser(int user)
@@ -53,21 +69,12 @@ public class DataRepository
 
     public boolean authorize(int id)
     {
-        return id == 5;
-    }
-
-    public void test()
-    {
-        Station station = StationDatabaseHelper.fetch(this.database, 2);
-
-        if(station == null)
+        if(id == 5)
         {
-            System.out.println("No station with the specified id");
+            this.setUser(id);
+            return true;
         }
-        else
-        {
-            System.out.println(station.getId());
-        }
+        return false;
     }
 
     /**
@@ -113,10 +120,31 @@ public class DataRepository
 
         if(stations.size() < 1)
         {
+            Log.d(TAG, "Fetching weather stations from remote API");
+
+            if(!Utils.isNetworkAvailable(this.context))
+            {
+                if(Utils.isEmulator())
+                {
+                    Log.e(TAG, "Cannot access remote API", new APINetworkException());
+                }
+
+                return null;
+            }
+
             String payload;
 
-            payload  = this.provider.fetch(new APIStationRequest(this.user));
-            stations = this.stationMapper.map(this.split(payload));
+            payload = this.provider.fetch(new APIStationRequest(this.user));
+
+            try
+            {
+                stations = this.stationMapper.map(new JSONArray(payload));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
 
             for(Station station : stations)
             {
@@ -143,7 +171,7 @@ public class DataRepository
 
         if(this.stations.containsKey(id))
         {
-            this.stations.get(id);
+            return this.stations.get(id);
         }
 
         Station station = StationDatabaseHelper.fetch(this.database, id);
@@ -153,7 +181,16 @@ public class DataRepository
             String payload;
 
             payload = this.provider.fetch(new APIStationRequest(this.user, id));
-            station = this.stationMapper.map(payload);
+
+            try
+            {
+                station = this.stationMapper.map(new JSONObject(payload));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
 
             this.stations.put(station.getId(), station);
             StationDatabaseHelper.add(this.database, station);
@@ -172,6 +209,11 @@ public class DataRepository
         if(this.user == 0)
         {
             throw new RuntimeException("Missing user ID.");
+        }
+
+        if(Utils.isEmulator())
+        {
+            Log.d(TAG, "Attempting to fetch latest data reading from station: " + station);
         }
 
         if(!this.readings.isEmpty() && this.readings.containsKey(station))
@@ -202,31 +244,82 @@ public class DataRepository
             return current;
         }
 
+        if(Utils.isEmulator())
+        {
+            Log.d(TAG, "Couldn't find matching data reading in object cache. Trying local database");
+        }
+
         DataReading reading = DataReadingDatabaseHelper.latest(this.database, this.readingMapper, station);
 
         if(reading == null)
         {
+            if(Utils.isEmulator())
+            {
+                Log.d(TAG, "Couldn't find matching data reading in local database. Trying remote API");
+            }
+
+            if(!Utils.isNetworkAvailable(this.context))
+            {
+                if(Utils.isEmulator())
+                {
+                    Log.e(TAG, "Cannot access remote API", new APINetworkException());
+                }
+
+                return null;
+            }
+
             APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
 
-            int ceiling = 3;
+            int ceiling = Environment.API_MAXIMUM_NUMBER_OF_RETRIES;
             int counter = 0;
 
-            String payload = "[]";
+            String    payload;
+            JSONArray json = null;
 
-            while(payload.equals("[]") && counter < ceiling)
+            while(counter < ceiling)
             {
                 payload = this.provider.fetch(request);
 
-                if(!payload.equals("[]"))
+                try
+                {
+                    json = new JSONArray(payload);
+                }
+                catch(JSONException e)
+                {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                if(json.length() > 0)
                 {
                     break;
                 }
+
+                Log.d(TAG, "No data returned");
 
                 request.increaseBackwardsReadingDateInterval();
                 counter++;
             }
 
-            reading = (DataReading) this.readingMapper.map(this.split(payload));
+            if(counter == ceiling || json == null)
+            {
+                if(Utils.isEmulator())
+                {
+                    Log.w(TAG, "Reached maximum number of incremental retries. Returning null");
+                }
+
+                return null;
+            }
+
+            try
+            {
+                reading = this.readingMapper.map(json.getJSONObject(0));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         return reading;
@@ -272,14 +365,24 @@ public class DataRepository
 
         if(results.size() < 1)
         {
-            String   payload;
-            String[] items;
+            String    payload;
+            JSONArray items;
 
             payload = this.provider.fetch(new APIDataReadingRequest(this.user, station, start, end));
-            items   = this.split(payload);
-            results = this.readingMapper.map(items);
 
-            if(items.length != results.size())
+            try
+            {
+                items   = new JSONArray(payload);
+                results = this.readingMapper.map(items);
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+
+                return new ArrayList<>();
+            }
+
+            if(items.length() != results.size())
             {
                 throw new RuntimeException("Cannot cache data readings due to mismatch in collection item count");
             }
@@ -295,30 +398,17 @@ public class DataRepository
 
                 this.readings.get(station).add(result);
 
-                DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items[index]);
+                try
+                {
+                    DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items.getString(index));
+                }
+                catch(JSONException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
 
         return results;
-    }
-
-    /**
-     * Splits a JSON payload into separate array elements.
-     *
-     * @param payload A JSON payload
-     */
-    private String[] split(String payload)
-    {
-        String[] elements = payload.substring(1, payload.length() - 1).split(",\\{$");
-
-        for(int index = 0; index < elements.length; index++)
-        {
-            if(!elements[index].substring(0, 1).equals("{"))
-            {
-                elements[index] = "{" + elements[index];
-            }
-        }
-
-        return elements;
     }
 }

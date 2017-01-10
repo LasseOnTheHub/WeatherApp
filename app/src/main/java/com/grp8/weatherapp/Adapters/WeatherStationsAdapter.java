@@ -1,25 +1,29 @@
 package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Constants;
-import com.grp8.weatherapp.TestData.WeatherStation;
-import com.grp8.weatherapp.TestData.WeatherStations;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 /**
  * Created by Frederik on 14/11/2016.
@@ -27,15 +31,15 @@ import java.util.Date;
 
 public class WeatherStationsAdapter extends BaseAdapter {
 
-    private WeatherStations weatherStations;
     private LayoutInflater inflater;
     private Activity activity;
+    private ListView list;
 
-    public WeatherStationsAdapter(Activity activity) {
+    public WeatherStationsAdapter(Activity activity, ListView list) {
         super();
-        weatherStations = WeatherStations.getInstance();
         inflater = activity.getLayoutInflater();
         this.activity = activity;
+        this.list = list;
     }
 
     private static class ViewHolder {
@@ -43,12 +47,37 @@ public class WeatherStationsAdapter extends BaseAdapter {
         TextView timeLabel;
         TextView tempLabel;
         LinearLayout oldContent;
+        ProgressBar tempSpinner;
+        ProgressBar timeSpinner;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
-        WeatherStation station = (WeatherStation) getItem(position);
+        final Station station = (Station) getItem(position);
+
+        if (station != null) {
+            new AsyncTask() {
+                private int id;
+                @Override
+                protected Object doInBackground(Object... arg0) {
+                    try {
+                        id = position;
+                        return DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+                    if (result != null) {
+                        updateListItem(position, (DataReading) result);
+                    }
+                }
+            }.execute();
+        }
 
         ViewHolder viewHolder;
 
@@ -59,27 +88,45 @@ public class WeatherStationsAdapter extends BaseAdapter {
             viewHolder.timeLabel = (TextView) convertView.findViewById(R.id.time_label);
             viewHolder.tempLabel = (TextView) convertView.findViewById(R.id.temp_label);
             viewHolder.oldContent = (LinearLayout) convertView.findViewById(R.id.old_content);
+            viewHolder.tempSpinner = (ProgressBar) convertView.findViewById(R.id.spinner_temp);
+            viewHolder.timeSpinner = (ProgressBar) convertView.findViewById(R.id.spinner_time);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.stationTitle.setText(station.getTitle());
-        if (position%2==0) {
+        if (station == null) {
+            viewHolder.stationTitle.setText("Some title");
+        } else {
+            viewHolder.stationTitle.setText(station.getNotes());
+        }
+        if (position % 2 == 0) {
             Date date = new Date(System.currentTimeMillis()-2760000);
             viewHolder.timeLabel.setText(formatDate(date));
-            viewHolder.oldContent.setVisibility(LinearLayout.VISIBLE);
+            if (isOldContent(date)) {
+                viewHolder.oldContent.setVisibility(LinearLayout.VISIBLE);
+            }
         } else {
             Date date = new Date();
             viewHolder.timeLabel.setText(formatDate(date));
             viewHolder.oldContent.setVisibility(LinearLayout.GONE);
         }
 
-        String tempUnit = PreferenceManager.getDefaultSharedPreferences(activity).getString(Constants.KEY_TEMP_UNIT,"");
-        String temp = String.valueOf(station.getWeatherData().getAirTemp())+tempUnit;
-        viewHolder.tempLabel.setText(temp);
-
         return convertView;
+    }
+
+    private void updateListItem(int index, DataReading reading) {
+        View element = list.getChildAt(index);
+        if (element != null) {
+            ViewHolder viewHolder = (ViewHolder) element.getTag();
+            viewHolder.tempSpinner.setVisibility(View.GONE);
+            viewHolder.timeSpinner.setVisibility(View.GONE);
+            viewHolder.timeLabel.setVisibility(View.VISIBLE);
+            viewHolder.tempLabel.setVisibility(View.VISIBLE);
+            String temp = String.valueOf(reading.getAirReadings().getTemperature()) + SettingsManager.getTempUnit(activity.getApplicationContext());
+            viewHolder.tempLabel.setText(temp);
+            viewHolder.timeLabel.setText(formatDate(reading.getTimestamp()));
+        }
     }
 
     private String formatDate(Date date) {
@@ -106,18 +153,18 @@ public class WeatherStationsAdapter extends BaseAdapter {
     }
 
     @Override
-    public long getItemId(int position) {
-        return weatherStations.getWeatherStations().get(position).getID();
+    public long getItemId(final int position) {
+        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position).getId();
     }
 
     @Override
     public int getCount() {
-        return weatherStations.getWeatherStations().size();
+        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return weatherStations.getWeatherStations().get(position);
+    public Object getItem(final int position) {
+        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position);
     }
 
 }

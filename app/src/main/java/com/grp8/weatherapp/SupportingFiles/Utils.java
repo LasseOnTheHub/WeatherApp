@@ -9,26 +9,18 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 
-import com.crashlytics.android.Crashlytics;
-
-import io.fabric.sdk.android.Fabric;
-
-
-
-public class Utils {
-
-
-
+public class Utils
+{
     public static boolean isEmulator()
     {
         return Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
     }
 
-    public static boolean isNetworkAvailable(Context context) {
-            ConnectivityManager cm =
-                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isNetworkAvailable(Context context)
+    {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
             return netInfo != null && netInfo.isConnected();
     }
-
 }

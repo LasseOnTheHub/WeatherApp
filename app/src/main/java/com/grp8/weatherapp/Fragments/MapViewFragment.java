@@ -1,6 +1,7 @@
 package com.grp8.weatherapp.Fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,44 +17,54 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
+
 import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.TestData.WeatherStation;
-import com.grp8.weatherapp.TestData.WeatherStations;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
+/*
  * Created by lasse on 11/21/16.
  */
-
-public class MapViewFragment extends android.support.v4.app.Fragment {
+public class MapViewFragment extends android.support.v4.app.Fragment
+{
     MapView mMapView;
     private GoogleMap googleMap;
-    WeatherStations weatherStations;
+    DataRepository dataRepository;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View rootView = inflater.inflate(R.layout.fragment_map_overview, container, false);
 
-        weatherStations = WeatherStations.getInstance();
+        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
+
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
 
-        try {
+        try
+        {
             MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
+        }
+        catch(Exception e)
+        {
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
+        mMapView.getMapAsync(new OnMapReadyCallback()
+        {
             @Override
-            public void onMapReady(GoogleMap mMap) {
+            public void onMapReady(final GoogleMap mMap)
+            {
                 googleMap = mMap;
-
 
                 //TODO: Her skal der implementeres således at der spørges efter tilladelse til at benytte GPS i Runtime.
                 // For showing a move to my location button
@@ -69,35 +80,76 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
                 //}
                 //googleMap.setMyLocationEnabled(true);
 
-                ArrayList<Marker> markers = new ArrayList<>();
+                try
+                {
+                    new AsyncTask<Void, List<Station>, List<Station>>()
+                    {
+                        @Override
+                        protected List<Station> doInBackground(Void... args)
+                        {
+                            try
+                            {
+                                return dataRepository.getStations();
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
 
-                for (final WeatherStation w : weatherStations.getWeatherStations()) {
-                    LatLng latLng = new LatLng(w.getLatitude(), w.getLongitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(w.getTitle()));
-                    markers.add(marker);
-
-                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                                return null;
+                            }
+                        }
 
                         @Override
-                        public void onInfoWindowClick(Marker marker) {
-                            //Toast.makeText(getApplicationContext(), "Marker Pushed",  Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), WeatherStationTab.class);
-                            intent.putExtra(Constants.KEY_USERID, w.getID());
-                            startActivity(intent);
+                        protected void onPostExecute(List<Station> stations)
+                        {
+                            if(stations == null)
+                            {
+                                return;
+                            }
+
+                            List<Marker> markers = new ArrayList<>();
+
+                            for(final Station station : stations)
+                            {
+                                LatLng latLng = new LatLng(station.getLatitude(), station.getLongitude());
+                                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(station.getNotes()));
+
+                                markers.add(marker);
+
+                                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
+                                {
+                                    @Override
+                                    public void onInfoWindowClick(Marker marker)
+                                    {
+                                        Intent intent = new Intent(getActivity(), WeatherStationTab.class);
+                                        intent.putExtra(Constants.KEY_USERID, station.getId());
+
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+
+                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                            for(Marker marker : markers)
+                            {
+                                builder.include(marker.getPosition());
+                            }
+
+                            LatLngBounds bounds = builder.build();
+
+                            int padding = 200; // offset from edges of the map in pixels
+                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+                            //googleMap.animateCamera(cu);
+                            googleMap.moveCamera(cu);
                         }
-                    });
+                    }.execute();
                 }
-
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                for (Marker marker : markers) {
-                    builder.include(marker.getPosition());
+                catch(Exception e)
+                {
+                    e.printStackTrace();
                 }
-                LatLngBounds bounds = builder.build();
-
-                int padding = 200; // offset from edges of the map in pixels
-                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                //googleMap.animateCamera(cu);
-                googleMap.moveCamera(cu);
             }
         });
 
@@ -105,26 +157,31 @@ public class MapViewFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         mMapView.onResume();
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         mMapView.onPause();
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         super.onDestroy();
         mMapView.onDestroy();
     }
 
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         mMapView.onLowMemory();
     }
 }
+
