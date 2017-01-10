@@ -10,7 +10,7 @@ import com.grp8.weatherapp.R;
  */
 public class PressureConverter {
 
-    public double getFormattedPressure(Context context, double pres) {
+    public static double getFormattedPressure(Context context, double pres) {
         String[] tempArray = context.getResources().getStringArray(R.array.pressure_options);
         String userUnit = SettingsManager.getTempUnit(context);
 
