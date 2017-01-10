@@ -16,7 +16,14 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Constants;
+import com.grp8.weatherapp.SupportingFiles.Converters.TemperatureConverter;
 import com.grp8.weatherapp.TestData.WeatherStation;
 import com.grp8.weatherapp.TestData.WeatherStations;
 
@@ -30,11 +37,15 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     ArrayList<WeatherStation> weatherStationsArr;
     private TextView temp,windSpeed,airP, humidity, updated;
     private TableLayout tableLayout;
+    DataRepository dataRepository;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
+
+        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
+
 
         // TextView declaration
         temp = (TextView)stationOverview.findViewById(R.id.temp);
@@ -50,8 +61,15 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         ArrayList<WeatherStation> stationer = weatherStations.getWeatherStations();
 
+        Station station;
+        int stationId = Integer.parseInt(getActivity().getIntent().getExtras().getString(Constants.KEY_USERID));
+        DataReading reading;
+        reading = dataRepository.getStationData(stationId);
+
         // setting text
-        temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
+        String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),reading.getAirReadings().getTemperature()));
+        temp.setText(tem + " " + SettingsManager.getTempUnit(getActivity().getApplicationContext()));
+        // temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
         windSpeed.setText(String.valueOf(stationer.get(1).getWeatherData().getWindSpeed())+" m/s");
         airP.setText(String.valueOf(stationer.get(1).getWeatherData().getAirPressure()) + " bar");
         humidity.setText(String.valueOf(stationer.get(1).getWeatherData().getAirHum())+" %");
