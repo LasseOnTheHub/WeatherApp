@@ -72,20 +72,22 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         temp.setText(tem + " " + SettingsManager.getTempUnit(getActivity().getApplicationContext()));
         // temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
 
-        windSpeed.setText(String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),reading.getWindReadings().getSpeed())));
+        String speed = String.valueOf(reading.getWindReadings().getSpeed());
+        windSpeed.setText(speed + " " + SettingsManager.getWindSpeedUnit(getActivity().getApplicationContext()));
       //  windSpeed.setText(String.valueOf(stationer.get(1).getWeatherData().getWindSpeed())+" m/s");
 
-        airP.setText(String.valueOf(PressureConverter.getFormattedPressure(getActivity().getApplicationContext(),reading.getAirReadings().getPressure())));
+        String pressure = String.valueOf(PressureConverter.getFormattedPressure(getActivity().getApplicationContext(),reading.getAirReadings().getPressure()));
+        airP.setText(pressure + " " + SettingsManager.getPressureUnit(getActivity().getApplicationContext()));
         //airP.setText(String.valueOf(stationer.get(1).getWeatherData().getAirPressure()) + " bar");
-
 
         humidity.setText(String.valueOf(stationer.get(1).getWeatherData().getAirHum())+" %");
 
-        Date date = new Date(stationer.get(1).getWeatherData().getTimeStamp());
-        SimpleDateFormat mdyFormat = new SimpleDateFormat("HH.mm");
-        String mdy = mdyFormat.format(date);
+        updated.setText(String.valueOf(reading.getTimestamp()));
+        //Date date = new Date(stationer.get(1).getWeatherData().getTimeStamp());
+        //SimpleDateFormat mdyFormat = new SimpleDateFormat("HH.mm");
+        //String mdy = mdyFormat.format(date);
+        //updated.setText(mdy);
 
-        updated.setText(mdy);
         return stationOverview;
     }
 
