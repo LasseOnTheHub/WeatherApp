@@ -91,28 +91,25 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private void updateView(DataReading reading) {
         // Fern spinner
         // setting text
+
+        // set temperature text and getting the appropriate unit
         String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),reading.getAirReadings().getTemperature()));
         temp.setText(tem + " " + SettingsManager.getTempUnit(getActivity().getApplicationContext()));
-        // temp.setText(String.valueOf(stationer.get(1).getWeatherData().getAirTemp()) + " \u2103");
 
+        // set windspeed text and getting the appropriate unit
         String speed = String.valueOf(reading.getWindReadings().getSpeed());
         windSpeed.setText(speed + " " + SettingsManager.getWindSpeedUnit(getActivity().getApplicationContext()));
-        // windSpeed.setText(String.valueOf(stationer.get(1).getWeatherData().getWindSpeed())+" m/s");
 
+        // set pressure text and getting the appropriate unit
         String pressure = String.valueOf(PressureConverter.getFormattedPressure(getActivity().getApplicationContext(),reading.getAirReadings().getPressure()));
         airP.setText(pressure + " " + SettingsManager.getPressureUnit(getActivity().getApplicationContext()));
-        //airP.setText(String.valueOf(stationer.get(1).getWeatherData().getAirPressure()) + " bar");
 
+        // set humidity text and getting the appropriate unit
         String hum = String.valueOf(reading.getAirReadings().getHumidity());
         humidity.setText(hum + " %");
-        //humidity.setText(String.valueOf(stationer.get(1).getWeatherData().getAirHum())+" %");
 
+        // Set last updated text and getting the appropriate unit
         updated.setText(String.valueOf(reading.getTimestamp()));
-        //Date date = new Date(stationer.get(1).getWeatherData().getTimeStamp());
-        //SimpleDateFormat mdyFormat = new SimpleDateFormat("HH.mm");
-        //String mdy = mdyFormat.format(date);
-        //updated.setText(mdy);
     }
-
 
 }
