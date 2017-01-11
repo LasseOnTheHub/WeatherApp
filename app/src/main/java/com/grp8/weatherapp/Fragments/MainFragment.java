@@ -78,12 +78,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         }.execute();
         list.setOnItemClickListener(this);
 
-        if (!Utils.isEmulator()) {
-            load();
-        } else {
-            updateList();
-        }
-
         return mainFrag;
     }
 

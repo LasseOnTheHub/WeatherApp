@@ -55,14 +55,13 @@ public class WeatherStationsAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         final Station station = (Station) getItem(position);
+        Log.d("Get view ", String.valueOf(position));
 
         if (station != null) {
-            new AsyncTask() {
-                private int id;
+            new AsyncTask<Void,DataReading,DataReading>() {
                 @Override
-                protected Object doInBackground(Object... arg0) {
+                protected DataReading doInBackground(Void... arg0) {
                     try {
-                        id = position;
                         return DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -71,9 +70,9 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 }
 
                 @Override
-                protected void onPostExecute(Object result) {
+                protected void onPostExecute(DataReading result) {
                     if (result != null) {
-                        updateListItem(position, (DataReading) result);
+                        updateListItem(position, result);
                     }
                 }
             }.execute();
@@ -144,7 +143,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     private boolean isOldContent(Date date) {
         Date threshold = new Date(System.currentTimeMillis()-1800000);
-        return date.compareTo(threshold) == 0 || date.compareTo(threshold) == 1;
+        return date.compareTo(threshold) != -1;
     }
 
     @Override
