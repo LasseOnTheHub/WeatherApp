@@ -88,7 +88,7 @@ public class DataRepository
     /**
      * Refreshed the data repository by clearing caches
      *
-     * @param hard Whether the SQlite database should be reset.
+     * @param hard Whether the SQLite database should be reset.
      */
     public void refresh(boolean hard)
     {
@@ -235,6 +235,8 @@ public class DataRepository
             Log.d(TAG, "Attempting to fetch latest data reading from station: " + station);
         }
 
+        Log.d(TAG, "Data reading object cache size: " + this.readings.size());
+
         if(!this.readings.isEmpty() && this.readings.containsKey(station))
         {
             List<DataReading> collection = this.readings.get(station);
@@ -339,6 +341,13 @@ public class DataRepository
                 e.printStackTrace();
                 return null;
             }
+
+            if(!this.readings.containsKey(station))
+            {
+                this.readings.put(station, new ArrayList<DataReading>());
+            }
+
+            this.readings.get(station).add(reading);
         }
 
         return reading;
