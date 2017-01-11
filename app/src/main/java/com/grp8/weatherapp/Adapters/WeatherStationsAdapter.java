@@ -139,6 +139,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
             // Some kind of error occurred
             showErrorState(viewHolder, (Station) getItem(index));
             // Only error layout and station name is visible
+            return;
         }
 
         // Setting outlets
