@@ -168,7 +168,7 @@ public class DataReadingDatabaseHelper
             return new ArrayList<>();
         }
 
-        String results = "[";
+        String results = "";
 
         for(int index = 0; index < size; index++)
         {
@@ -177,8 +177,6 @@ public class DataReadingDatabaseHelper
         }
 
         cursor.close();
-
-        results += "]";
 
         try
         {

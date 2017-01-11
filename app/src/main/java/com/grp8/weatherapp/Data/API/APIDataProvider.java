@@ -12,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.URL;
 
-/**
+/*
  * Created by Thomas on 03-Jan-17.
  */
 public class APIDataProvider implements IDataProvider
@@ -31,7 +31,7 @@ public class APIDataProvider implements IDataProvider
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
-            Log.d(TAG, "[API DEBUG]: Sending GET request to: " + url.toString());
+            Log.d(TAG, "Sending GET request to: " + url.toString());
 
             int responseCode = connection.getResponseCode();
 

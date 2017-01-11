@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -74,9 +75,9 @@ public class DataReadingMapper implements IListableMapper<DataReading>
     {
         try
         {
-            int id        = json.getInt("id");
-            int device    = json.getInt("deviceID");
-            int timestamp = json.getInt("timestamp");
+            int  id        = json.getInt("id");
+            int  device    = json.getInt("deviceID");
+            long timestamp = json.getLong("timestamp");
 
             double rainfall = json.getDouble("rainfall");
 
@@ -107,7 +108,7 @@ public class DataReadingMapper implements IListableMapper<DataReading>
             temperature[2] = json.getInt("soilTemperatureThree");
             temperature[3] = json.getInt("soilTemperatureFour");
 
-            return new DataReading(id, device, timestamp, rainfall, air, wind, new Soil(moisture, temperature));
+            return new DataReading(id, device, new Date(timestamp), rainfall, air, wind, new Soil(moisture, temperature));
         }
         catch(JSONException e)
         {

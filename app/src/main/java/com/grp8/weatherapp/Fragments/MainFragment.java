@@ -47,44 +47,36 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     private FrameLayout searchFrame;
     private RelativeLayout spinnerFrame;
 
-    private boolean searchIsVisible;
-    private long delay = 5000;
+    private boolean searchIsVisible = false;
 
+    private class LoadTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            try {
+                DataRepositoryFactory.build(getActivity().getApplicationContext()).getStations();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            updateList();
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
-
         spinnerFrame = (RelativeLayout) mainFrag.findViewById(R.id.spinner_layout);
         spinnerText = (TextView) mainFrag.findViewById(R.id.spinner_text);
         searchFrame = (FrameLayout) mainFrag.findViewById(R.id.searchFrame);
         searchFrame.setVisibility(FrameLayout.GONE);
-        searchIsVisible = false;
         list = (ListView) mainFrag.findViewById(R.id.stationlist);
         DataRepositoryFactory.build(getActivity().getApplicationContext()).setUser(5);
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... arg0) {
-                try {
-                    DataRepositoryFactory.build(getActivity().getApplicationContext()).getStations();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                    return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object result) {
-                updateList();
-            }
-        }.execute();
+        new LoadTask().execute();
         list.setOnItemClickListener(this);
-
-        if (!Utils.isEmulator()) {
-            load();
-        } else {
-            updateList();
-        }
 
         return mainFrag;
     }
@@ -100,6 +92,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
             list.setVisibility(View.GONE);
             spinnerFrame.setVisibility(RelativeLayout.VISIBLE);
             spinnerText.setText(R.string.loadingText);
+            new LoadTask().execute();
         }
     }
 
@@ -119,6 +112,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         Log.d("Clicked on item",String.valueOf(position));
 
         Intent intent = new Intent(getActivity(), WeatherStationTab.class);
@@ -126,7 +120,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         Log.d(" ID stashed",getActivity().getIntent().getExtras().getString(Constants.KEY_USERID));
         startActivity(intent);
 
-        //startActivity(new Intent(getActivity(), WeatherStationTab.class));
     }
 
     public void toggleSearch(boolean shouldChange) {
