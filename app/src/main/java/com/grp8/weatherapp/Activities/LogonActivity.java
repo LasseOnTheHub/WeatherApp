@@ -38,7 +38,7 @@ public class LogonActivity extends AppCompatActivity {
         if (!Utils.isEmulator()) {
             Fabric.with(this, new Crashlytics());
         }
-        setContentView(R.layout.activity_logon2);
+        setContentView(R.layout.activity_logon);
 
         inputLayoutName = (TextInputLayout) findViewById(R.id.userIDTextLayout);
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.userPasswordTextLayout);
