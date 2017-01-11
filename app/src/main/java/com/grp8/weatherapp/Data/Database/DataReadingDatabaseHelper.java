@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,8 +25,6 @@ import java.util.List;
  */
 public class DataReadingDatabaseHelper
 {
-    private static final String DATE_FORMAT = "YYYY-MM-DD HH:mm";
-
     /**
      * Fetches all data readings associated with the specified station
      *
@@ -115,11 +112,9 @@ public class DataReadingDatabaseHelper
     {
         String[] params = new String[3];
 
-        SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
-
         params[0] = Integer.toString(station);
-        params[1] = df.format(from);
-        params[2] = df.format(to);
+        params[1] = Long.toString(from.getTime());
+        params[2] = Long.toString(to.getTime());
 
         Cursor cursor = database.read(ReadingsTable.SELECT_BETWEEN_TIMESTAMPS_QUERY, params);
 
@@ -139,11 +134,9 @@ public class DataReadingDatabaseHelper
     {
         ContentValues values = new ContentValues();
 
-        SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
-
         values.put(ReadingsTable.COLUMN_ID, id);
         values.put(ReadingsTable.COLUMN_STATION_ID, device);
-        values.put(ReadingsTable.COLUMN_TIMESTAMP, df.format(timestamp));
+        values.put(ReadingsTable.COLUMN_TIMESTAMP, timestamp.getTime());
         values.put(ReadingsTable.COLUMN_JSON, json);
 
         database.insert(ReadingsTable.TABLE_NAME, values);
