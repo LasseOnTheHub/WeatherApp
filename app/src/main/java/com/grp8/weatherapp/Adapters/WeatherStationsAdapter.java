@@ -100,6 +100,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
         if (station == null) {
             // Setting the view state to error
             showErrorState(viewHolder, null);
+            // Only error layout is visible
             return convertView;
         }
 
@@ -137,6 +138,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
         if (reading == null) {
             // Some kind of error occurred
             showErrorState(viewHolder, (Station) getItem(index));
+            // Only error layout and station name is visible
         }
 
         // Setting outlets
@@ -175,64 +177,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
             viewHolder.stationTitle.setText(station.getNotes()); // Setting station title
         }
         viewHolder.errorLayout.setVisibility(View.VISIBLE); // Label for error
-        // Only error layout (and possibly station name) is visible
     }
-
-    /*private void showState(ViewHolder viewHolder, DataReading reading) {
-        // Error
-                viewHolder.tempLabel.setVisibility(View.GONE); // Label for temp
-                viewHolder.timeLayout.setVisibility(View.GONE); // Layout for time (including old content)
-                viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temp (big one)
-                viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time (little one)
-                viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
-                viewHolder.errorLayout.setVisibility(View.VISIBLE); // Label for error
-                // Only error layout and station name is visible
-                return;
-        // Loading
-                viewHolder.tempLabel.setVisibility(View.GONE); // Label for temp
-                viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
-                viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
-                viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
-                viewHolder.tempSpinner.setVisibility(View.VISIBLE); // Spinner for temp
-                viewHolder.timeSpinner.setVisibility(View.VISIBLE); // Spinner for time
-                viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
-                viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
-                // Spinners, clock image and title is visible
-                return;
-        // Loaded
-                viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temp
-                viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
-                viewHolder.timeLabel.setVisibility(View.VISIBLE); // Label for time
-                viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
-                viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
-                viewHolder.oldContent.setVisibility(View.GONE); // Layout for old content
-                viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temp
-                viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time
-                break;
-        // Loaded old content
-                viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temp
-                viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
-                viewHolder.timeLabel.setVisibility(View.VISIBLE); // Label for time
-                viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
-                viewHolder.oldContent.setVisibility(View.VISIBLE); // Layout for old content
-                viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
-                viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temp
-                viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time
-                break;
-        // Loaded insane content
-                viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temp
-                viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
-                viewHolder.timeLabel.setVisibility(View.VISIBLE); // Label for time
-                viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
-                viewHolder.oldContent.setVisibility(View.VISIBLE); // Layout for old content
-                // TODO Set insane content layout
-                viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
-                viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temp
-                viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time
-                break;
-        }
-        // TODO Fill labels
-    }*/
 
     private void setTimeLabel(ViewHolder viewHolder, DataReading reading) {
         viewHolder.timeSpinner.setVisibility(View.GONE);
