@@ -19,8 +19,9 @@ public class StationsTable
     public final static int COLUMN_POSITION_LATITUDE = 3;
     public final static int COLUMN_POSITION_LONGITUDE = 4;
 
-    public final static String COLUMN_SELECT_ALL_QUERY      = "SELECT * FROM " + TABLE_NAME;
-    public final static String COLUMN_SELECT_SPECIFIC_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
+    public final static String QUERY_SELECT_COUNT    = "SELECT COUNT(*) FROM " + TABLE_NAME;
+    public final static String QUERY_SELECT_ALL      = "SELECT * FROM " + TABLE_NAME;
+    public final static String QUERY_SELECT_SPECIFIC = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
 
     public final static String CREATE_QUERY = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("+ COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_TYPE + " INTEGER, " + COLUMN_NOTES + " VARCHAR, " + COLUMN_LATITUDE + " VARCHAR, " + COLUMN_LONGITUDE + " VARCHAR)";
     public final static String RESET_QUERY  = "DELETE FROM " + TABLE_NAME;

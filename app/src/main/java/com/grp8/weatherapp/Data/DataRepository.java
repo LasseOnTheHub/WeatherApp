@@ -102,6 +102,23 @@ public class DataRepository
     }
 
     /**
+     * Returns the number of stations in the object cache.
+     *
+     * @return Returns an integer.
+     */
+    public int getStationCount()
+    {
+        int count = this.stations.size();
+
+        if(count < 1)
+        {
+            count = StationDatabaseHelper.count(this.database);
+        }
+
+        return count;
+    }
+
+    /**
      * Fetches all stations associated with the current user
      */
     public List<Station> getStations()
@@ -113,6 +130,8 @@ public class DataRepository
 
         if(this.stations.size() > 0)
         {
+            Log.d(TAG, "Returning stations from object cache.");
+
             return new ArrayList<>(this.stations.values());
         }
 
