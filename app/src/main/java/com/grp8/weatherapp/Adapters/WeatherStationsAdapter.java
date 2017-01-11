@@ -18,6 +18,7 @@ import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,12 +58,10 @@ public class WeatherStationsAdapter extends BaseAdapter {
         final Station station = (Station) getItem(position);
 
         if (station != null) {
-            new AsyncTask() {
-                private int id;
+            new AsyncTask<Void,DataReading,DataReading>() {
                 @Override
-                protected Object doInBackground(Object... arg0) {
+                protected DataReading doInBackground(Void... arg0) {
                     try {
-                        id = position;
                         return DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -71,9 +70,9 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 }
 
                 @Override
-                protected void onPostExecute(Object result) {
+                protected void onPostExecute(DataReading result) {
                     if (result != null) {
-                        updateListItem(position, (DataReading) result);
+                        updateListItem(position, result);
                     }
                 }
             }.execute();
@@ -100,17 +99,6 @@ public class WeatherStationsAdapter extends BaseAdapter {
         } else {
             viewHolder.stationTitle.setText(station.getNotes());
         }
-        if (position % 2 == 0) {
-            Date date = new Date(System.currentTimeMillis()-2760000);
-            viewHolder.timeLabel.setText(formatDate(date));
-            if (isOldContent(date)) {
-                viewHolder.oldContent.setVisibility(LinearLayout.VISIBLE);
-            }
-        } else {
-            Date date = new Date();
-            viewHolder.timeLabel.setText(formatDate(date));
-            viewHolder.oldContent.setVisibility(LinearLayout.GONE);
-        }
 
         return convertView;
     }
@@ -126,6 +114,13 @@ public class WeatherStationsAdapter extends BaseAdapter {
             String temp = String.valueOf(reading.getAirReadings().getTemperature()) + SettingsManager.getTempUnit(activity.getApplicationContext());
             viewHolder.tempLabel.setText(temp);
             viewHolder.timeLabel.setText(formatDate(reading.getTimestamp()));
+            if (isOldContent(reading.getTimestamp())) {
+                viewHolder.oldContent.setVisibility(View.VISIBLE);
+            } else if (Utils.sanityCheck(reading)) {
+                viewHolder.oldContent.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.oldContent.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -144,7 +139,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     private boolean isOldContent(Date date) {
         Date threshold = new Date(System.currentTimeMillis()-1800000);
-        return date.compareTo(threshold) == 0 || date.compareTo(threshold) == 1;
+        return date.compareTo(threshold) < 0;
     }
 
     @Override
