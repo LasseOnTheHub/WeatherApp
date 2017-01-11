@@ -117,7 +117,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
             if (isOldContent(reading.getTimestamp())) {
                 viewHolder.oldContent.setVisibility(View.VISIBLE);
             } else if (Utils.sanityCheck(reading)) {
-
+                viewHolder.oldContent.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.oldContent.setVisibility(View.GONE);
             }
