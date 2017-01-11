@@ -19,6 +19,17 @@ import java.util.List;
  */
 public class StationDatabaseHelper
 {
+    public static int count(Database database)
+    {
+        Cursor cursor = database.read(StationsTable.QUERY_SELECT_COUNT);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+
+        return count;
+    }
+
     /**
      * Fetches all stations.
      *
@@ -28,7 +39,7 @@ public class StationDatabaseHelper
      */
     public static List<Station> all(Database database)
     {
-        Cursor        cursor = database.read(StationsTable.COLUMN_SELECT_ALL_QUERY);
+        Cursor        cursor = database.read(StationsTable.QUERY_SELECT_ALL);
         List<Station> result = new ArrayList<>();
 
         if(cursor.getCount() == 0)
@@ -65,7 +76,7 @@ public class StationDatabaseHelper
      */
     public static Station fetch(Database database, int id)
     {
-        Cursor cursor = database.read(StationsTable.COLUMN_SELECT_SPECIFIC_QUERY, new String[] { Integer.toString(id) });
+        Cursor cursor = database.read(StationsTable.QUERY_SELECT_SPECIFIC, new String[] { Integer.toString(id) });
 
         if(cursor.getCount() == 0)
         {

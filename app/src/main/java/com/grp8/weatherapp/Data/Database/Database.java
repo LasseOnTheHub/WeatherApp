@@ -76,7 +76,7 @@ public class Database extends SQLiteOpenHelper
         Log.d(TAG, "Resetting SQLite database " + DATABASE_NAME);
 
         this.getWritableDatabase().execSQL(StationsTable.RESET_QUERY);
-        this.getWritableDatabase().execSQL(ReadingsTable.RESET_QUERY);
+        //this.getWritableDatabase().execSQL(ReadingsTable.RESET_QUERY);
     }
 
     /**
