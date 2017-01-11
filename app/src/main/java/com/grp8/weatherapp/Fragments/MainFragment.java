@@ -24,9 +24,11 @@ import android.widget.TextView;
 
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
+import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
@@ -118,7 +120,13 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("Clicked on item",String.valueOf(position));
-        startActivity(new Intent(getActivity(), WeatherStationTab.class));
+
+        Intent intent = new Intent(getActivity(), WeatherStationTab.class);
+        intent.putExtra(Constants.KEY_USERID, list.getAdapter().getItemId(position));
+        Log.d(" ID stashed",getActivity().getIntent().getExtras().getString(Constants.KEY_USERID));
+        startActivity(intent);
+
+        //startActivity(new Intent(getActivity(), WeatherStationTab.class));
     }
 
     public void toggleSearch(boolean shouldChange) {
