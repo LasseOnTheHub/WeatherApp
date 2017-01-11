@@ -1,6 +1,7 @@
 package com.grp8.weatherapp.Data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.grp8.weatherapp.Data.API.Exceptions.APINetworkException;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +46,14 @@ public class DataRepository
     private Database       database;
 
     private Map<Integer, Station>           stations = new HashMap<>();
-    private Map<Integer, List<DataReading>> readings = new HashMap<>();
+    private Map<Integer, List<DataReading>> readings = new LinkedHashMap<Integer, List<DataReading>>(Environment.API_CACHE_DATA_READING_MAX_SIZE)
+    {
+        @Override
+        protected boolean removeEldestEntry(Entry<Integer, List<DataReading>> entry)
+        {
+            return size() > Environment.API_CACHE_DATA_READING_MAX_SIZE;
+        }
+    };
 
     private Context context;
 
@@ -130,8 +139,6 @@ public class DataRepository
 
         if(this.stations.size() > 0)
         {
-            Log.d(TAG, "Returning stations from object cache.");
-
             return new ArrayList<>(this.stations.values());
         }
 
@@ -234,8 +241,6 @@ public class DataRepository
         {
             Log.d(TAG, "Attempting to fetch latest data reading from station: " + station);
         }
-
-        Log.d(TAG, "Data reading object cache size: " + this.readings.size());
 
         if(!this.readings.isEmpty() && this.readings.containsKey(station))
         {
