@@ -139,8 +139,6 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     private boolean isOldContent(Date date) {
         Date threshold = new Date(System.currentTimeMillis()-1800000);
-        Log.d("Date1",date.toString());
-        Log.d("Threshold",threshold.toString());
         return date.compareTo(threshold) < 0;
     }
 
@@ -151,7 +149,6 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(final int position) {
-        Log.d("Get item id", String.valueOf(position));
         return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position).getId();
     }
 
