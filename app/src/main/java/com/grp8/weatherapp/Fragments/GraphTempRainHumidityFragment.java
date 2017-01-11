@@ -23,14 +23,24 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Formatters.DayAxisValueFormatter;
 import com.grp8.weatherapp.SupportingFiles.Formatters.DegreeAxisValueFormatter;
 import com.grp8.weatherapp.SupportingFiles.Formatters.DegreeValueFormatter;
 import com.grp8.weatherapp.SupportingFiles.Formatters.MMAxisValueFormatter;
 import com.grp8.weatherapp.SupportingFiles.Formatters.MMValueFormatter;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -45,6 +55,7 @@ public class GraphTempRainHumidityFragment extends Fragment {
     private LineChart humidityChart;
     private CombinedChart tempRainChart;
     Typeface mTfLight;
+    DataRepository dataRepository;
 
     //Dato vælger
     private TextView dateInputFrom;
@@ -53,6 +64,8 @@ public class GraphTempRainHumidityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_temp_rain_humidity, container, false);
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
+        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
+        dataRepository.setUser(5);
 
         //Grafer
         humidityChart = (LineChart) view.findViewById(R.id.humiditychart);
@@ -222,14 +235,14 @@ public class GraphTempRainHumidityFragment extends Fragment {
             // create a dataset and give it a type
             set2 = new LineDataSet(airVals, "Luftfugtighed");
             set2.setAxisDependency(YAxis.AxisDependency.RIGHT);
-            set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+/*            set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set2.setCubicIntensity(0.1f);
             set2.setColor(Color.RED);
-            set2.setCircleColor(Color.BLACK);
+            set2.setCircleColor(Color.BLACK);*/
             set2.setLineWidth(2f);
-            set2.setCircleRadius(3f);
-            set2.setFillAlpha(65);
-            set2.setFillColor(Color.RED);
+            //set2.setCircleRadius(3f);
+            //set2.setFillAlpha(65);
+            //set2.setFillColor(Color.RED);
             //set2.setDrawCircleHole(false);
             set2.setHighLightColor(Color.rgb(244, 117, 117));
             set2.setValueFormatter(new PercentFormatter());
@@ -244,13 +257,53 @@ public class GraphTempRainHumidityFragment extends Fragment {
         }
     }
 
+    private Date convertDateFromStringToDate(String date)
+    {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date dateObj = null;
+        try {
+            dateObj = format.parse(date);
+            System.out.println(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return dateObj;
+    }
+
+    public static float toNumber(Date now) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(now);
+        int hour = c.get(Calendar.HOUR_OF_DAY);// 0-23
+        int minute = c.get(Calendar.MINUTE);// 0-59
+
+        return toNumber(hour, minute);
+    }
+
+    public static float toNumber(int hour, int minute) {
+        return hour + minute / 60f;
+    }
+
     private LineData generateTemperatureLineData() {
 
         LineData d = new LineData();
-
         ArrayList<Entry> tempVals = new ArrayList<Entry>();
 
-        Random r = new Random();
+        String dtStart = "2015-01-01T00:00:00Z";
+        String dtEnd = "2017-01-00T00:00:00Z";
+
+
+        List<DataReading> data =  dataRepository.getStationData(1,convertDateFromStringToDate(dtStart),convertDateFromStringToDate(dtEnd));
+
+
+        for (DataReading s: data) {
+            float x = toNumber(s.getTimestamp());
+            float y = (float)s.getAirReadings().getTemperature();
+            tempVals.add(new Entry(x,y));
+        }
+
+
+/*        Random r = new Random();
         int low = 15;
         int high = 25;
 
@@ -260,7 +313,7 @@ public class GraphTempRainHumidityFragment extends Fragment {
             tempVals.add(new Entry(i,i));
             else
                 tempVals.add(new Entry(i,50-i));
-        }
+        }*/
 
 /*        tempVals.add(new Entry(1,6));
         tempVals.add(new Entry(2,8));
@@ -284,18 +337,17 @@ public class GraphTempRainHumidityFragment extends Fragment {
         set.setColor(Color.rgb(242, 72, 0));
         set.setLineWidth(2.5f);
         set.setCircleColor(Color.rgb(242, 72, 0));
-        set.setCircleRadius(5f);
+        set.setCircleRadius(0f);
         set.setFillColor(Color.rgb(240, 238, 70));
         set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setCubicIntensity(0.0f);
-        set.setDrawValues(true);
+        set.setDrawValues(false);
         set.setValueTextSize(10f);
         set.setValueTextColor(Color.rgb(242, 72, 0));
         set.setValueFormatter(new DegreeValueFormatter());
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         d.addDataSet(set);
-
         return d;
     }
 
