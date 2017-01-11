@@ -2,8 +2,10 @@ package com.grp8.weatherapp.Fragments;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -56,6 +59,9 @@ public class GraphTempRainHumidityFragment extends Fragment {
     private CombinedChart tempRainChart;
     Typeface mTfLight;
     DataRepository dataRepository;
+
+/*    String dtStart = "";
+    String dtEnd = "";*/
 
     //Dato vælger
     private TextView dateInputFrom;
@@ -100,7 +106,7 @@ public class GraphTempRainHumidityFragment extends Fragment {
         YAxis tempRainYRightAxis = tempRainChart.getAxisRight();
         tempRainYRightAxis.setDrawGridLines(false);
         tempRainYRightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        tempRainYRightAxis.setAxisMaximum(10f);
+        tempRainYRightAxis.setAxisMaximum(40f);
         tempRainYRightAxis.setValueFormatter(new MMAxisValueFormatter());
 
         //Definere temperatur og nedbørs venstre Y-akse
@@ -113,7 +119,7 @@ public class GraphTempRainHumidityFragment extends Fragment {
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setAxisMinimum(0f);
         xAxis.setGranularity(0f);
-        xAxis.setValueFormatter(new DayAxisValueFormatter(tempRainChart));
+        //xAxis.setValueFormatter(new DayAxisValueFormatter(tempRainChart));
 
         CombinedData data = new CombinedData();
 
@@ -259,16 +265,18 @@ public class GraphTempRainHumidityFragment extends Fragment {
 
     private Date convertDateFromStringToDate(String date)
     {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        Date dateObj = null;
+        Calendar cal = Calendar.getInstance();
         try {
-            dateObj = format.parse(date);
-            System.out.println(date);
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            cal.setTime(sdf.parse(date));// all done
+            Log.d("Tid", "Tiden sat fra grafen er:" + cal.getTime().toString());
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            //return null;
         }
-        return dateObj;
+        return cal.getTime();
     }
 
     public static float toNumber(Date now) {
@@ -287,19 +295,38 @@ public class GraphTempRainHumidityFragment extends Fragment {
     private LineData generateTemperatureLineData() {
 
         LineData d = new LineData();
-        ArrayList<Entry> tempVals = new ArrayList<Entry>();
+        final ArrayList<Entry> tempVals = new ArrayList<Entry>();
 
-        String dtStart = "2015-01-01T00:00:00Z";
-        String dtEnd = "2017-01-00T00:00:00Z";
+        /*String dtStart = "2015-01-01T00:00:00Z";
+        String dtEnd = "2017-01-01T00:00:00Z";*/
+        final String dtStart = "2015-01-01 00:00";
+        final String dtEnd = "2017-01-01 00:00";
+        //yyyy-MM-dd'T'HH:mm:ss.SSSZ
 
 
-        List<DataReading> data =  dataRepository.getStationData(1,convertDateFromStringToDate(dtStart),convertDateFromStringToDate(dtEnd));
+        try {
+            new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
+                @Override
+                protected List<DataReading> doInBackground(Void... args) {
+                    List<DataReading> data = dataRepository.getStationData(1, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
+                    return data;
+                }
+
+                @Override
+                protected void onPostExecute(List<DataReading> data) {
+                    for (DataReading d : data) {
+                        float x = toNumber(d.getTimestamp());
+                        float y = (float) d.getAirReadings().getTemperature();
+                        tempVals.add(new Entry(x, y));
+                    }
+                }
+            }.execute();
 
 
-        for (DataReading s: data) {
-            float x = toNumber(s.getTimestamp());
-            float y = (float)s.getAirReadings().getTemperature();
-            tempVals.add(new Entry(x,y));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
 
 
@@ -333,23 +360,24 @@ public class GraphTempRainHumidityFragment extends Fragment {
         tempVals.add(new Entry(1451761200,5));*/
 
 
-        LineDataSet set = new LineDataSet(tempVals, "Temperatur");
-        set.setColor(Color.rgb(242, 72, 0));
-        set.setLineWidth(2.5f);
-        set.setCircleColor(Color.rgb(242, 72, 0));
-        set.setCircleRadius(0f);
-        set.setFillColor(Color.rgb(240, 238, 70));
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setCubicIntensity(0.0f);
-        set.setDrawValues(false);
-        set.setValueTextSize(10f);
-        set.setValueTextColor(Color.rgb(242, 72, 0));
-        set.setValueFormatter(new DegreeValueFormatter());
+            LineDataSet set = new LineDataSet(tempVals, "Temperatur");
+            set.setColor(Color.rgb(242, 72, 0));
+            set.setLineWidth(2.5f);
+            set.setCircleColor(Color.rgb(242, 72, 0));
+            set.setCircleRadius(0f);
+            set.setFillColor(Color.rgb(240, 238, 70));
+            set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            set.setCubicIntensity(0.0f);
+            set.setDrawValues(false);
+            set.setValueTextSize(10f);
+            set.setValueTextColor(Color.rgb(242, 72, 0));
+            set.setValueFormatter(new DegreeValueFormatter());
 
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        d.addDataSet(set);
-        return d;
-    }
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+            d.addDataSet(set);
+            return d;
+        }
+
 
     private BarData generateRainBarData() {
 
