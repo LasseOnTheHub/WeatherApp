@@ -61,7 +61,13 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
         final Station station = (Station) getItem(position);
 
-        if (station != null && convertView == null) {
+        if (station == null) {
+            // Some error occurred
+        }
+
+        ViewHolder viewHolder;
+
+        if (convertView == null) {
             // First load of element and station is not null
             new AsyncTask<Void,DataReading,DataReading>() {
                 @Override
@@ -79,12 +85,8 @@ public class WeatherStationsAdapter extends BaseAdapter {
                     updateListItem(position, result);
                 }
             }.execute();
-        }
-
-        ViewHolder viewHolder;
-
-        if (convertView == null) {
             viewHolder = new ViewHolder();
+            // Inflating convertView and retrieving the outlets
             convertView = inflater.inflate(R.layout.stationlistelement, parent, false);
             viewHolder.stationTitle = (TextView) convertView.findViewById(R.id.title_label);
             viewHolder.timeLabel = (TextView) convertView.findViewById(R.id.time_label);
@@ -99,46 +101,45 @@ public class WeatherStationsAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if (station == null) {
-            viewHolder.stationTitle.setText("Some title");
-        } else {
-            viewHolder.stationTitle.setText(station.getNotes());
-        }
+        // TODO Setup outlets for loading screen
 
         return convertView;
     }
 
+    /**
+     * Updates a specific item in the list with the data provided in the parameter index.
+     * @param index The index of the list item that is to be updated
+     * @param reading The data reading that should populate the list item
+     */
     private void updateListItem(int index, DataReading reading) {
         View element = list.getChildAt(index);
 
         if (element == null) {
+            // Element is no longer on screen and will update the next time getView is called
             return;
         }
 
+        // Element is not null, which means the view has been on screen and has set up outlets
         ViewHolder viewHolder = (ViewHolder) element.getTag();
-        if (reading != null) {
-            viewHolder.tempSpinner.setVisibility(View.GONE);
-            viewHolder.timeSpinner.setVisibility(View.GONE);
-            viewHolder.timeLabel.setVisibility(View.VISIBLE);
-            viewHolder.tempLabel.setVisibility(View.VISIBLE);
-            String temp = String.valueOf(reading.getAirReadings().getTemperature()) + SettingsManager.getTempUnit(activity.getApplicationContext());
-            viewHolder.tempLabel.setText(temp);
-            viewHolder.timeLabel.setText(formatDate(reading.getTimestamp()));
-            if (isOldContent(reading.getTimestamp())) {
-                viewHolder.oldContent.setVisibility(View.VISIBLE);
-            } else if (Utils.sanityCheck(reading)) {
-                viewHolder.oldContent.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.oldContent.setVisibility(View.GONE);
-            }
-        } else {
-            viewHolder.tempSpinner.setVisibility(View.GONE);
-            viewHolder.timeSpinner.setVisibility(View.GONE);
-            viewHolder.timeLayout.setVisibility(View.GONE);
-            viewHolder.errorLayout.setVisibility(View.VISIBLE);
+
+        if (reading == null) {
+            // Some kind of error occurred
+            showState(viewHolder, reading, ViewState.Error);
         }
+
+        // Setting outlets
+        setTempLabel(viewHolder, reading);
+        setTimeLabel(viewHolder, reading);
+        // Set title of station
+
+
     }
 
+    /**
+     * Returns a date in the format "MMM d HH:mm yyyy" i.e. "Jan 6 12:34 1989"
+     * @param date
+     * @return A formatted String representation of the date.
+     */
     private String formatDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -152,7 +153,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
         return time;
     }
 
-    private void showState(View element, ViewHolder viewHolder, DataReading reading, ViewState state) {
+    private void showState(ViewHolder viewHolder, DataReading reading, ViewState state) {
         switch (state) {
             case Error:
                 viewHolder.tempLabel.setVisibility(View.GONE); // Label for temp
@@ -173,7 +174,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
                 viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
                 // Spinners, clock image and title is visible
-                break;
+                return;
             case Loaded:
                 viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temp
                 viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
@@ -209,7 +210,29 @@ public class WeatherStationsAdapter extends BaseAdapter {
         // TODO Fill labels
     }
 
+    private void setTimeLabel(ViewHolder viewHolder, DataReading reading) {
+        viewHolder.timeSpinner.setVisibility(View.GONE);
+        viewHolder.timeLabel.setVisibility(View.VISIBLE);
+        viewHolder.timeLabel.setText(formatDate(reading.getTimestamp()));
+        viewHolder.timeLayout.setVisibility(View.VISIBLE);
+        viewHolder.oldContent.setVisibility(isOldContent(reading.getTimestamp()) ? View.VISIBLE : View.GONE);
+        // TODO Sane content
+    }
+
+    private void setTempLabel(ViewHolder viewHolder, DataReading reading) {
+        viewHolder.tempSpinner.setVisibility(View.GONE);
+        // TODO use temp converter
+        String temp = String.valueOf(reading.getAirReadings().getTemperature()) + SettingsManager.getTempUnit(activity.getApplicationContext());
+        viewHolder.tempLabel.setText(temp);
+    }
+
+    /**
+     * A boolean indicating whether the data is older than 30 minutes
+     * @param date
+     * @return True if the data is older than 30 minutes, otherwise false
+     */
     private boolean isOldContent(Date date) {
+        // 30 minutes = 30*60*1000 = 1.800.000 milliseconds
         Date threshold = new Date(System.currentTimeMillis()-1800000);
         return date.before(threshold);
     }
@@ -220,7 +243,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
     }
 
     @Override
-    public long getItemId(final int position) {
+    public long getItemId(int position) {
         return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position).getId();
     }
 
@@ -230,7 +253,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(final int position) {
+    public Object getItem(int position) {
         return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position);
     }
 
