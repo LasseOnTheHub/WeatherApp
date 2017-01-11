@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:descendantFocusability="blocksDescendants"
     android:focusable="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/error_layout"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/title_label"
+        android:layout_toRightOf="@+id/title_label"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/warning"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Could not load data"
+            android:textSize="20sp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -76,6 +100,7 @@
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
         android:textSize="20sp"
         android:id="@+id/title_label" />
 
@@ -100,11 +125,5 @@
         android:layout_marginStart="5dp"
         android:layout_alignTop="@+id/temp_label"
         android:layout_marginTop="15dp"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:clickable="false"
-        android:layout_below="@+id/title_label"
-        android:layout_height="15dp" />
 
 </RelativeLayout>
