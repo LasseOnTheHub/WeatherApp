@@ -36,8 +36,6 @@ public class WeatherStationsAdapter extends BaseAdapter {
     private Activity activity;
     private ListView list;
 
-    private enum ViewState { Error, Loading, Loaded, LoadedOldContent, LoadedInsaneContent }
-
     public WeatherStationsAdapter(Activity activity, ListView list) {
         super();
         inflater = activity.getLayoutInflater();
@@ -61,30 +59,28 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
         final Station station = (Station) getItem(position);
 
-        if (station == null) {
-            // Some error occurred
-        }
-
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            // First load of element and station is not null
-            new AsyncTask<Void,DataReading,DataReading>() {
-                @Override
-                protected DataReading doInBackground(Void... arg0) {
-                    try {
-                        return DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return null;
+            // First load of element
+            if (station != null) {
+                new AsyncTask<Void, DataReading, DataReading>() {
+                    @Override
+                    protected DataReading doInBackground(Void... arg0) {
+                        try {
+                            return DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return null;
+                        }
                     }
-                }
 
-                @Override
-                protected void onPostExecute(DataReading result) {
-                    updateListItem(position, result);
-                }
-            }.execute();
+                    @Override
+                    protected void onPostExecute(DataReading result) {
+                        updateListItem(position, result);
+                    }
+                }.execute();
+            }
             viewHolder = new ViewHolder();
             // Inflating convertView and retrieving the outlets
             convertView = inflater.inflate(R.layout.stationlistelement, parent, false);
@@ -101,7 +97,23 @@ public class WeatherStationsAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // TODO Setup outlets for loading screen
+        if (station == null) {
+            // Setting the view state to error
+            showErrorState(viewHolder, null);
+            return convertView;
+        }
+
+        // Setting up outlets for loading screen
+        viewHolder.tempLabel.setVisibility(View.GONE); // Label for temperature
+        viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
+        viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
+        viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
+        viewHolder.tempSpinner.setVisibility(View.VISIBLE); // Spinner for temperature
+        viewHolder.timeSpinner.setVisibility(View.VISIBLE); // Spinner for time
+        viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
+        viewHolder.stationTitle.setVisibility(View.VISIBLE); // Label for station title
+        viewHolder.stationTitle.setText(station.getNotes()); // Setting the stations as title
+        // Spinners, clock image and title is visible
 
         return convertView;
     }
@@ -124,15 +136,13 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
         if (reading == null) {
             // Some kind of error occurred
-            showState(viewHolder, reading, ViewState.Error);
+            showErrorState(viewHolder, (Station) getItem(index));
         }
 
         // Setting outlets
         setTempLabel(viewHolder, reading);
         setTimeLabel(viewHolder, reading);
-        // Set title of station
-
-
+        viewHolder.stationTitle.setText(((Station) getItem(index)).getNotes());
     }
 
     /**
@@ -153,9 +163,23 @@ public class WeatherStationsAdapter extends BaseAdapter {
         return time;
     }
 
-    private void showState(ViewHolder viewHolder, DataReading reading, ViewState state) {
-        switch (state) {
-            case Error:
+    private void showErrorState(ViewHolder viewHolder, Station station) {
+        viewHolder.tempLabel.setVisibility(View.GONE); // Label for temperature
+        viewHolder.timeLayout.setVisibility(View.GONE); // Layout for time (including old content)
+        viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temperature (big one)
+        viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time (little one)
+        if (station == null) {
+            viewHolder.stationTitle.setVisibility(View.GONE); // Label for station title
+        } else {
+            viewHolder.stationTitle.setVisibility(View.VISIBLE); // Label for station title
+            viewHolder.stationTitle.setText(station.getNotes()); // Setting station title
+        }
+        viewHolder.errorLayout.setVisibility(View.VISIBLE); // Label for error
+        // Only error layout (and possibly station name) is visible
+    }
+
+    /*private void showState(ViewHolder viewHolder, DataReading reading) {
+        // Error
                 viewHolder.tempLabel.setVisibility(View.GONE); // Label for temp
                 viewHolder.timeLayout.setVisibility(View.GONE); // Layout for time (including old content)
                 viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temp (big one)
@@ -164,7 +188,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 viewHolder.errorLayout.setVisibility(View.VISIBLE); // Label for error
                 // Only error layout and station name is visible
                 return;
-            case Loading:
+        // Loading
                 viewHolder.tempLabel.setVisibility(View.GONE); // Label for temp
                 viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
                 viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
@@ -175,7 +199,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
                 // Spinners, clock image and title is visible
                 return;
-            case Loaded:
+        // Loaded
                 viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temp
                 viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
                 viewHolder.timeLabel.setVisibility(View.VISIBLE); // Label for time
@@ -185,7 +209,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temp
                 viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time
                 break;
-            case LoadedOldContent:
+        // Loaded old content
                 viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temp
                 viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
                 viewHolder.timeLabel.setVisibility(View.VISIBLE); // Label for time
@@ -195,7 +219,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temp
                 viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time
                 break;
-            case LoadedInsaneContent:
+        // Loaded insane content
                 viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temp
                 viewHolder.stationTitle.setVisibility(View.VISIBLE); // Always visible
                 viewHolder.timeLabel.setVisibility(View.VISIBLE); // Label for time
@@ -208,7 +232,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
                 break;
         }
         // TODO Fill labels
-    }
+    }*/
 
     private void setTimeLabel(ViewHolder viewHolder, DataReading reading) {
         viewHolder.timeSpinner.setVisibility(View.GONE);
@@ -222,6 +246,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
     private void setTempLabel(ViewHolder viewHolder, DataReading reading) {
         viewHolder.tempSpinner.setVisibility(View.GONE);
         // TODO use temp converter
+        viewHolder.tempLabel.setVisibility(View.VISIBLE);
         String temp = String.valueOf(reading.getAirReadings().getTemperature()) + SettingsManager.getTempUnit(activity.getApplicationContext());
         viewHolder.tempLabel.setText(temp);
     }
