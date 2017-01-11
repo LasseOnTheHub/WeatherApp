@@ -43,16 +43,14 @@ public class APIDataReadingRequest extends APIRequest
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        /*
-         * 2016-11-14 23:59:59 in UNIX time converted to milliseconds (in Denmark)
-         */
-        long validEndDate = 1479164399 * 1000L;
+        Date forcedEndDate   = new Date(Environment.API_VALID_DATE_OFFSET);
+        Date forcedStartDate = new Date(Environment.API_VALID_DATE_OFFSET - (end.getTime() - start.getTime()));
 
-        Date forcedEndDate   = new Date(validEndDate);
-        Date forcedStartDate = new Date(validEndDate - (end.getTime() - start.getTime()));
-
-        Log.d(TAG, "Forced start date " + forcedStartDate.toString());
-        Log.d(TAG, "Forced end date " + forcedEndDate.toString());
+        if(Utils.isEmulator())
+        {
+            Log.d(TAG, "Forced start date " + forcedStartDate.toString());
+            Log.d(TAG, "Forced end date " + forcedEndDate.toString());
+        }
 
         this.addParameter("startDate", df.format(forcedStartDate));
         this.addParameter("endDate",   df.format(forcedEndDate));

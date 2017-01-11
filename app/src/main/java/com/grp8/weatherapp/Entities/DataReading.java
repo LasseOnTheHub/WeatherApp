@@ -42,6 +42,11 @@ public class DataReading
         return this.device;
     }
 
+    public void setTimestamp(Date date)
+    {
+        this.date = date;
+    }
+
     public Date getTimestamp()
     {
         return this.date;

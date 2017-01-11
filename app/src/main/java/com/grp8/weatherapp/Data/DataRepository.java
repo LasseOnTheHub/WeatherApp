@@ -1,7 +1,6 @@
 package com.grp8.weatherapp.Data;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.grp8.weatherapp.Data.API.Exceptions.APINetworkException;
@@ -24,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -84,14 +85,6 @@ public class DataRepository
             return true;
         }
         return false;
-    }
-
-    /**
-     * Refreshes the data repository by clearing memory caches.
-     */
-    public void refresh()
-    {
-        this.refresh(false);
     }
 
     /**
@@ -299,8 +292,13 @@ public class DataRepository
             int ceiling = Environment.API_MAXIMUM_NUMBER_OF_RETRIES;
             int counter = 0;
 
-            String    payload;
-            JSONArray json = null;
+            String    payload = "";
+            JSONArray json    = null;
+
+            if(!this.readings.containsKey(station))
+            {
+                this.readings.put(station, new ArrayList<DataReading>());
+            }
 
             while(counter < ceiling)
             {
@@ -347,12 +345,14 @@ public class DataRepository
                 return null;
             }
 
-            if(!this.readings.containsKey(station))
-            {
-                this.readings.put(station, new ArrayList<DataReading>());
-            }
+            /*
+             * Update timestamp to reflect manipulated data.
+             */
+            updateTimestampOnManipulatedReading(reading);
 
             this.readings.get(station).add(reading);
+
+            DataReadingDatabaseHelper.add(this.database, reading.getID(), reading.getDeviceID(), reading.getTimestamp(), payload);
         }
 
         return reading;
@@ -435,6 +435,15 @@ public class DataRepository
             }
         }
 
+        Collections.sort(results, new Comparator<DataReading>()
+        {
+            @Override
+            public int compare(DataReading a, DataReading b)
+            {
+                return a.getTimestamp().compareTo(b.getTimestamp());
+            }
+        });
+
         return results;
     }
 
@@ -468,6 +477,11 @@ public class DataRepository
         {
             DataReading result = results.get(index);
 
+            /*
+             * Update reading to reflect manipulated timestamps
+             */
+            updateTimestampOnManipulatedReading(result);
+
             this.readings.get(station).add(result);
 
             try
@@ -481,5 +495,17 @@ public class DataRepository
         }
 
         return results;
+    }
+
+    private void updateTimestampOnManipulatedReading(DataReading reading)
+    {
+        if(reading.getTimestamp().getTime() > Environment.API_VALID_DATE_OFFSET)
+        {
+            return;
+        }
+
+        long diff = System.currentTimeMillis() - Environment.API_VALID_DATE_OFFSET;
+
+        reading.setTimestamp(new Date(reading.getTimestamp().getTime() + diff));
     }
 }
