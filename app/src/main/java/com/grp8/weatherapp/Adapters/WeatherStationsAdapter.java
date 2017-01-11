@@ -18,6 +18,7 @@ import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
+import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -115,6 +116,8 @@ public class WeatherStationsAdapter extends BaseAdapter {
             viewHolder.timeLabel.setText(formatDate(reading.getTimestamp()));
             if (isOldContent(reading.getTimestamp())) {
                 viewHolder.oldContent.setVisibility(View.VISIBLE);
+            } else if (Utils.sanityCheck(reading)) {
+
             } else {
                 viewHolder.oldContent.setVisibility(View.GONE);
             }
