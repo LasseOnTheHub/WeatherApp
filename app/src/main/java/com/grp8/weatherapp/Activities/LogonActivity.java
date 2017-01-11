@@ -1,6 +1,7 @@
 package com.grp8.weatherapp.Activities;
 
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ public class LogonActivity extends AppCompatActivity {
 
     private EditText passwordEditText;
     private EditText userIDEditText;
+    private TextInputLayout inputLayoutName, inputLayoutPassword;
 
     Authorizer authroizer;
 
@@ -36,8 +38,10 @@ public class LogonActivity extends AppCompatActivity {
         if (!Utils.isEmulator()) {
             Fabric.with(this, new Crashlytics());
         }
-        setContentView(R.layout.activity_logon);
+        setContentView(R.layout.activity_logon2);
 
+        inputLayoutName = (TextInputLayout) findViewById(R.id.userIDTextLayout);
+        inputLayoutPassword = (TextInputLayout) findViewById(R.id.userPasswordTextLayout);
         passwordEditText = (EditText) findViewById(R.id.userPasswordText);
         userIDEditText = (EditText) findViewById(R.id.userIDText);
         authroizer = new Authorizer();
