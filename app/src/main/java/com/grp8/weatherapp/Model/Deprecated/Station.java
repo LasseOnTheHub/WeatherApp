@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Model;
+package com.grp8.weatherapp.Model.Deprecated;
 
 import com.google.android.gms.maps.model.LatLng;
 

@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Model;
+package com.grp8.weatherapp.Model.Deprecated;
 
 /**
  * Created by Henrik on 03-01-2017.
