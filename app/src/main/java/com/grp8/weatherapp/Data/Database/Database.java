@@ -68,7 +68,7 @@ public class Database extends SQLiteOpenHelper
 
     public void insert(String table, ContentValues values)
     {
-        this.getWritableDatabase().insert(table, null, values);
+        this.getWritableDatabase().insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     public void reset()

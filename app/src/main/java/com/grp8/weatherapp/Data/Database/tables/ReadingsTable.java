@@ -20,9 +20,9 @@ public class ReadingsTable
     public final static String SELECT_ALL_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STATION_ID + " = ?";
     public final static String SELECT_LATEST_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TIMESTAMP + " = (SELECT MAX(" + COLUMN_TIMESTAMP + ") FROM " + TABLE_NAME + " WHERE " + COLUMN_STATION_ID + " = ?) LIMIT 1";
     public final static String SELECT_SPECIFIC_FROM_ID_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
-    public final static String SELECT_BETWEEN_TIMESTAMPS_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STATION_ID + " = ? AND " + COLUMN_TIMESTAMP + " BETWEEN ? AND ?";
+    public final static String SELECT_BETWEEN_TIMESTAMPS_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STATION_ID + " = ? AND " + COLUMN_TIMESTAMP + " BETWEEN ? AND ? ORDER BY " + COLUMN_ID + " DESC";
 
-    public final static String CREATE_QUERY = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_STATION_ID + " INTEGER, " + COLUMN_TIMESTAMP + " INTEGER, " + COLUMN_JSON + " VARCHAR)";
+    public final static String CREATE_QUERY = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + COLUMN_ID + " INTEGER, " + COLUMN_STATION_ID + " INTEGER, " + COLUMN_TIMESTAMP + " INTEGER, " + COLUMN_JSON + " VARCHAR)";
     public final static String RESET_QUERY  = "DELETE FROM " + TABLE_NAME;
     public final static String DROP_QUERY   = "DROP TABLE " + TABLE_NAME;
 }

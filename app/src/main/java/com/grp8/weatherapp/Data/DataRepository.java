@@ -384,47 +384,85 @@ public class DataRepository
 
         if(results.size() < 1)
         {
-            String    payload;
-            JSONArray items;
+            results = synchronizeDatabase(station, start, end);
+        }
+        else
+        {
+            /*
+             * Check if the result-set time range ends before the selection ends and more
+             * data may exists.
+             */
+            Date newestTimestamp = results.get(0).getTimestamp();
 
-            payload = this.provider.fetch(new APIDataReadingRequest(this.user, station, start, end));
+            if(newestTimestamp.before(end))
+            {
+                List<DataReading> subsetAfter = synchronizeDatabase(station, newestTimestamp, end);
+
+                for(DataReading item : subsetAfter)
+                {
+                    results.add(item);
+                }
+            }
+
+            /*
+             * Check if the result-set time range starts after the selection starts and more
+             * data may exists
+             */
+            Date oldestTimestamp = results.get(results.size() - 1).getTimestamp();
+
+            if(oldestTimestamp.after(start))
+            {
+                List<DataReading> subsetBefore = synchronizeDatabase(station, start, oldestTimestamp);
+
+                for(DataReading item : subsetBefore)
+                {
+                    results.add(item);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    private List<DataReading> synchronizeDatabase(int station, Date start, Date end)
+    {
+        List<DataReading> results;
+
+        String    payload;
+        JSONArray items;
+
+        payload = this.provider.fetch(new APIDataReadingRequest(this.user, station, start, end));
+
+        try
+        {
+            items   = new JSONArray(payload);
+            results = this.readingMapper.map(items);
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+
+            return new ArrayList<>();
+        }
+
+        if(!this.readings.containsKey(station))
+        {
+            this.readings.put(station, new ArrayList<DataReading>());
+        }
+
+        for(int index = 0; index < results.size(); index++)
+        {
+            DataReading result = results.get(index);
+
+            this.readings.get(station).add(result);
 
             try
             {
-                items   = new JSONArray(payload);
-                results = this.readingMapper.map(items);
+                DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items.getString(index));
             }
             catch(JSONException e)
             {
                 e.printStackTrace();
-
-                return new ArrayList<>();
-            }
-
-            if(items.length() != results.size())
-            {
-                throw new RuntimeException("Cannot cache data readings due to mismatch in collection item count");
-            }
-
-            if(!this.readings.containsKey(station))
-            {
-                this.readings.put(station, new ArrayList<DataReading>());
-            }
-
-            for(int index = 0; index < results.size(); index++)
-            {
-                DataReading result = results.get(index);
-
-                this.readings.get(station).add(result);
-
-                try
-                {
-                    DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items.getString(index));
-                }
-                catch(JSONException e)
-                {
-                    e.printStackTrace();
-                }
             }
         }
 
