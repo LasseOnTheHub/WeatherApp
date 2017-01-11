@@ -51,6 +51,8 @@ public class DataReadingDatabaseHelper
             return null;
         }
 
+        cursor.moveToFirst();
+
         String json = cursor.getString(ReadingsTable.COLUMN_POSITION_JSON);
 
         try
