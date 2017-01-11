@@ -257,7 +257,11 @@ public class WeatherStationsAdapter extends BaseAdapter {
      * @return True if the data is older than 30 minutes, otherwise false
      */
     private boolean isOldContent(Date date) {
-        // 30 minutes = 30*60*1000 = 1.800.000 milliseconds
+        /*
+         *  30 minutes = 30*60*1000 = 1.800.000 milliseconds
+         *  System.currentTimeMillis compares to the time and date of the device (which maybe an emulator)
+         *  - if so, the time may be off, if not set correctly in settings
+         */
         Date threshold = new Date(System.currentTimeMillis()-1800000);
         return date.before(threshold);
     }
