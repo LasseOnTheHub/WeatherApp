@@ -102,11 +102,11 @@ public class GraphTempRainHumidityFragment extends Fragment {
         tempRainLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         tempRainLegend.setDrawInside(false);
 
-        //Definere temperatur og nedbørs højre Y-akse
+        //Definere nedbørs højre Y-akse
         YAxis tempRainYRightAxis = tempRainChart.getAxisRight();
         tempRainYRightAxis.setDrawGridLines(false);
-        tempRainYRightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        tempRainYRightAxis.setAxisMaximum(40f);
+        tempRainYRightAxis.setAxisMinimum(100f); // this replaces setStartAtZero(true)
+        //tempRainYRightAxis.setAxisMaximum(40f);
         tempRainYRightAxis.setValueFormatter(new MMAxisValueFormatter());
 
         //Definere temperatur og nedbørs venstre Y-akse
@@ -124,10 +124,10 @@ public class GraphTempRainHumidityFragment extends Fragment {
         CombinedData data = new CombinedData();
 
         data.setData(generateTemperatureLineData());
-        data.setData(generateRainBarData());
+        //data.setData(generateRainBarData());
         data.setValueTypeface(mTfLight);
 
-        xAxis.setAxisMaximum(data.getXMax() + 0.25f);
+        //xAxis.setAxisMaximum(data.getXMax() + 0.25f);
 
         tempRainChart.setData(data);
 
@@ -299,18 +299,14 @@ public class GraphTempRainHumidityFragment extends Fragment {
         LineData d = new LineData();
         final ArrayList<Entry> tempVals = new ArrayList<Entry>();
 
-        /*String dtStart = "2015-01-01T00:00:00Z";
-        String dtEnd = "2017-01-01T00:00:00Z";*/
         final String dtStart = "2015-01-01 00:00";
         final String dtEnd = "2017-01-01 00:00";
-        //yyyy-MM-dd'T'HH:mm:ss.SSSZ
-
 
         try {
             new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
                 @Override
                 protected List<DataReading> doInBackground(Void... args) {
-                    List<DataReading> data = dataRepository.getStationData(1, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
+                    List<DataReading> data = dataRepository.getStationData(2, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
                     return data;
                 }
 
@@ -323,45 +319,12 @@ public class GraphTempRainHumidityFragment extends Fragment {
                     }
                 }
             }.execute();
-
-
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-
-
-/*        Random r = new Random();
-        int low = 15;
-        int high = 25;
-
-        for (int i=1;i<50;i++)
-        {
-            if(i<30)
-            tempVals.add(new Entry(i,i));
-            else
-                tempVals.add(new Entry(i,50-i));
-        }*/
-
-/*        tempVals.add(new Entry(1,6));
-        tempVals.add(new Entry(2,8));
-        tempVals.add(new Entry(2,9));
-        tempVals.add(new Entry(3,10));
-        tempVals.add(new Entry(4,10));
-        tempVals.add(new Entry(5,5));
-        tempVals.add(new Entry(6,-0));
-        tempVals.add(new Entry(7,-5));
-        tempVals.add(new Entry(8,-5));
-        tempVals.add(new Entry(9,0));*/
-
-/*        tempVals.add(new Entry(1451660400,6));
-        tempVals.add(new Entry(1451685600,8));
-        tempVals.add(new Entry(1451721600,10));
-        tempVals.add(new Entry(1451743200,10));
-        tempVals.add(new Entry(1451761200,5));*/
-
-
+            tempVals.add(new Entry(1, 20));
             LineDataSet set = new LineDataSet(tempVals, "Temperatur");
             set.setColor(Color.rgb(242, 72, 0));
             set.setLineWidth(2.5f);
@@ -383,9 +346,34 @@ public class GraphTempRainHumidityFragment extends Fragment {
 
     private BarData generateRainBarData() {
 
-        ArrayList<BarEntry> rainVals = new ArrayList<BarEntry>();
+        final ArrayList<BarEntry> rainVals = new ArrayList<BarEntry>();
+        final String dtStart = "2015-01-01 00:00";
+        final String dtEnd = "2017-01-01 00:00";
 
+        try {
+            new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
+                @Override
+                protected List<DataReading> doInBackground(Void... args) {
+                    List<DataReading> data = dataRepository.getStationData(2, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
+                    return data;
+                }
+
+                @Override
+                protected void onPostExecute(List<DataReading> data) {
+                    for (DataReading d : data) {
+                        float x = toNumber(d.getTimestamp());
+                        float y = (float) d.getAirReadings().getPressure();
+                        rainVals.add(new BarEntry(x, y));
+                    }
+                }
+            }.execute();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         rainVals.add(new BarEntry(1f,1.2f));
+/*        rainVals.add(new BarEntry(1f,1.2f));
         rainVals.add(new BarEntry(2f,1.0f));
         rainVals.add(new BarEntry(2f,2.0f));
         rainVals.add(new BarEntry(2f,3.0f));
@@ -395,7 +383,7 @@ public class GraphTempRainHumidityFragment extends Fragment {
         rainVals.add(new BarEntry(6f,2.0f));
         rainVals.add(new BarEntry(7f,1.7f));
         rainVals.add(new BarEntry(8f,1.5f));
-        rainVals.add(new BarEntry(9f,1.2f));
+        rainVals.add(new BarEntry(9f,1.2f));*/
 
 
 /*        rainVals.add(new BarEntry(1451660400,1,2));
