@@ -112,6 +112,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("Clicked on item",String.valueOf(position));
+        Log.d("Id",String.valueOf(id));
         startActivity(new Intent(getActivity(), WeatherStationTab.class));
     }
 

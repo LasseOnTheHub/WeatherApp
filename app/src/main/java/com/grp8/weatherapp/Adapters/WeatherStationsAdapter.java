@@ -55,7 +55,6 @@ public class WeatherStationsAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         final Station station = (Station) getItem(position);
-        Log.d("Get view ", String.valueOf(position));
 
         if (station != null) {
             new AsyncTask<Void,DataReading,DataReading>() {
@@ -99,17 +98,6 @@ public class WeatherStationsAdapter extends BaseAdapter {
         } else {
             viewHolder.stationTitle.setText(station.getNotes());
         }
-        if (position % 2 == 0) {
-            Date date = new Date(System.currentTimeMillis()-2760000);
-            viewHolder.timeLabel.setText(formatDate(date));
-            if (isOldContent(date)) {
-                viewHolder.oldContent.setVisibility(LinearLayout.VISIBLE);
-            }
-        } else {
-            Date date = new Date();
-            viewHolder.timeLabel.setText(formatDate(date));
-            viewHolder.oldContent.setVisibility(LinearLayout.GONE);
-        }
 
         return convertView;
     }
@@ -125,6 +113,11 @@ public class WeatherStationsAdapter extends BaseAdapter {
             String temp = String.valueOf(reading.getAirReadings().getTemperature()) + SettingsManager.getTempUnit(activity.getApplicationContext());
             viewHolder.tempLabel.setText(temp);
             viewHolder.timeLabel.setText(formatDate(reading.getTimestamp()));
+            if (isOldContent(reading.getTimestamp())) {
+                viewHolder.oldContent.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.oldContent.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -143,7 +136,9 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     private boolean isOldContent(Date date) {
         Date threshold = new Date(System.currentTimeMillis()-1800000);
-        return date.compareTo(threshold) != -1;
+        Log.d("Date1",date.toString());
+        Log.d("Threshold",threshold.toString());
+        return date.compareTo(threshold) < 0;
     }
 
     @Override
@@ -153,6 +148,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(final int position) {
+        Log.d("Get item id", String.valueOf(position));
         return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position).getId();
     }
 
