@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Formatters.DayAxisValueFormatter;
@@ -42,10 +43,10 @@ public class GraphLuxPressure extends Fragment {
 
     private LineChart pressureChart;
     private LineChart luxChart;
-    Typeface mTfLight;
-    DataRepository dataRepository;
-    long referenceTimestamp;
-    MyMarkerView myMarkerView;
+    Typeface        mTfLight;
+    IDataRepository dataRepository;
+    long            referenceTimestamp;
+    MyMarkerView    myMarkerView;
     final String dtStart = "2016-11-01 00:00";
     final String dtEnd = "2016-12-01 00:00";
     final int station = 2;
