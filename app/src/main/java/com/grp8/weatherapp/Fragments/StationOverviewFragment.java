@@ -23,7 +23,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private TableLayout tableLayout;
     private ProgressBar spinner;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
@@ -38,11 +37,8 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         updated = (TextView)stationOverview.findViewById(R.id.updated);
         spinner = (ProgressBar)stationOverview.findViewById(R.id.spinner);
 
+        // setting spinner visible
         loadView();
-
-        // Hent spinner
-        // Sæt spinner som visible
-        // metode som sætter spinner
 
         // TableLayout declaration
         tableLayout = (TableLayout)stationOverview.findViewById(R.id.tableLayoutt);
@@ -59,7 +55,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
                     return null;
                 }
             }
-
             @Override
             protected void onPostExecute(DataReading reading) {
                 if (reading != null) {
@@ -69,8 +64,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
             }
         }.execute();
 
-
-
         return stationOverview;
     }
 
@@ -79,9 +72,11 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
 
     private void updateView(DataReading reading) {
-        // Fern spinner
+
+        // removing spinner
+        spinner.setVisibility(View.GONE);
+
         // setting text
-        loadedView();
 
         // set temperature text and getting the appropriate unit
         String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),reading.getAirReadings().getTemperature()));
@@ -106,19 +101,10 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
     private void loadView() {
         spinner.setVisibility(View.VISIBLE);
-        temp.setVisibility(View.INVISIBLE);
-        windSpeed.setVisibility(View.INVISIBLE);
-        airP.setVisibility(View.INVISIBLE);
-        humidity.setVisibility(View.INVISIBLE);
-        updated.setVisibility(View.INVISIBLE);
-    }
-
-    private void loadedView() {
-        spinner.setVisibility(View.GONE);
-        temp.setVisibility(View.VISIBLE);
-        windSpeed.setVisibility(View.VISIBLE);
-        airP.setVisibility(View.VISIBLE);
-        humidity.setVisibility(View.VISIBLE);
-        updated.setVisibility(View.VISIBLE);
+        temp.setText(R.string.loadingTextOverview);
+        windSpeed.setText(R.string.loadingTextOverview);
+        airP.setText(R.string.loadingTextOverview);
+        humidity.setText(R.string.loadingTextOverview);
+        updated.setText(R.string.loadingTextOverview);
     }
 }

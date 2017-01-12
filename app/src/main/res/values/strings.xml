@@ -18,6 +18,7 @@
 
     <string name="searchHint">Search...</string>
     <string name="loadingText">Loading stations...</string>
+    <string name="loadingTextOverview">Loading...</string>
 
     <!-- Font awesome icons -->
     <string name="icon_temp">&#xf02b;</string>
