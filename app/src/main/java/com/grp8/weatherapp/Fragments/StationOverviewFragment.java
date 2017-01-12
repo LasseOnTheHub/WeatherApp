@@ -1,36 +1,19 @@
 package com.grp8.weatherapp.Fragments;
 
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.content.Intent;
-import android.icu.text.DateFormat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
-import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.SupportingFiles.Converters.PressureConverter;
 import com.grp8.weatherapp.SupportingFiles.Converters.TemperatureConverter;
-import com.grp8.weatherapp.TestData.WeatherStation;
-import com.grp8.weatherapp.TestData.WeatherStations;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -57,7 +40,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         // TableLayout declaration
         tableLayout = (TableLayout)stationOverview.findViewById(R.id.tableLayoutt);
 
-        final int stationId = (int) getActivity().getIntent().getExtras().getLong(Constants.KEY_USERID);
+        final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
 
         new AsyncTask<Void, DataReading, DataReading>() {
             @Override

@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.R;
@@ -57,8 +58,8 @@ public class GraphTempRainHumidityFragment extends Fragment {
     //Grafer
     private LineChart humidityChart;
     private CombinedChart tempRainChart;
-    Typeface mTfLight;
-    DataRepository dataRepository;
+    Typeface        mTfLight;
+    IDataRepository dataRepository;
 
 /*    String dtStart = "";
     String dtEnd = "";*/
