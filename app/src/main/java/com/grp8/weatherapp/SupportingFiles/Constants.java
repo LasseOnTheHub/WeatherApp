@@ -5,6 +5,8 @@ package com.grp8.weatherapp.SupportingFiles;
  */
 public class Constants {
     public static final String KEY_USERID = "userid";
+    public static final String KEY_STATION_ID = "station-id";
+
     public static final String KEY_WEATHERSTATIONARR = "weatherStationArray";
     public static final String KEY_SELECTED_STATION = "selected_station";
     public static final String KEY_TEMP_UNIT = "temp_unit";

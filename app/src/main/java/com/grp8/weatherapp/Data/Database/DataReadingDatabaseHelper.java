@@ -57,7 +57,13 @@ public class DataReadingDatabaseHelper
 
         try
         {
-            return mapper.map(new JSONObject(json));
+            JSONArray arr = new JSONArray(json);
+
+            if(arr.length() < 1)
+            {
+                throw new RuntimeException("Zero length JSON array returned from database.");
+            }
+            return mapper.map(arr.getJSONObject(0));
         }
         catch(JSONException e)
         {

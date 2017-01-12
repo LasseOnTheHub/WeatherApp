@@ -18,8 +18,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.DataRepositoryOLD;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 
@@ -36,7 +37,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment
 {
     MapView mMapView;
     private GoogleMap googleMap;
-    DataRepository dataRepository;
+    IDataRepository dataRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
