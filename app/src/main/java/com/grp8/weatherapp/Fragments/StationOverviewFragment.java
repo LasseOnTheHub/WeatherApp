@@ -26,18 +26,20 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
-        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
+       // TODO remove if font awesome is not implemented
+       // Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
 
         // TextView declaration
         temp = (TextView)stationOverview.findViewById(R.id.temp);
-        temp.setTypeface(font);
+        //TODO remove if font awesome is not implemented
+        // temp.setTypeface(font);
         windSpeed = (TextView)stationOverview.findViewById(R.id.windSpeed);
         airP = (TextView)stationOverview.findViewById(R.id.airP);
         humidity = (TextView)stationOverview.findViewById(R.id.humidity);
         updated = (TextView)stationOverview.findViewById(R.id.updated);
         spinner = (ProgressBar)stationOverview.findViewById(R.id.spinner);
 
-        // setting spinner visible
+        // setting spinner visible and loading text
         loadView();
 
         // TableLayout declaration
@@ -107,4 +109,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         humidity.setText(R.string.loadingTextOverview);
         updated.setText(R.string.loadingTextOverview);
     }
+
+    private void errorView() {
+
+    }
+
 }

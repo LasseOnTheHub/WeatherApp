@@ -59,11 +59,10 @@
             android:layout_height="match_parent"
             android:gravity="center">
 
-            <TextView
+            <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/TempIcon"
-                android:text="@string/icon_temp"
                 android:src="@drawable/temperature"/>
 
             <TextView
