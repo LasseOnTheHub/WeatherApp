@@ -25,7 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivityTab" />
+        <activity android:name=".Activities.MainActivityTab" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@layout/fragment_stationlist"/>
+        </activity>
         <activity android:name=".Activities.Deprecated.StationDetailsActivity" />
         <activity android:name=".Activities.SettingsActivity" />
         <!--

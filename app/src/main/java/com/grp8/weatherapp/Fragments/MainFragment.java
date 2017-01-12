@@ -91,6 +91,12 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("onPause","called");
+    }
+
     private void updateList() {
         spinnerFrame.setVisibility(RelativeLayout.GONE);
         list.setVisibility(View.VISIBLE);
