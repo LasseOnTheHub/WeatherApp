@@ -131,7 +131,7 @@
         android:layout_alignLeft="@+id/temp_label"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
-        android:layout_alignTop="@+id/temp_label"
+        android:layout_centerVertical="true"
         android:layout_marginTop="15dp"/>
 
 </RelativeLayout>

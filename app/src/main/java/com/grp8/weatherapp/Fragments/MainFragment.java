@@ -44,10 +44,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     private ListView list;
     private TextView spinnerText;
 
-    private FrameLayout searchFrame;
     private RelativeLayout spinnerFrame;
-
-    private boolean searchIsVisible = false;
 
     private class LoadTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -71,8 +68,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         View mainFrag = inflater.inflate(R.layout.fragment_stationlist, container, false);
         spinnerFrame = (RelativeLayout) mainFrag.findViewById(R.id.spinner_layout);
         spinnerText = (TextView) mainFrag.findViewById(R.id.spinner_text);
-        searchFrame = (FrameLayout) mainFrag.findViewById(R.id.searchFrame);
-        searchFrame.setVisibility(FrameLayout.GONE);
         list = (ListView) mainFrag.findViewById(R.id.stationlist);
         DataRepositoryFactory.build(getActivity().getApplicationContext()).setUser(5);
         new LoadTask().execute();
@@ -96,14 +91,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (searchIsVisible) {
-            toggleSearch(true);
-        }
-    }
-
     private void updateList() {
         spinnerFrame.setVisibility(RelativeLayout.GONE);
         list.setVisibility(View.VISIBLE);
@@ -120,45 +107,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         Log.d(" ID stashed",getActivity().getIntent().getExtras().getString(Constants.KEY_USERID));
         startActivity(intent);
 
-    }
-
-    public void toggleSearch(boolean shouldChange) {
-        if (searchIsVisible) {
-            searchFrame.animate()
-                    .translationY(-1/2*searchFrame.getHeight())
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            EditText searchField = (EditText) getView().findViewById(R.id.searchField);
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-                         }
-                    });
-            searchFrame.setVisibility(FrameLayout.GONE);
-        } else {
-            searchFrame.setVisibility(VISIBLE);
-            searchFrame.animate()
-                    .translationY(1/2*searchFrame.getHeight())
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            EditText searchField = (EditText) getView().findViewById(R.id.searchField);
-                            searchField.requestFocus();
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
-                        }
-                    });
-        }
-
-        if (shouldChange) {
-            searchIsVisible = !searchIsVisible;
-        }
-    }
-
-    public boolean isSearchVisible() {
-        return searchIsVisible;
     }
 
 }

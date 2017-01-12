@@ -1,7 +1,6 @@
 package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +9,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -105,7 +102,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
         }
 
         // Setting up outlets for loading screen
-        viewHolder.tempLabel.setVisibility(View.GONE); // Label for temperature
+        viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
         viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
         viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
         viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
@@ -158,7 +155,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
         cal.setTime(date);
         String time;
         if (cal.get(Calendar.DAY_OF_MONTH) <= 9) {
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM d HH:mm yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM d HH:mm yyyy", Locale.getDefault());
             time = formatter.format(date);
         } else {
             time = date.toString().substring(4,16);
@@ -167,8 +164,8 @@ public class WeatherStationsAdapter extends BaseAdapter {
     }
 
     private void showErrorState(ViewHolder viewHolder, Station station) {
-        viewHolder.tempLabel.setVisibility(View.GONE); // Label for temperature
-        viewHolder.timeLayout.setVisibility(View.GONE); // Layout for time (including old content)
+        viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
+        viewHolder.timeLayout.setVisibility(View.INVISIBLE); // Layout for time (including old content)
         viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temperature (big one)
         viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time (little one)
         if (station == null) {
