@@ -243,8 +243,8 @@ public class GraphLuxPressure extends Fragment {
 
             // set data
             luxChart.setData(lineData);
-            pressureChart.notifyDataSetChanged();
-            pressureChart.invalidate();
+            luxChart.notifyDataSetChanged();
+            luxChart.invalidate();
     }
     }
     private Date convertDateFromStringToDate(String date)
