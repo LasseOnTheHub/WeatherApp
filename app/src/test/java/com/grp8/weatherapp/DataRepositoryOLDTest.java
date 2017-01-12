@@ -9,7 +9,7 @@ import org.junit.Test;
  * Created by Thomas on 03-Jan-17.
  */
 
-public class DataRepositoryTest
+public class DataRepositoryOLDTest
 {
     @Test
     public void canSplitPayload() throws Exception

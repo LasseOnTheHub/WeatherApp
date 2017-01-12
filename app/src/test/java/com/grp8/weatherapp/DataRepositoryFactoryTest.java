@@ -1,7 +1,8 @@
 package com.grp8.weatherapp;
 
-import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.DataRepositoryOLD;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Data.IDataRepository;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -15,8 +16,8 @@ public class DataRepositoryFactoryTest
     @Test
     public void canCreateAndRetainInstance() throws Exception
     {
-        DataRepository first  = DataRepositoryFactory.build(null);
-        DataRepository second = DataRepositoryFactory.build(null);
+        IDataRepository first  = DataRepositoryFactory.build(null);
+        IDataRepository second = DataRepositoryFactory.build(null);
 
         assertEquals(first, second);
     }
