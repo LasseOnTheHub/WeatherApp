@@ -59,21 +59,19 @@ public class MainActivityTab extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_stationslist, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         //SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         //searchView.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 getMainFragment().toggleSearch();
-                Log.d("Searching","true");
-                return false;
+                return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 getMainFragment().toggleSearch();
-                Log.d("Searching","false");
-                return false;
+                return true;
             }
         });
         return true;

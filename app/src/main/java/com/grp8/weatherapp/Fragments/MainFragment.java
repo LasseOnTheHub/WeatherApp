@@ -70,7 +70,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         spinnerFrame = (RelativeLayout) mainFrag.findViewById(R.id.spinner_layout);
         spinnerText = (TextView) mainFrag.findViewById(R.id.spinner_text);
         list = (ListView) mainFrag.findViewById(R.id.stationlist);
-        DataRepositoryFactory.build(getActivity().getApplicationContext()).setUser(5);
         new LoadTask().execute();
         list.setOnItemClickListener(this);
 
@@ -90,12 +89,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
             spinnerText.setText(R.string.loadingText);
             new LoadTask().execute();
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("onPause","called");
     }
 
     private void updateList() {

@@ -1,6 +1,7 @@
 package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -36,6 +41,8 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
     private Activity activity;
     private ListView list;
     private boolean isSearching = false;
+    private ArrayList<HashMap<Station,DataReading>> searchResults;
+
 
     public WeatherStationsAdapter(Activity activity, ListView list) {
         super();
@@ -47,30 +54,28 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
     @Override
     public Filter getFilter() {
         return new Filter() {
+            private ArrayList<HashMap<Station,DataReading>> searchRes;
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
+                if (constraint != null && constraint.length() != 0) {
+                    ArrayList<HashMap<Station,DataReading>> filterResultsData = new ArrayList<HashMap<Station,DataReading>>();
 
-                if (constraint == null || constraint.length() == 0) {
-                    results.values = DataRepositoryFactory.build(activity.getApplicationContext()).getStations();
-                    results.count = getCount();
-                } else {
-                    ArrayList<Station> filterResultsData = new ArrayList<Station>();
                     for(int i = 0; i<getCount(); i++) {
                         Station station = (Station) getItem(i);
                         if (station.getNotes().contains(constraint)) {
-                            filterResultsData.add(station);
+                            HashMap<Station, DataReading> map = new HashMap<Station, DataReading>();
+                            map.put(station,DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId()));
+                            filterResultsData.add(map);
                         }
                     }
-                    results.values = filterResultsData;
-                    results.count = filterResultsData.size();
+                    searchResults = filterResultsData;
                 }
-                return results;
+                return null;
             }
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-
+                notifyDataSetChanged();
             }
         };
     }
@@ -134,6 +139,21 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
             showErrorState(viewHolder, null);
             // Only error layout is visible
             return convertView;
+        }
+        Log.d("isSearching",String.valueOf(isSearching));
+        if (isSearching) {
+            if (searchResults != null) {
+                HashMap<Station, DataReading> map = searchResults.get(0);
+                Map.Entry<Station,DataReading> entry = (Map.Entry<Station, DataReading>) map.entrySet();
+                Station searchStation = entry.getKey();
+                DataReading searchReading = entry.getValue();
+                setTempLabel(viewHolder, searchReading);
+                setTimeLabel(viewHolder, searchReading);
+                viewHolder.stationTitle.setText(searchStation.getNotes());
+                return convertView;
+            } else {
+                return convertView; // Search is clicked but not yet finished
+            }
         }
 
         // Setting up outlets for loading screen
