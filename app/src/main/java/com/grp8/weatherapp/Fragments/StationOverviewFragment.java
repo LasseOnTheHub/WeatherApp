@@ -109,6 +109,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         humidity.setText(hum + " %");
 
         // Set last updated text and getting the appropriate unit
+        updated.setMaxWidth(80);
         updated.setText(String.valueOf(reading.getTimestamp()));
     }
 
