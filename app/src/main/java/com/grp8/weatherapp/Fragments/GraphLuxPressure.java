@@ -1,5 +1,6 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -18,6 +21,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
@@ -34,12 +38,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lbirk on 09-01-2017.
  */
-
-public class GraphLuxPressure extends Fragment {
+public class GraphLuxPressure extends Fragment implements DatePickerFragment {
 
     private LineChart pressureChart;
     private LineChart luxChart;
@@ -51,8 +55,65 @@ public class GraphLuxPressure extends Fragment {
     final String dtEnd = "2016-12-01 00:00";
     final int station = 2;
 
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat formatter;
+
+    private TextView dateInputFrom;
+    private TextView dateInputTo;
+
+    private DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setFromDate(cal.getTime());
+            cal.set(Calendar.DATE, 7);
+            if (((WeatherStationTab) getActivity()).getEndDate().after(cal.getTime())) {
+                dateInputTo.callOnClick();
+            }
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
+        }
+    };
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lux_pressure, container, false);
+
+        formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        dateInputTo = (TextView) view.findViewById(R.id.dateInputTo);
+        setToDate(((WeatherStationTab) getActivity()).getEndDate());
+        dateInputTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.setTime(((WeatherStationTab) getActivity()).getEndDate());
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), dateToListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMinDate(((WeatherStationTab) getActivity()).getStartDate().getTime());
+                dialog.getDatePicker().setMaxDate(((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000);
+                dialog.setTitle("Choose end date");
+                dialog.show();
+            }
+        });
+        dateInputFrom = (TextView) view.findViewById(R.id.dateInputFrom);
+        setFromDate(((WeatherStationTab) getActivity()).getStartDate());
+        dateInputFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.setTime(((WeatherStationTab) getActivity()).getStartDate());
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), dateFromListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+                dialog.setTitle("Choose start date");
+                dialog.show();
+            }
+        });
+
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
         dataRepository.setUser(5);
 
@@ -275,5 +336,15 @@ public class GraphLuxPressure extends Fragment {
 
     public static float toNumber(int hour, int minute) {
         return hour + minute / 60f;
+    }
+
+    @Override
+    public void setToDate(Date date) {
+        dateInputTo.setText(formatter.format(date));
+    }
+
+    @Override
+    public void setFromDate(Date date) {
+        dateInputFrom.setText(formatter.format(date));
     }
 }
