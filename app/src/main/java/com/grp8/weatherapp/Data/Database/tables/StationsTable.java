@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.Data.Database.tables;
+package com.grp8.weatherapp.Data.Database.Tables;
 
 /*
  * Created by Thomas on 07-Jan-17.

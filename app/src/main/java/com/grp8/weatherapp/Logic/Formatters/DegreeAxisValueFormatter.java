@@ -1,21 +1,21 @@
-package com.grp8.weatherapp.SupportingFiles.Formatters;
+package com.grp8.weatherapp.Logic.Formatters;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.text.DecimalFormat;
 
-public class MMAxisValueFormatter implements IAxisValueFormatter
+public class DegreeAxisValueFormatter implements IAxisValueFormatter
 {
 
     private DecimalFormat mFormat;
 
-    public MMAxisValueFormatter() {
+    public DegreeAxisValueFormatter() {
         mFormat = new DecimalFormat("###.#");
     }
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        return mFormat.format(value) + " mm";
+        return mFormat.format(value) + (char) 0x00B0+"C";
     }
 }

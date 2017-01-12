@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.BussinessLogic;
+package com.grp8.weatherapp.Logic;
 
 /**
  * Created by lbirk on 02-10-2016.

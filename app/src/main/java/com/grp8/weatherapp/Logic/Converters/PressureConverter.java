@@ -1,8 +1,8 @@
-package com.grp8.weatherapp.SupportingFiles.Converters;
+package com.grp8.weatherapp.Logic.Converters;
 
 import android.content.Context;
 
-import com.grp8.weatherapp.Model.SettingsManager;
+import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
 
 /**

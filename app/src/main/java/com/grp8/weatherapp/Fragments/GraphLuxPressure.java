@@ -22,14 +22,12 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Formatters.DayAxisValueFormatter;
-import com.grp8.weatherapp.SupportingFiles.Formatters.HourAxisValueFormatter;
-import com.grp8.weatherapp.SupportingFiles.Formatters.MyMarkerView;
+import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

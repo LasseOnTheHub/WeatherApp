@@ -23,7 +23,7 @@ import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Constants;
+import com.grp8.weatherapp.Logic.Constants;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 

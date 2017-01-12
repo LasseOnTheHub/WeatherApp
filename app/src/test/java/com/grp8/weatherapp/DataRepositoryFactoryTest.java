@@ -1,6 +1,5 @@
 package com.grp8.weatherapp;
 
-import com.grp8.weatherapp.Data.DataRepositoryOLD;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
 

@@ -1,7 +1,6 @@
 package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
-import com.grp8.weatherapp.Model.SettingsManager;
+import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

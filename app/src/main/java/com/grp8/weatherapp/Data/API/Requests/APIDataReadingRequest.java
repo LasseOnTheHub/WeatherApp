@@ -2,13 +2,11 @@ package com.grp8.weatherapp.Data.API.Requests;
 
 import android.util.Log;
 
-import com.grp8.weatherapp.SupportingFiles.Environment;
-import com.grp8.weatherapp.SupportingFiles.Utils;
+import com.grp8.weatherapp.Logic.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /*
  * Created by Thomas on 03-Jan-17.
@@ -52,7 +50,7 @@ public class APIDataReadingRequest extends APIRequest
         /*
          * This assumes the starting interval was -1 hour when called for the first time.
          */
-        this.backwardsReadingDateInterval = (this.backwardsReadingDateInterval * Environment.API_RETRY_MULTIPLICATION_FACTOR);
+        this.backwardsReadingDateInterval = (this.backwardsReadingDateInterval * 3);
 
         if(Utils.isEmulator())
         {

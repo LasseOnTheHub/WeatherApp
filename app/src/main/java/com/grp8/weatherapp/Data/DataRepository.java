@@ -12,7 +12,6 @@ import com.grp8.weatherapp.Data.API.Requests.APIStationRequest;
 import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
-import com.grp8.weatherapp.SupportingFiles.Environment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -125,7 +124,7 @@ public class DataRepository implements IDataRepository
     {
         APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
 
-        int ceiling = Environment.API_MAXIMUM_NUMBER_OF_RETRIES;
+        int ceiling = 5;
         int counter = 0;
 
         JSONArray json = null;

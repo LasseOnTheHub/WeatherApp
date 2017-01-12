@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.SupportingFiles.Formatters;
+package com.grp8.weatherapp.Logic.Formatters;
 import android.content.Context;
 import android.widget.TextView;
 

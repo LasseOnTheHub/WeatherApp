@@ -3,7 +3,7 @@ package com.grp8.weatherapp.Data.Database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.grp8.weatherapp.Data.Database.tables.ReadingsTable;
+import com.grp8.weatherapp.Data.Database.Tables.ReadingsTable;
 import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Entities.DataReading;
 
