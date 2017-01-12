@@ -1,5 +1,6 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -25,10 +27,10 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
-import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Formatters.DayAxisValueFormatter;
 import com.grp8.weatherapp.SupportingFiles.Formatters.DegreeAxisValueFormatter;
@@ -45,7 +47,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 /**
  * Created by lbirk on 08-01-2017.
@@ -53,13 +54,15 @@ import java.util.Random;
 
 
 
-public class GraphTempRainHumidityFragment extends Fragment {
+public class GraphTempRainHumidityFragment extends Fragment implements DatePickerFragment {
 
     //Grafer
     private LineChart humidityChart;
     private CombinedChart tempRainChart;
     Typeface        mTfLight;
     IDataRepository dataRepository;
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat formatter;
 
 /*    String dtStart = "";
     String dtEnd = "";*/
@@ -72,15 +75,37 @@ public class GraphTempRainHumidityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_temp_rain_humidity, container, false);
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
-        dataRepository.setUser(5);
 
         //Grafer
         humidityChart = (LineChart) view.findViewById(R.id.humiditychart);
         tempRainChart = (CombinedChart) view.findViewById(R.id.tempandrainchart);
 
         //Datovælger
-        dateInputFrom = (TextView) view.findViewById(R.id.dateInputFrom);
+        formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         dateInputTo = (TextView) view.findViewById(R.id.dateInputTo);
+        setToDate(((WeatherStationTab) getActivity()).getEndDate());
+        dateInputTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.setTime(((WeatherStationTab) getActivity()).getEndDate());
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), dateToListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMinDate(((WeatherStationTab) getActivity()).getStartDate().getTime());
+                dialog.getDatePicker().setMaxDate(((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000);
+                dialog.setTitle("Choose end date");
+                dialog.show();
+            }
+        });
+        dateInputFrom = (TextView) view.findViewById(R.id.dateInputFrom);
+        setFromDate(((WeatherStationTab) getActivity()).getStartDate());
+        dateInputFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.setTime(((WeatherStationTab) getActivity()).getStartDate());
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), dateFromListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+                dialog.setTitle("Choose start date");
+                dialog.show();
+            }
+        });
 
         //******Definere graf for temperatur og nedbør START******
 
@@ -325,24 +350,24 @@ public class GraphTempRainHumidityFragment extends Fragment {
         {
             e.printStackTrace();
         }
-            tempVals.add(new Entry(1, 20));
-            LineDataSet set = new LineDataSet(tempVals, "Temperatur");
-            set.setColor(Color.rgb(242, 72, 0));
-            set.setLineWidth(2.5f);
-            set.setCircleColor(Color.rgb(242, 72, 0));
-            set.setCircleRadius(0f);
-            set.setFillColor(Color.rgb(240, 238, 70));
-            set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-            set.setCubicIntensity(0.0f);
-            set.setDrawValues(false);
-            set.setValueTextSize(10f);
-            set.setValueTextColor(Color.rgb(242, 72, 0));
-            set.setValueFormatter(new DegreeValueFormatter());
+        tempVals.add(new Entry(1, 20));
+        LineDataSet set = new LineDataSet(tempVals, "Temperatur");
+        set.setColor(Color.rgb(242, 72, 0));
+        set.setLineWidth(2.5f);
+        set.setCircleColor(Color.rgb(242, 72, 0));
+        set.setCircleRadius(0f);
+        set.setFillColor(Color.rgb(240, 238, 70));
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set.setCubicIntensity(0.0f);
+        set.setDrawValues(false);
+        set.setValueTextSize(10f);
+        set.setValueTextColor(Color.rgb(242, 72, 0));
+        set.setValueFormatter(new DegreeValueFormatter());
 
-            set.setAxisDependency(YAxis.AxisDependency.LEFT);
-            d.addDataSet(set);
-            return d;
-        }
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        d.addDataSet(set);
+        return d;
+    }
 
 
     private BarData generateRainBarData() {
@@ -404,5 +429,39 @@ public class GraphTempRainHumidityFragment extends Fragment {
         BarData d = new BarData(set1);
         d.setBarWidth(barWidth);
         return d;
+    }
+
+    DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setFromDate(cal.getTime());
+            cal.set(Calendar.DATE, 7);
+            if (((WeatherStationTab) getActivity()).getEndDate().after(cal.getTime())) {
+                dateInputTo.callOnClick();
+            }
+        }
+    };
+
+    DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
+        }
+    };
+
+    @Override
+    public void setToDate(Date date) {
+        dateInputTo.setText(formatter.format(date));
+    }
+
+    @Override
+    public void setFromDate(Date date) {
+        dateInputFrom.setText(formatter.format(date));
     }
 }

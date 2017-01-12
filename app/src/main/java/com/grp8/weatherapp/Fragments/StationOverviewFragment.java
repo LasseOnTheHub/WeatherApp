@@ -1,9 +1,18 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.content.Intent;
+import android.icu.text.DateFormat;
+import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -21,6 +30,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
     private TextView temp,windSpeed,airP, humidity, updated;
     private TableLayout tableLayout;
+    private ProgressBar spinner;
 
 
     @Override
@@ -33,6 +43,10 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         airP = (TextView)stationOverview.findViewById(R.id.airP);
         humidity = (TextView)stationOverview.findViewById(R.id.humidity);
         updated = (TextView)stationOverview.findViewById(R.id.updated);
+        spinner = (ProgressBar)stationOverview.findViewById(R.id.spinner);
+
+        loadView();
+
         // Hent spinner
         // Sæt spinner som visible
         // metode som sætter spinner
@@ -74,6 +88,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private void updateView(DataReading reading) {
         // Fern spinner
         // setting text
+        loadedView();
 
         // set temperature text and getting the appropriate unit
         String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),reading.getAirReadings().getTemperature()));
@@ -95,5 +110,21 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         updated.setMaxWidth(80);
         updated.setText(String.valueOf(reading.getTimestamp()));
     }
+    private void loadView() {
+        spinner.setVisibility(View.VISIBLE);
+        temp.setVisibility(View.INVISIBLE);
+        windSpeed.setVisibility(View.INVISIBLE);
+        airP.setVisibility(View.INVISIBLE);
+        humidity.setVisibility(View.INVISIBLE);
+        updated.setVisibility(View.INVISIBLE);
+    }
 
+    private void loadedView() {
+        spinner.setVisibility(View.GONE);
+        temp.setVisibility(View.VISIBLE);
+        windSpeed.setVisibility(View.VISIBLE);
+        airP.setVisibility(View.VISIBLE);
+        humidity.setVisibility(View.VISIBLE);
+        updated.setVisibility(View.VISIBLE);
+    }
 }
