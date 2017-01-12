@@ -1,39 +1,20 @@
 package com.grp8.weatherapp.Fragments;
 
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.content.Intent;
-import android.icu.text.DateFormat;
-import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
-
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
-import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.SupportingFiles.Converters.PressureConverter;
 import com.grp8.weatherapp.SupportingFiles.Converters.TemperatureConverter;
-import com.grp8.weatherapp.TestData.WeatherStation;
-import com.grp8.weatherapp.TestData.WeatherStations;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
@@ -46,9 +27,11 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
 
         // TextView declaration
         temp = (TextView)stationOverview.findViewById(R.id.temp);
+        temp.setTypeface(font);
         windSpeed = (TextView)stationOverview.findViewById(R.id.windSpeed);
         airP = (TextView)stationOverview.findViewById(R.id.airP);
         humidity = (TextView)stationOverview.findViewById(R.id.humidity);
@@ -110,6 +93,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         // set pressure text and getting the appropriate unit
         String pressure = String.valueOf(PressureConverter.getFormattedPressure(getActivity().getApplicationContext(),reading.getAirReadings().getPressure()));
+        airP.setMaxWidth(315);
         airP.setText(pressure + " " + SettingsManager.getPressureUnit(getActivity().getApplicationContext()));
 
         // set humidity text and getting the appropriate unit
@@ -117,7 +101,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         humidity.setText(hum + " %");
 
         // Set last updated text and getting the appropriate unit
-        updated.setMaxWidth(80);
+        updated.setMaxWidth(315);
         updated.setText(String.valueOf(reading.getTimestamp()));
     }
     private void loadView() {

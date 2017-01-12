@@ -19,6 +19,9 @@
     <string name="searchHint">Search...</string>
     <string name="loadingText">Loading stations...</string>
 
+    <!-- Font awesome icons -->
+    <string name="icon_temp">&#xf02b;</string>
+
     <!-- Activity titles -->
     <string name="title_mainActivity">Stations</string>
     <string name="title_activity_settings">Settings</string>
