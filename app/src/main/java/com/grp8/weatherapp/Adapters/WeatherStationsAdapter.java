@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -17,6 +19,7 @@ import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -27,17 +30,49 @@ import io.fabric.sdk.android.services.concurrency.AsyncTask;
  * Created by Frederik on 14/11/2016.
  */
 
-public class WeatherStationsAdapter extends BaseAdapter {
+public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
 
     private LayoutInflater inflater;
     private Activity activity;
     private ListView list;
+    private boolean isSearching = false;
 
     public WeatherStationsAdapter(Activity activity, ListView list) {
         super();
         inflater = activity.getLayoutInflater();
         this.activity = activity;
         this.list = list;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+
+                if (constraint == null || constraint.length() == 0) {
+                    results.values = DataRepositoryFactory.build(activity.getApplicationContext()).getStations();
+                    results.count = getCount();
+                } else {
+                    ArrayList<Station> filterResultsData = new ArrayList<Station>();
+                    for(int i = 0; i<getCount(); i++) {
+                        Station station = (Station) getItem(i);
+                        if (station.getNotes().contains(constraint)) {
+                            filterResultsData.add(station);
+                        }
+                    }
+                    results.values = filterResultsData;
+                    results.count = filterResultsData.size();
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            }
+        };
     }
 
     private static class ViewHolder {
@@ -227,6 +262,10 @@ public class WeatherStationsAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position);
+    }
+
+    public void toggleSearch() {
+        isSearching = !isSearching;
     }
 
 }

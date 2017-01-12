@@ -30,6 +30,7 @@ import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.SupportingFiles.Utils;
+import com.grp8.weatherapp.TestData.WeatherStation;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -44,7 +45,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     private ListView list;
     private TextView spinnerText;
 
-    private RelativeLayout spinnerFrame;
+    private RelativeLayout spinnerFrame; // Background spinner
 
     private class LoadTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -113,6 +114,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         Log.d(" ID stashed",getActivity().getIntent().getExtras().getString(Constants.KEY_USERID));
         startActivity(intent);
 
+    }
+
+    public void toggleSearch() {
+        ((WeatherStationsAdapter) list.getAdapter()).toggleSearch();
     }
 
 }

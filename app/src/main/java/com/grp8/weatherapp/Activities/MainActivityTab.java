@@ -1,5 +1,7 @@
 package com.grp8.weatherapp.Activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
@@ -56,8 +58,24 @@ public class MainActivityTab extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_stationslist, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
+        //SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        //searchView.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                getMainFragment().toggleSearch();
+                Log.d("Searching","true");
+                return false;
+            }
 
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getMainFragment().toggleSearch();
+                Log.d("Searching","false");
+                return false;
+            }
+        });
         return true;
     }
 
@@ -73,7 +91,6 @@ public class MainActivityTab extends AppCompatActivity {
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
             case R.id.action_search:
-                //mViewPager.setCurrentItem(0);
 
                 break;
             case R.id.logout_menu:
@@ -116,7 +133,7 @@ public class MainActivityTab extends AppCompatActivity {
 
     @Override
     public void onBackPressed()
-{
+    {
         if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
         {
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
