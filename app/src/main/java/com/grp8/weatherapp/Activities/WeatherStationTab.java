@@ -12,17 +12,19 @@ import android.view.MenuItem;
 import android.view.View;
 
 
+import com.grp8.weatherapp.Fragments.DatePickerFragment;
 import com.grp8.weatherapp.Fragments.GraphLuxPressure;
 import com.grp8.weatherapp.Fragments.GraphTempRainHumidityFragment;
 import com.grp8.weatherapp.Fragments.StationOverviewFragment;
 import com.grp8.weatherapp.R;
 
+import java.util.Date;
+
 public class    WeatherStationTab extends AppCompatActivity
 {
-    private StationOverviewFragment stationOverviewFragment;
 
-    private GraphLuxPressure                luxPressureFragment;
-    private GraphTempRainHumidityFragment   tempRainHumidityFragment;
+    private Date startDate = new Date(System.currentTimeMillis()-604800000);
+    private Date endDate = new Date();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,12 +36,6 @@ public class    WeatherStationTab extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -63,8 +59,31 @@ public class    WeatherStationTab extends AppCompatActivity
         return true;
     }
 
+
+    public void setFromDate(Date date) {
+        startDate = date;
+        ((DatePickerFragment)getSupportFragmentManager().getFragments().get(1)).setFromDate(date);
+        ((DatePickerFragment)getSupportFragmentManager().getFragments().get(2)).setFromDate(date);
+    }
+
+    public void setToDate(Date date) {
+        endDate = date;
+
+        ((DatePickerFragment)getSupportFragmentManager().getFragments().get(1)).setToDate(date);
+        ((DatePickerFragment)getSupportFragmentManager().getFragments().get(2)).setToDate(date);
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter
     {
+
         public SectionsPagerAdapter(FragmentManager fm)
         {
             super(fm);
@@ -73,16 +92,12 @@ public class    WeatherStationTab extends AppCompatActivity
         @Override
         public Fragment getItem(int position)
         {
-            switch(position)
-            {
-                case 0:
-                    return stationOverviewFragment = new StationOverviewFragment();
-                case 1:
-                    return tempRainHumidityFragment = new GraphTempRainHumidityFragment();
-                case 2:
-                    return luxPressureFragment = new GraphLuxPressure();
-                default:
-                    return null;
+            if (position == 0) {
+                return new StationOverviewFragment();
+            } else if (position == 1) {
+                return new GraphTempRainHumidityFragment();
+            } else {
+                return new GraphLuxPressure();
             }
         }
 
@@ -104,7 +119,7 @@ public class    WeatherStationTab extends AppCompatActivity
                 case 2 :
                     return "Pressure+Lux";
                 default:
-                    return "?";
+                    return "";
             }
         }
     }

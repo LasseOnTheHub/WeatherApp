@@ -224,7 +224,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().size();
+        return DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount();
     }
 
     @Override
