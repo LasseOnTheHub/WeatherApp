@@ -44,7 +44,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         }
         @Override
         protected void onPostExecute(DataReading reading) {
-                updateView(reading);
+               if(reading != null){
+                   updateView(reading);
+               } else errorView();
         }
     };
 
