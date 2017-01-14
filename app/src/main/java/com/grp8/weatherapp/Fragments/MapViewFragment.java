@@ -132,10 +132,12 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                             for (Marker marker : markers) {
                                 builder.include(marker.getPosition());
                             }
-                            LatLngBounds bounds = builder.build();
-                            int padding = 200;
-                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                            googleMap.moveCamera(cu);
+                            if (!markers.isEmpty()) {
+                                LatLngBounds bounds = builder.build();
+                                int padding = 200;
+                                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                                googleMap.moveCamera(cu);
+                            }
                         }
                     }.execute();
                 } catch (Exception e) {

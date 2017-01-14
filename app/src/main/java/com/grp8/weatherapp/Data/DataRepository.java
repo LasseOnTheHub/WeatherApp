@@ -116,7 +116,7 @@ public class DataRepository implements IDataRepository
     @Override
     public int getStationCount()
     {
-        return 3; // TODO: Make dynamic
+        return this.cache.size(); // TODO: Make dynamic
     }
 
     @Override

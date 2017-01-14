@@ -1,6 +1,7 @@
 package com.grp8.weatherapp.Adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -280,9 +281,14 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public int getCount() {
+        Log.d("getCount","called");
         if (searchResults == null) {
-            return DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount();
+            Log.d("Search results are","null");
+            int count = DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount();
+            Log.d("count is",String.valueOf(count));
+            return count;
         } else {
+            Log.d("Search results are","not null");
             return searchResults.size();
         }
     }
@@ -295,6 +301,10 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
     public void toggleSearch() {
         isSearching = !isSearching;
         searchResults = isSearching ? new ArrayList<HashMap<Station,DataReading>>() : null;
+    }
+
+    public boolean isSearching() {
+        return isSearching;
     }
 
 }

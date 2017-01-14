@@ -1,39 +1,24 @@
 package com.grp8.weatherapp.Fragments;
-
-
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.R;
-
-import com.grp8.weatherapp.SupportingFiles.Constants;
-import com.grp8.weatherapp.SupportingFiles.Utils;
-import com.grp8.weatherapp.TestData.WeatherStation;
-
 import com.grp8.weatherapp.Logic.Constants;
 
+import org.w3c.dom.Text;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
-
-import static android.view.View.VISIBLE;
 
 /**
  * Created by Frederik on 14/11/2016.
@@ -42,7 +27,7 @@ import static android.view.View.VISIBLE;
 public class MainFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView list;
-    private TextView spinnerText;
+    private TextView spinnerText, backgroundText;
 
     private RelativeLayout spinnerFrame; // Background spinner
 
@@ -69,6 +54,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         spinnerFrame = (RelativeLayout) mainFrag.findViewById(R.id.spinner_layout);
         spinnerText = (TextView) mainFrag.findViewById(R.id.spinner_text);
         list = (ListView) mainFrag.findViewById(R.id.stationlist);
+        backgroundText = (TextView) mainFrag.findViewById(R.id.no_results_text);
+        list.setEmptyView(mainFrag.findViewById(R.id.no_results));
         new LoadTask().execute();
         list.setOnItemClickListener(this);
 
@@ -105,7 +92,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     public void toggleSearch() {
-        ((WeatherStationsAdapter) list.getAdapter()).toggleSearch();
+        String text = getListAdapter().isSearching() ? getString(R.string.no_search_results) : getString(R.string.no_stations);
+        backgroundText.setText(text);
+        getListAdapter().toggleSearch();
+
     }
 
     public WeatherStationsAdapter getListAdapter() {
