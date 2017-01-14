@@ -2,6 +2,7 @@ package com.grp8.weatherapp.Fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,22 +28,59 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private TableLayout tableLayout;
     private ProgressBar spinner;
     private ImageView weatherWindow;
+    private Handler handler = new Handler();
+    private TaskCanceler asyncCanceler;
+
+    private class DataRead extends AsyncTask<Void, DataReading, DataReading> {
+        final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
+        @Override
+        protected DataReading doInBackground(Void... arg0) {
+            try {
+                return DataRepositoryFactory.build(getActivity().getApplicationContext()).getStationData(stationId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(DataReading reading) {
+                updateView(reading);
+        }
+    };
+
+    public class TaskCanceler implements Runnable{
+        private AsyncTask task;
+
+        public TaskCanceler(AsyncTask task) {
+            this.task = task;
+        }
+
+        @Override
+        public void run() {
+            if (task.getStatus() == AsyncTask.Status.RUNNING )
+                task.cancel(true);
+                errorView();
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
-       // TODO remove if font awesome is not implemented
-       // Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
 
         // TextView declaration
         temp = (TextView)stationOverview.findViewById(R.id.temp);
-        //TODO remove if font awesome is not implemented
-        // temp.setTypeface(font);
         windSpeed = (TextView)stationOverview.findViewById(R.id.windSpeed);
         airP = (TextView)stationOverview.findViewById(R.id.airP);
         humidity = (TextView)stationOverview.findViewById(R.id.humidity);
         updated = (TextView)stationOverview.findViewById(R.id.updated);
         spinner = (ProgressBar)stationOverview.findViewById(R.id.spinner);
+
+        // initiates asynctask and cancels it after 15 sec if it hasn't finished
+        DataRead task = new DataRead();
+        asyncCanceler = new TaskCanceler(task);
+        handler.postDelayed(asyncCanceler, 15*1000);
+        task.execute();
 
         // ImageView declaration
         weatherWindow = (ImageView)stationOverview.findViewById(R.id.weatherWindow);
@@ -53,26 +91,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         // TableLayout declaration
         tableLayout = (TableLayout)stationOverview.findViewById(R.id.tableLayoutt);
 
-        final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
-
-        new AsyncTask<Void, DataReading, DataReading>() {
-            @Override
-            protected DataReading doInBackground(Void... arg0) {
-                try {
-                    return DataRepositoryFactory.build(getActivity().getApplicationContext()).getStationData(stationId);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-            @Override
-            protected void onPostExecute(DataReading reading) {
-                if (reading != null) {
-                    updateView(reading);
-                }
-                // Håndter null
-            }
-        }.execute();
 
         return stationOverview;
     }
@@ -126,6 +144,12 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
 
     private void errorView() {
+        spinner.setVisibility(View.GONE);
+        temp.setText(R.string.error);
+        windSpeed.setText(R.string.error);
+        airP.setText(R.string.error);
+        humidity.setText(R.string.error);
+        updated.setText(R.string.error);
 
     }
 
