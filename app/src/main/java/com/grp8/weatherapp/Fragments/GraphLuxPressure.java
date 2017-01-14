@@ -50,10 +50,6 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
     IDataRepository dataRepository;
     long            referenceTimestamp;
     MyMarkerView    myMarkerView;
-    final String dtStart = "2016-11-01 00:00";
-    final String dtEnd = "2016-12-01 00:00";
-/*    Date dtStart;
-    Date dtEnd;*/
     WeatherStationTab weatherStationTab;
     int stationId;
 
@@ -105,6 +101,53 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         luxChart = (LineChart) view.findViewById(R.id.luxchart);
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
 
+        drawGraphs();
+        getData();
+        return view;
+    }
+
+    public void drawGraphs()
+    {
+        definePressureGraph();
+        defineLuxGraph();
+    }
+
+    public void defineLuxGraph()
+    {
+        //******Definere graf for lux START******
+        luxChart.getDescription().setEnabled(false);
+        luxChart.setBackgroundColor(Color.rgb(250,250,250));
+        luxChart.setDrawGridBackground(false);
+        luxChart.setViewPortOffsets(100f, 100f, 100f, 100f);
+
+        //Definere lux's legend
+        Legend luxLegend = luxChart.getLegend();
+        luxLegend.setWordWrapEnabled(true);
+        luxLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        luxLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        luxLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        luxLegend.setDrawInside(false);
+
+        //Definere lux's X-akse
+        XAxis luxXAxis = luxChart.getXAxis();
+        luxXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        luxXAxis.setGranularity(1f);
+
+        //Definere lux's Y-akse
+        YAxis luxLeftAxis = luxChart.getAxisLeft();
+        luxChart.getAxisRight().setDrawLabels(false);
+        luxChart.getAxisRight().setDrawGridLines(false);
+        luxLeftAxis.setTypeface(mTfLight);
+        luxLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        luxLeftAxis.setAxisMaximum(1100f);
+        luxLeftAxis.setAxisMinimum(900f);
+        luxLeftAxis.setDrawGridLines(true);
+        luxLeftAxis.setGranularityEnabled(true);
+        //******Definere graf for lux SLUT******
+    }
+
+    public void definePressureGraph()
+    {
         //******Definere graf for tryk START******
         pressureChart.setBackgroundColor(Color.rgb(250,250,250));
         pressureChart.setDrawGridBackground(false);
@@ -137,40 +180,6 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         PressureYLeftAxis.setDrawGridLines(true);
         PressureYLeftAxis.setGranularityEnabled(true);
         //******Definere graf for tryk SLUT******
-
-        //******Definere graf for lux START******
-        luxChart.getDescription().setEnabled(false);
-        luxChart.setBackgroundColor(Color.rgb(250,250,250));
-        luxChart.setDrawGridBackground(false);
-        luxChart.setViewPortOffsets(100f, 100f, 100f, 100f);
-
-        //Definere lux's legend
-        Legend luxLegend = luxChart.getLegend();
-        luxLegend.setWordWrapEnabled(true);
-        luxLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        luxLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        luxLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        luxLegend.setDrawInside(false);
-
-        //Definere lux's X-akse
-        XAxis luxXAxis = luxChart.getXAxis();
-        luxXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        luxXAxis.setGranularity(1f);
-
-        //Definere lux's Y-akse
-        YAxis luxLeftAxis = luxChart.getAxisLeft();
-        luxChart.getAxisRight().setDrawLabels(false);
-        luxChart.getAxisRight().setDrawGridLines(false);
-        luxLeftAxis.setTypeface(mTfLight);
-        luxLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        luxLeftAxis.setAxisMaximum(1100f);
-        luxLeftAxis.setAxisMinimum(900f);
-        luxLeftAxis.setDrawGridLines(true);
-        luxLeftAxis.setGranularityEnabled(true);
-        //******Definere graf for lux SLUT******
-
-        getData();
-        return view;
     }
 
     public void getData()
@@ -179,13 +188,17 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
             @Override
             protected List<DataReading> doInBackground(Void... args) {
-                List<DataReading> data = dataRepository.getStationData(stationId, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
+               /* List<DataReading> data = dataRepository.getStationData(stationId, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));*/
+                List<DataReading> data = dataRepository.getStationData(stationId, (((WeatherStationTab) getActivity()).getStartDate()), (((WeatherStationTab) getActivity()).getEndDate()));
                 return data;
             }
 
             @Override
             protected void onPostExecute(List<DataReading> data) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 referenceTimestamp = data.get(0).getTimestamp().getTime()/1000;
+                String string = sdf.format(referenceTimestamp);
+                Log.d("Reference","Reference tidspunktet er: " + string);
                 setPressureData(data);
                 setLuxData(data);
             }
@@ -298,7 +311,6 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
             //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             cal.setTime(sdf.parse(date));// all done
-            Log.d("Tid", "Tiden sat fra grafen er:" + cal.getTime().toString());
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -324,7 +336,6 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             ((WeatherStationTab) getActivity()).setFromDate(cal.getTime());
             cal.set(Calendar.DATE, 7);
-            //dtStart = cal.getTime();
             if (((WeatherStationTab) getActivity()).getEndDate().after(cal.getTime())) {
                 dateInputTo.callOnClick();
             }
@@ -337,8 +348,9 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
             cal.set(Calendar.YEAR, year);
             cal.set(Calendar.MONTH, monthOfYear);
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            //dtEnd = cal.getTime();
             ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
+            drawGraphs();
+            getData();
         }
     };
 
