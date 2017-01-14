@@ -62,6 +62,11 @@ public class DataRepository implements IDataRepository
     @Override
     public Station getStation(int id)
     {
+        if(this.user == 0)
+        {
+            throw new RuntimeException("Missing user ID");
+        }
+
         if(this.cache.containsKey(id))
         {
             return this.cache.get(id);
@@ -84,6 +89,11 @@ public class DataRepository implements IDataRepository
     @Override
     public List<Station> getStations()
     {
+        if(this.user == 0)
+        {
+            throw new RuntimeException("Missing user ID");
+        }
+
         if(Looper.getMainLooper().getThread() == Thread.currentThread())
         {
             return new ArrayList<>(this.cache.values());
@@ -122,6 +132,11 @@ public class DataRepository implements IDataRepository
     @Override
     public DataReading getStationData(int station)
     {
+        if(this.user == 0)
+        {
+            throw new RuntimeException("Missing user ID");
+        }
+
         APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
 
         int ceiling = 5;
@@ -175,6 +190,11 @@ public class DataRepository implements IDataRepository
     @Override
     public List<DataReading> getStationData(int station, Date start, Date end)
     {
+        if(this.user == 0)
+        {
+            throw new RuntimeException("Missing user ID");
+        }
+
         String payload = this.api.fetch(new APIDataReadingRequest(this.user, station, start, end));
 
         try

@@ -68,6 +68,8 @@ public class LogonActivity extends AppCompatActivity {
                     logUser(userId);
                 }
 
+                DataRepositoryFactory.build(getApplicationContext()).setUser(5);
+
                 Intent intent = new Intent(LogonActivity.this,MainActivityTab.class);
                 intent.putExtra(Constants.KEY_USERID,userId);
                 startActivity(intent);
