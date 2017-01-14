@@ -79,10 +79,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         spinner = (ProgressBar)stationOverview.findViewById(R.id.spinner);
 
         // initiates asynctask and cancels it after 15 sec if it hasn't finished
-        DataRead task = new DataRead();
-        asyncCanceler = new TaskCanceler(task);
-        handler.postDelayed(asyncCanceler, 15*1000);
-        task.execute();
+        loadData();
 
         // ImageView declaration
         weatherWindow = (ImageView)stationOverview.findViewById(R.id.weatherWindow);
@@ -153,6 +150,15 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         humidity.setText(R.string.error);
         updated.setText(R.string.error);
 
+    }
+    private void loadData(){
+        DataRead task = new DataRead();
+        asyncCanceler = new TaskCanceler(task);
+        handler.postDelayed(asyncCanceler, 5*1000);
+        task.execute();
+        if(asyncCanceler != null && handler != null) {
+            handler.removeCallbacks(asyncCanceler);
+        }
     }
 
 }
