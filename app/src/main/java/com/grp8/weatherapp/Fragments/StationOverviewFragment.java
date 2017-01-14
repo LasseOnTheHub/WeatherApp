@@ -1,12 +1,10 @@
 package com.grp8.weatherapp.Fragments;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -15,11 +13,9 @@ import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.Logic.Converters.PressureConverter;
 import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
-
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
@@ -85,7 +81,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         weatherWindow = (ImageView)stationOverview.findViewById(R.id.weatherWindow);
 
         // setting spinner visible and loading text
-        loadView();
+        loadedView();
 
         // TableLayout declaration
         tableLayout = (TableLayout)stationOverview.findViewById(R.id.tableLayoutt);
@@ -133,7 +129,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         updated.setMaxWidth(315);
         updated.setText(String.valueOf(reading.getTimestamp()));
     }
-    private void loadView() {
+    private void loadedView() {
         spinner.setVisibility(View.VISIBLE);
         temp.setText(R.string.loadingTextOverview);
         windSpeed.setText(R.string.loadingTextOverview);

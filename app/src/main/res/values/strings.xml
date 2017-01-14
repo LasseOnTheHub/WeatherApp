@@ -3,7 +3,7 @@
     <string name="indtast_bruger_id">Indtast Bruger ID</string>
     <string name="indtast_password">Indtast Password</string>
     <string name="forkert_login">Forkert Login</string>
-    <string name="toast_exit">Pres back again to exit</string>
+    <string name="toast_exit">Press back again to exit</string>
     <string name="app_logout">Click here to sign out</string>
     <string name="logout_button">Sign out</string>
 
@@ -32,8 +32,8 @@
     <string name="title_activity_maps">Map</string>
 
     <!-- Tabs titles -->
-    <string name="ListTab">LIST</string>
-    <string name="MapTab">MAP</string>
+    <string name="listTab">LIST</string>
+    <string name="mapTab">MAP</string>
 
     <!-- Settings strings and arrays -->
 
