@@ -154,7 +154,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private void loadData(){
         DataRead task = new DataRead();
         asyncCanceler = new TaskCanceler(task);
-        handler.postDelayed(asyncCanceler, 5*1000);
+        handler.postDelayed(asyncCanceler, 15*1000);
         task.execute();
         if(asyncCanceler != null && handler != null) {
             handler.removeCallbacks(asyncCanceler);
