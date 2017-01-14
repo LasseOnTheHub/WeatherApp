@@ -1,8 +1,12 @@
 package com.grp8.weatherapp.Activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -41,24 +45,6 @@ public class MainActivityTab extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (position == 1) {
-
-                    if (getMainFragment().isSearchVisible()) {
-                        getMainFragment().toggleSearch(true);
-                    }
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) { }
-
-            @Override
-            public void onPageScrollStateChanged(int state) { }
-        });
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
@@ -72,6 +58,35 @@ public class MainActivityTab extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_stationslist, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mViewPager.setCurrentItem(0, true);
+                getMainFragment().getListAdapter().getFilter().filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                getMainFragment().getListAdapter().getFilter().filter(newText);
+                return true;
+            }
+        });
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                getMainFragment().toggleSearch();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getMainFragment().toggleSearch();
+                return true;
+            }
+        });
         return true;
     }
 
@@ -86,9 +101,8 @@ public class MainActivityTab extends AppCompatActivity {
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
-            case R.id.search_menu:
-                mViewPager.setCurrentItem(0);
-                getMainFragment().toggleSearch(true);
+            case R.id.action_search:
+
                 break;
             case R.id.logout_menu:
                 //TODO: Add logout logic
@@ -131,7 +145,7 @@ public class MainActivityTab extends AppCompatActivity {
 
     @Override
     public void onBackPressed()
-{
+    {
         if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
         {
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
