@@ -200,7 +200,7 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     referenceTimestamp = data.get(0).getTimestamp().getTime() / 1000;
                     String string = sdf.format(referenceTimestamp * 1000);
-                    Log.d("Reference", "Reference tidspunktet er: " + string);
+                    Log.d("Reference", "Reference tidspunktet sat i GraphLuxPressure er: " + string);
                     setPressureData(data);
                     setLuxData(data);
                 }
@@ -261,6 +261,7 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
             lineData.setValueTextSize(9f);
             // set data
             pressureChart.setData(lineData);
+            lineData.notifyDataChanged();
             pressureChart.notifyDataSetChanged();
             pressureChart.invalidate();
         }
@@ -307,6 +308,7 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
 
             // set data
             luxChart.setData(lineData);
+            lineData.notifyDataChanged();
             luxChart.notifyDataSetChanged();
             luxChart.invalidate();
     }
