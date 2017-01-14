@@ -92,9 +92,9 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     public void toggleSearch() {
+        getListAdapter().toggleSearch();
         String text = getListAdapter().isSearching() ? getString(R.string.no_search_results) : getString(R.string.no_stations);
         backgroundText.setText(text);
-        getListAdapter().toggleSearch();
 
     }
 
