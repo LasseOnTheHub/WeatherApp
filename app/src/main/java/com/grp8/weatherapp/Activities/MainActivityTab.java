@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
@@ -126,6 +127,7 @@ public class MainActivityTab extends AppCompatActivity {
             return position == 0 ? getString(R.string.ListTab) : getString(R.string.MapTab); // TODO: Add language strings
         }
     }
+
 
     @Override
     public void onBackPressed()
