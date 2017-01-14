@@ -3,7 +3,6 @@ package com.grp8.weatherapp.Data;
 import android.content.Context;
 
 import com.grp8.weatherapp.Data.API.APIDataProvider;
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Entities.Data.Air;
 import com.grp8.weatherapp.Entities.Data.Soil;
@@ -14,6 +13,7 @@ import com.grp8.weatherapp.Logic.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +85,31 @@ public class FallbackDataRepository extends DataRepository
             return super.getStationData(station);
         }
 
-        Random   rand = new Random();
+        return generate(1, station, new Random());
+    }
+
+    @Override
+    public List<DataReading> getStationData(int station, Date start, Date end)
+    {
+        if(Utils.isNetworkAvailable(this.context))
+        {
+            return super.getStationData(station, start, end);
+        }
+
+        List<DataReading> readings = new ArrayList<>();
+
+        Random rand = new Random();
+
+        for(int index = 1; index <= 20; index++)
+        {
+            readings.add(generate(index, station, rand));
+        }
+
+        return readings;
+    }
+
+    private DataReading generate(int id, int station, Random rand)
+    {
         Calendar cal  = Calendar.getInstance();
 
         double rain = 10 - rand.nextInt(10);
@@ -94,6 +118,6 @@ public class FallbackDataRepository extends DataRepository
         Wind wind = new Wind(25.0 - (double) rand.nextInt(25), 0);
         Soil soil = new Soil(new int[] {0, 0, 0, 0}, new int[] {0, 0, 0, 0});
 
-        return new DataReading(1, station, cal.getTime(), rain, air, wind, soil);
+        return new DataReading(id, station, cal.getTime(), rain, air, wind, soil);
     }
 }
