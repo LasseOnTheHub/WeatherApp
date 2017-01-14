@@ -50,8 +50,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         }
     }
 
-    ;
-
     public class TaskCanceler implements Runnable {
         private AsyncTask task;
 
