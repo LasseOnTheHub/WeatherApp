@@ -1,12 +1,17 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -16,23 +21,99 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.grp8.weatherapp.Activities.WeatherStationTab;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Data.IDataRepository;
+import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Formatters.DayAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lbirk on 09-01-2017.
  */
-
-public class GraphLuxPressure extends Fragment {
+public class GraphLuxPressure extends Fragment implements DatePickerFragment {
 
     private LineChart pressureChart;
     private LineChart luxChart;
-    Typeface mTfLight;
+    Typeface        mTfLight;
+    IDataRepository dataRepository;
+    long            referenceTimestamp;
+    MyMarkerView    myMarkerView;
+    final String dtStart = "2016-11-01 00:00";
+    final String dtEnd = "2016-12-01 00:00";
+    final int station = 2;
+
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat formatter;
+
+    private TextView dateInputFrom;
+    private TextView dateInputTo;
+
+    private DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setFromDate(cal.getTime());
+            cal.set(Calendar.DATE, 7);
+            if (((WeatherStationTab) getActivity()).getEndDate().after(cal.getTime())) {
+                dateInputTo.callOnClick();
+            }
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
+        }
+    };
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lux_pressure, container, false);
+
+        formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        dateInputTo = (TextView) view.findViewById(R.id.dateInputTo);
+        setToDate(((WeatherStationTab) getActivity()).getEndDate());
+        dateInputTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.setTime(((WeatherStationTab) getActivity()).getEndDate());
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), dateToListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMinDate(((WeatherStationTab) getActivity()).getStartDate().getTime());
+                dialog.getDatePicker().setMaxDate(((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000);
+                dialog.setTitle("Choose end date");
+                dialog.show();
+            }
+        });
+        dateInputFrom = (TextView) view.findViewById(R.id.dateInputFrom);
+        setFromDate(((WeatherStationTab) getActivity()).getStartDate());
+        dateInputFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.setTime(((WeatherStationTab) getActivity()).getStartDate());
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), dateFromListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+                dialog.setTitle("Choose start date");
+                dialog.show();
+            }
+        });
+
+        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
+        dataRepository.setUser(5);
 
         //Opretter grafer
         pressureChart = (LineChart) view.findViewById(R.id.pressurechart);
@@ -44,6 +125,7 @@ public class GraphLuxPressure extends Fragment {
         pressureChart.setDrawGridBackground(false);
         pressureChart.setViewPortOffsets(100f, 100f, 100f, 100f);
         pressureChart.getDescription().setEnabled(false);
+        //pressureChart.setMarker(myMarkerView);
 
         //Legend
         Legend pressureLegend = pressureChart.getLegend();
@@ -58,7 +140,6 @@ public class GraphLuxPressure extends Fragment {
         PressyreXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         PressyreXAxis.setAxisMinimum(0f);
         PressyreXAxis.setGranularity(1f);
-        PressyreXAxis.setValueFormatter(new DayAxisValueFormatter(pressureChart));
 
         //Definere tryk's Y-akse
         YAxis PressureYLeftAxis = pressureChart.getAxisLeft();
@@ -66,13 +147,11 @@ public class GraphLuxPressure extends Fragment {
         pressureChart.getAxisRight().setDrawLabels(false);
         pressureChart.getAxisRight().setDrawGridLines(false);
         PressureYLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        PressureYLeftAxis.setAxisMaximum(100);
-        PressureYLeftAxis.setAxisMinimum(0f);
+        PressureYLeftAxis.setAxisMaximum(1100);
+        PressureYLeftAxis.setAxisMinimum(900);
         PressureYLeftAxis.setDrawGridLines(true);
         PressureYLeftAxis.setGranularityEnabled(true);
         //******Definere graf for tryk SLUT******
-
-
 
         //******Definere graf for lux START******
         luxChart.getDescription().setEnabled(false);
@@ -91,10 +170,7 @@ public class GraphLuxPressure extends Fragment {
         //Definere lux's X-akse
         XAxis luxXAxis = luxChart.getXAxis();
         luxXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        luxXAxis.setAxisMinimum(0f);
         luxXAxis.setGranularity(1f);
-        luxXAxis.setValueFormatter(new DayAxisValueFormatter(luxChart));
-
 
         //Definere lux's Y-akse
         YAxis luxLeftAxis = luxChart.getAxisLeft();
@@ -102,31 +178,52 @@ public class GraphLuxPressure extends Fragment {
         luxChart.getAxisRight().setDrawGridLines(false);
         luxLeftAxis.setTypeface(mTfLight);
         luxLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        luxLeftAxis.setAxisMaximum(100);
-        luxLeftAxis.setAxisMinimum(0f);
+        luxLeftAxis.setAxisMaximum(1100f);
+        luxLeftAxis.setAxisMinimum(900f);
         luxLeftAxis.setDrawGridLines(true);
         luxLeftAxis.setGranularityEnabled(true);
         //******Definere graf for lux SLUT******
 
-        setPressyreData();
-        setLuxData();
+        getData();
         return view;
     }
 
-    private void setPressyreData() {
+    public void getData()
+    {
+        try{
+        new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
+            @Override
+            protected List<DataReading> doInBackground(Void... args) {
+                List<DataReading> data = dataRepository.getStationData(station, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
+                return data;
+            }
 
-        ArrayList<Entry> pressureVals = new ArrayList<Entry>();
-        pressureVals.add(new Entry(1,6));
-        pressureVals.add(new Entry(2,8));
-        pressureVals.add(new Entry(2,9));
-        pressureVals.add(new Entry(3,10));
-        pressureVals.add(new Entry(4,10));
-        pressureVals.add(new Entry(5,5));
-        pressureVals.add(new Entry(6,-0));
-        pressureVals.add(new Entry(7,-5));
-        pressureVals.add(new Entry(8,-5));
-        pressureVals.add(new Entry(9,0));
+            @Override
+            protected void onPostExecute(List<DataReading> data) {
+                referenceTimestamp = data.get(618).getTimestamp().getTime()/1000;
+                setPressureData(data);
+                setLuxData(data);
+            }
+        }.execute();
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+    }
+    }
 
+
+    private void setPressureData(List<DataReading> data) {
+        final ArrayList<Entry> pressureVals = new ArrayList<Entry>();
+        for (int i=618;i<data.size();i++)
+        {
+            DataReading d = data.get(i);
+            long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
+            //float x = d.getTimestamp().ge;
+            float x = d.getTimestamp().getTime();
+            float y = (float) d.getAirReadings().getPressure();
+            pressureVals.add(new Entry(xNew, y));
+        }
         LineDataSet set1;
 
         if (pressureChart.getData() != null &&
@@ -146,33 +243,34 @@ public class GraphLuxPressure extends Fragment {
             set1.setColor(ColorTemplate.getHoloBlue());
             set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
+            set1.setDrawCircles(false);
             set1.setFillAlpha(100);
             set1.setFillColor(ColorTemplate.getHoloBlue());
             set1.setHighLightColor(Color.rgb(244, 117, 117));
+            pressureChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
+            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
+            pressureChart.setMarker(myMarkerView);
 
             // create a data object with the datasets
-            LineData data = new LineData(set1);
-            data.setValueTextColor(Color.BLACK);
-            data.setValueTextSize(9f);
-
+            LineData lineData = new LineData(set1);
+            lineData.setValueTextColor(Color.BLACK);
+            lineData.setValueTextSize(9f);
             // set data
-            pressureChart.setData(data);
+            pressureChart.setData(lineData);
+            pressureChart.notifyDataSetChanged();
+            pressureChart.invalidate();
         }
     }
-    private void setLuxData() {
-
+    private void setLuxData(List<DataReading> data) {
         ArrayList<Entry> luxVals = new ArrayList<Entry>();
-        luxVals.add(new Entry(1,10));
-        luxVals.add(new Entry(2,20));
-        luxVals.add(new Entry(2,30));
-        luxVals.add(new Entry(3,40));
-        luxVals.add(new Entry(4,0));
-        luxVals.add(new Entry(5,-10));
-        luxVals.add(new Entry(6,20));
-        luxVals.add(new Entry(7,5));
-        luxVals.add(new Entry(8,10));
-        luxVals.add(new Entry(9,20));
+        for (int i=618;i<data.size();i++)
+        {
+            DataReading d = data.get(i);
+            long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
+            float x = d.getTimestamp().getTime();
+            float y = (float) d.getAirReadings().getPressure();
+            luxVals.add(new Entry(xNew, y));
+        }
 
         LineDataSet set1;
 
@@ -189,7 +287,6 @@ public class GraphLuxPressure extends Fragment {
             set1.setCubicIntensity(0.1f);
             set1.setDrawCircles(true);
 
-            //set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
             set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);
@@ -197,14 +294,55 @@ public class GraphLuxPressure extends Fragment {
             set1.setFillAlpha(100);
             set1.setFillColor(ColorTemplate.getHoloBlue());
             set1.setHighLightColor(Color.rgb(244, 117, 117));
+            luxChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
 
             // create a data object with the datasets
-            LineData data = new LineData(set1);
-            data.setValueTextColor(Color.BLACK);
-            data.setValueTextSize(9f);
+            LineData lineData = new LineData(set1);
+            lineData.setValueTextColor(Color.BLACK);
+            lineData.setValueTextSize(9f);
 
             // set data
-            luxChart.setData(data);
+            luxChart.setData(lineData);
+            luxChart.notifyDataSetChanged();
+            luxChart.invalidate();
+    }
+    }
+    private Date convertDateFromStringToDate(String date)
+    {
+        Calendar cal = Calendar.getInstance();
+        try {
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            cal.setTime(sdf.parse(date));// all done
+            Log.d("Tid", "Tiden sat fra grafen er:" + cal.getTime().toString());
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            //return null;
         }
+        return cal.getTime();
+    }
+
+    public static float toNumber(Date now) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(now);
+        int hour = c.get(Calendar.HOUR_OF_DAY);// 0-23
+        int minute = c.get(Calendar.MINUTE);// 0-59
+
+        return toNumber(hour, minute);
+    }
+
+    public static float toNumber(int hour, int minute) {
+        return hour + minute / 60f;
+    }
+
+    @Override
+    public void setToDate(Date date) {
+        dateInputTo.setText(formatter.format(date));
+    }
+
+    @Override
+    public void setFromDate(Date date) {
+        dateInputFrom.setText(formatter.format(date));
     }
 }

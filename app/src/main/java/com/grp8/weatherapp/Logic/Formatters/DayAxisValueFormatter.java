@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.SupportingFiles.Formatters;
+package com.grp8.weatherapp.Logic.Formatters;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.AxisBase;

@@ -11,12 +11,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="20dp"
         android:id="@+id/error_layout"
         android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/title_layout"
-        android:layout_toRightOf="@+id/title_layout"
-        android:visibility="gone">
+        android:layout_marginLeft="-18dp"
+        android:layout_marginStart="-18dp"
+        >
 
         <ImageView
             android:layout_width="60dp"
@@ -27,13 +27,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Could not load data"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:layout_gravity="center" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -131,7 +130,7 @@
         android:layout_alignLeft="@+id/temp_label"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
-        android:layout_alignTop="@+id/temp_label"
+        android:layout_centerVertical="true"
         android:layout_marginTop="15dp"/>
 
 </RelativeLayout>

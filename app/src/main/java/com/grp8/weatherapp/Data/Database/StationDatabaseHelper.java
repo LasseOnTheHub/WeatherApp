@@ -3,7 +3,7 @@ package com.grp8.weatherapp.Data.Database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.grp8.weatherapp.Data.Database.tables.StationsTable;
+import com.grp8.weatherapp.Data.Database.Tables.StationsTable;
 import com.grp8.weatherapp.Entities.Station;
 
 import java.util.ArrayList;

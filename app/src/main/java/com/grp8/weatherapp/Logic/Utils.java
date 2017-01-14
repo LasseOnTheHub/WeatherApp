@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.SupportingFiles;
+package com.grp8.weatherapp.Logic;
 
 /**
  * Created by lbirk on 05-01-2017.

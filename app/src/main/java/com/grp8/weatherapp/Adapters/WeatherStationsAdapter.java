@@ -6,23 +6,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
-import com.grp8.weatherapp.Model.SettingsManager;
+import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -30,11 +34,14 @@ import io.fabric.sdk.android.services.concurrency.AsyncTask;
  * Created by Frederik on 14/11/2016.
  */
 
-public class WeatherStationsAdapter extends BaseAdapter {
+public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
 
     private LayoutInflater inflater;
     private Activity activity;
     private ListView list;
+    private boolean isSearching = false;
+    private ArrayList<HashMap<Station,DataReading>> searchResults;
+
 
     public WeatherStationsAdapter(Activity activity, ListView list) {
         super();
@@ -43,19 +50,47 @@ public class WeatherStationsAdapter extends BaseAdapter {
         this.list = list;
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            private ArrayList<HashMap<Station,DataReading>> searchRes;
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                if (constraint != null && constraint.length() != 0) {
+                    ArrayList<HashMap<Station,DataReading>> filterResultsData = new ArrayList<HashMap<Station,DataReading>>();
+
+                    for(int i = 0; i<DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount(); i++) {
+                        Station station = (Station) getItem(i);
+                        if (station.getNotes().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                            HashMap<Station, DataReading> map = new HashMap<Station, DataReading>();
+                            map.put(station,DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId()));
+                            filterResultsData.add(map);
+                        }
+                    }
+                    searchResults = !filterResultsData.isEmpty() ? filterResultsData : new ArrayList<HashMap<Station,DataReading>>();
+                } else {
+                    searchResults = null;
+                }
+                return null;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     private static class ViewHolder {
-        TextView stationTitle;
-        TextView timeLabel;
-        TextView tempLabel;
-        LinearLayout timeLayout;
-        LinearLayout oldContent;
-        LinearLayout errorLayout;
-        ProgressBar tempSpinner;
-        ProgressBar timeSpinner;
+        TextView stationTitle, timeLabel, tempLabel;
+        LinearLayout timeLayout, oldContent, errorLayout;
+        ProgressBar tempSpinner, timeSpinner;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
+        boolean loading = false;
 
         final Station station = (Station) getItem(position);
 
@@ -64,6 +99,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
         if (convertView == null) {
             // First load of element
             if (station != null) {
+                loading = true;
                 new AsyncTask<Void, DataReading, DataReading>() {
                     @Override
                     protected DataReading doInBackground(Void... arg0) {
@@ -103,18 +139,39 @@ public class WeatherStationsAdapter extends BaseAdapter {
             // Only error layout is visible
             return convertView;
         }
+        Log.d("getView isSearching",String.valueOf(isSearching));
+        if (isSearching && searchResults != null) {
+            HashMap<Station, DataReading> map = searchResults.get(0);
+            Iterator it = map.entrySet().iterator();
+            if (it.hasNext()) {
+                Map.Entry<Station, DataReading> entry = (Map.Entry<Station, DataReading>) it.next();
+                Station searchStation = entry.getKey();
+                DataReading searchReading = entry.getValue();
+                if (searchStation != null) {
+                    viewHolder.stationTitle.setText(searchStation.getNotes());
+                    if (searchReading != null) {
+                        setTempLabel(viewHolder, searchReading);
+                        setTimeLabel(viewHolder, searchReading);
+                    }
+                }
+            } else {
+            }
+            return convertView;
+        }
 
-        // Setting up outlets for loading screen
-        viewHolder.tempLabel.setVisibility(View.GONE); // Label for temperature
-        viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
-        viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
-        viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
-        viewHolder.tempSpinner.setVisibility(View.VISIBLE); // Spinner for temperature
-        viewHolder.timeSpinner.setVisibility(View.VISIBLE); // Spinner for time
-        viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
-        viewHolder.stationTitle.setVisibility(View.VISIBLE); // Label for station title
-        viewHolder.stationTitle.setText(station.getNotes()); // Setting the stations as title
-        // Spinners, clock image and title is visible
+        if (loading) {
+            // Setting up outlets for loading screen
+            viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
+            viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
+            viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
+            viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
+            viewHolder.tempSpinner.setVisibility(View.VISIBLE); // Spinner for temperature
+            viewHolder.timeSpinner.setVisibility(View.VISIBLE); // Spinner for time
+            viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
+            viewHolder.stationTitle.setVisibility(View.VISIBLE); // Label for station title
+            viewHolder.stationTitle.setText(station.getNotes()); // Setting the stations as title
+            // Spinners, clock image and title is visible
+        }
 
         return convertView;
     }
@@ -158,7 +215,7 @@ public class WeatherStationsAdapter extends BaseAdapter {
         cal.setTime(date);
         String time;
         if (cal.get(Calendar.DAY_OF_MONTH) <= 9) {
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM d HH:mm yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM d HH:mm yyyy", Locale.getDefault());
             time = formatter.format(date);
         } else {
             time = date.toString().substring(4,16);
@@ -167,8 +224,8 @@ public class WeatherStationsAdapter extends BaseAdapter {
     }
 
     private void showErrorState(ViewHolder viewHolder, Station station) {
-        viewHolder.tempLabel.setVisibility(View.GONE); // Label for temperature
-        viewHolder.timeLayout.setVisibility(View.GONE); // Layout for time (including old content)
+        viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
+        viewHolder.timeLayout.setVisibility(View.INVISIBLE); // Layout for time (including old content)
         viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temperature (big one)
         viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time (little one)
         if (station == null) {
@@ -224,12 +281,30 @@ public class WeatherStationsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().size();
+        Log.d("getCount","called");
+        if (searchResults == null) {
+            Log.d("Search results are","null");
+            int count = DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount();
+            Log.d("count is",String.valueOf(count));
+            return count;
+        } else {
+            Log.d("Search results are","not null");
+            return searchResults.size();
+        }
     }
 
     @Override
     public Object getItem(int position) {
         return DataRepositoryFactory.build(activity.getApplicationContext()).getStations().get(position);
+    }
+
+    public void toggleSearch() {
+        isSearching = !isSearching;
+        searchResults = isSearching ? new ArrayList<HashMap<Station,DataReading>>() : null;
+    }
+
+    public boolean isSearching() {
+        return isSearching;
     }
 
 }

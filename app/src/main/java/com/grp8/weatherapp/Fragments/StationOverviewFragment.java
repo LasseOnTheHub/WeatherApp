@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -13,9 +14,11 @@ import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Model.SettingsManager;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Constants;
-import com.grp8.weatherapp.SupportingFiles.Converters.PressureConverter;
-import com.grp8.weatherapp.SupportingFiles.Converters.TemperatureConverter;
+import com.grp8.weatherapp.Logic.SettingsManager;
+import com.grp8.weatherapp.Logic.Constants;
+import com.grp8.weatherapp.Logic.Converters.PressureConverter;
+import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
+
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
@@ -50,7 +53,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         // TableLayout declaration
         tableLayout = (TableLayout)stationOverview.findViewById(R.id.tableLayoutt);
 
-        final int stationId = (int) getActivity().getIntent().getExtras().getLong(Constants.KEY_USERID);
+        final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
 
         new AsyncTask<Void, DataReading, DataReading>() {
             @Override

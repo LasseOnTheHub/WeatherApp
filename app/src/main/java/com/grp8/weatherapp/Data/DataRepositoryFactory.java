@@ -12,13 +12,13 @@ import com.grp8.weatherapp.Data.Mappers.StationMapper;
  */
 public class DataRepositoryFactory
 {
-    private static DataRepository instance;
+    private static IDataRepository instance;
 
-    public static DataRepository build(Context appContext)
+    public static IDataRepository build(Context appContext)
     {
         if(instance == null)
         {
-            instance = new DataRepository(new APIDataProvider(), new Database(appContext), new StationMapper(), new DataReadingMapper(), appContext);
+            instance = new DataRepository(new APIDataProvider(), new StationMapper(), new DataReadingMapper());
         }
 
         return instance;

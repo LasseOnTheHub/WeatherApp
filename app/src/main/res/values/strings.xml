@@ -22,6 +22,8 @@
 
     <!-- Font awesome icons -->
     <string name="icon_temp">&#xf02b;</string>
+    <string name="no_search_results">Sorry, no weather stations matching you query</string>
+    <string name="no_stations">Oops, you currently don\'t own any stations.\nVisit http://www.clafis-project.eu for more information.</string>
 
     <!-- Activity titles -->
     <string name="title_mainActivity">Stations</string>
@@ -38,7 +40,7 @@
     <string name="temp">Temperature unit</string>
     <string-array name="temp_options_titles">
         <item>Celsius</item>
-        <item>ahrenheit</item>
+        <item>Fahrenheit</item>
     </string-array>
 
     <string-array name="temp_options_values">
