@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -94,7 +95,7 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
 
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
         //TODO: Gør denne generisk
-        dataRepository.setUser(5);
+
 
         //Opretter grafer
         pressureChart = (LineChart) view.findViewById(R.id.pressurechart);
@@ -195,12 +196,18 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
 
             @Override
             protected void onPostExecute(List<DataReading> data) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                referenceTimestamp = data.get(0).getTimestamp().getTime()/1000;
-                String string = sdf.format(referenceTimestamp);
-                Log.d("Reference","Reference tidspunktet er: " + string);
-                setPressureData(data);
-                setLuxData(data);
+                if(!data.isEmpty()) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    referenceTimestamp = data.get(0).getTimestamp().getTime() / 1000;
+                    String string = sdf.format(referenceTimestamp * 1000);
+                    Log.d("Reference", "Reference tidspunktet er: " + string);
+                    setPressureData(data);
+                    setLuxData(data);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Intet data i det angivet tidsrum", Toast.LENGTH_SHORT).show();
+                }
             }
         }.execute();
     }
