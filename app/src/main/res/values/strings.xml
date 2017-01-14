@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">GR8 CLAFIS WeatherApp</string>
-    <string name="husk_mig">Husk mig</string>
     <string name="indtast_bruger_id">Indtast Bruger ID</string>
     <string name="indtast_password">Indtast Password</string>
     <string name="forkert_login">Forkert Login</string>
-    <string name="toast_exit">Pres back again to exit</string>
+    <string name="toast_exit">Press back again to exit</string>
     <string name="app_logout">Click here to sign out</string>
     <string name="logout_button">Sign out</string>
 
@@ -19,6 +18,7 @@
     <string name="searchHint">Search...</string>
     <string name="loadingText">Loading stations...</string>
     <string name="loadingTextOverview">Loading...</string>
+    <string name="error">Error</string>
 
     <!-- Font awesome icons -->
     <string name="icon_temp">&#xf02b;</string>
@@ -32,8 +32,8 @@
     <string name="title_activity_maps">Map</string>
 
     <!-- Tabs titles -->
-    <string name="ListTab">LIST</string>
-    <string name="MapTab">MAP</string>
+    <string name="listTab">LIST</string>
+    <string name="mapTab">MAP</string>
 
     <!-- Settings strings and arrays -->
 

@@ -20,20 +20,20 @@ public class SettingsManager {
     public static String getPressureUnit(Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(Constants.KEY_PRESS_UNIT, "");
+                .getString(Constants.KEY_PRESS_UNIT, context.getResources().getStringArray(R.array.pressure_options)[0]);
 
     }
 
     public static String getWindSpeedUnit(Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(Constants.KEY_WS_UNIT, "");
+                .getString(Constants.KEY_WS_UNIT, context.getResources().getStringArray(R.array.windspeed_values)[0]);
     }
 
     public static String getLanguage(Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(Constants.KEY_LANG, "");
+                .getString(Constants.KEY_LANG, context.getResources().getStringArray(R.array.language_options)[0]);
     }
 
     public static void setupSettings(Context context) {
