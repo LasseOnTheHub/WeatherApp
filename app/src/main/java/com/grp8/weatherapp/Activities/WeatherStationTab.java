@@ -16,6 +16,7 @@ import com.grp8.weatherapp.Fragments.DatePickerFragment;
 import com.grp8.weatherapp.Fragments.GraphLuxPressure;
 import com.grp8.weatherapp.Fragments.GraphTempRainHumidityFragment;
 import com.grp8.weatherapp.Fragments.StationOverviewFragment;
+import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.R;
 
 import java.util.Date;
@@ -25,6 +26,7 @@ public class    WeatherStationTab extends AppCompatActivity
 
     private Date startDate = new Date(System.currentTimeMillis()-604800000);
     private Date endDate = new Date();
+    public int stationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,7 +43,7 @@ public class    WeatherStationTab extends AppCompatActivity
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        stationId = getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -25,6 +26,7 @@ import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
@@ -49,42 +51,21 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
     IDataRepository dataRepository;
     long            referenceTimestamp;
     MyMarkerView    myMarkerView;
-    final String dtStart = "2016-11-01 00:00";
-    final String dtEnd = "2016-12-01 00:00";
-    final int station = 2;
+    WeatherStationTab weatherStationTab;
+    int stationId;
 
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat formatter;
 
+
     private TextView dateInputFrom;
     private TextView dateInputTo;
 
-    private DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            cal.set(Calendar.YEAR, year);
-            cal.set(Calendar.MONTH, monthOfYear);
-            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            ((WeatherStationTab) getActivity()).setFromDate(cal.getTime());
-            cal.set(Calendar.DATE, 7);
-            if (((WeatherStationTab) getActivity()).getEndDate().after(cal.getTime())) {
-                dateInputTo.callOnClick();
-            }
-        }
-    };
-
-    private DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            cal.set(Calendar.YEAR, year);
-            cal.set(Calendar.MONTH, monthOfYear);
-            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
-        }
-    };
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lux_pressure, container, false);
+        weatherStationTab = (WeatherStationTab)getActivity();
+        stationId = weatherStationTab.stationId;
 
         formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         dateInputTo = (TextView) view.findViewById(R.id.dateInputTo);
@@ -113,13 +94,61 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         });
 
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
-        dataRepository.setUser(5);
+        //TODO: Gør denne generisk
+
 
         //Opretter grafer
         pressureChart = (LineChart) view.findViewById(R.id.pressurechart);
         luxChart = (LineChart) view.findViewById(R.id.luxchart);
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
 
+        drawGraphs();
+        getData();
+        return view;
+    }
+
+    public void drawGraphs()
+    {
+        definePressureGraph();
+        defineLuxGraph();
+    }
+
+    public void defineLuxGraph()
+    {
+        //******Definere graf for lux START******
+        luxChart.getDescription().setEnabled(false);
+        luxChart.setBackgroundColor(Color.rgb(250,250,250));
+        luxChart.setDrawGridBackground(false);
+        luxChart.setViewPortOffsets(100f, 100f, 100f, 100f);
+
+        //Definere lux's legend
+        Legend luxLegend = luxChart.getLegend();
+        luxLegend.setWordWrapEnabled(true);
+        luxLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        luxLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        luxLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        luxLegend.setDrawInside(false);
+
+        //Definere lux's X-akse
+        XAxis luxXAxis = luxChart.getXAxis();
+        luxXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        luxXAxis.setGranularity(1f);
+
+        //Definere lux's Y-akse
+        YAxis luxLeftAxis = luxChart.getAxisLeft();
+        luxChart.getAxisRight().setDrawLabels(false);
+        luxChart.getAxisRight().setDrawGridLines(false);
+        luxLeftAxis.setTypeface(mTfLight);
+        luxLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        luxLeftAxis.setAxisMaximum(1100f);
+        luxLeftAxis.setAxisMinimum(900f);
+        luxLeftAxis.setDrawGridLines(true);
+        luxLeftAxis.setGranularityEnabled(true);
+        //******Definere graf for lux SLUT******
+    }
+
+    public void definePressureGraph()
+    {
         //******Definere graf for tryk START******
         pressureChart.setBackgroundColor(Color.rgb(250,250,250));
         pressureChart.setDrawGridBackground(false);
@@ -152,40 +181,6 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         PressureYLeftAxis.setDrawGridLines(true);
         PressureYLeftAxis.setGranularityEnabled(true);
         //******Definere graf for tryk SLUT******
-
-        //******Definere graf for lux START******
-        luxChart.getDescription().setEnabled(false);
-        luxChart.setBackgroundColor(Color.rgb(250,250,250));
-        luxChart.setDrawGridBackground(false);
-        luxChart.setViewPortOffsets(100f, 100f, 100f, 100f);
-
-        //Definere lux's legend
-        Legend luxLegend = luxChart.getLegend();
-        luxLegend.setWordWrapEnabled(true);
-        luxLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        luxLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        luxLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        luxLegend.setDrawInside(false);
-
-        //Definere lux's X-akse
-        XAxis luxXAxis = luxChart.getXAxis();
-        luxXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        luxXAxis.setGranularity(1f);
-
-        //Definere lux's Y-akse
-        YAxis luxLeftAxis = luxChart.getAxisLeft();
-        luxChart.getAxisRight().setDrawLabels(false);
-        luxChart.getAxisRight().setDrawGridLines(false);
-        luxLeftAxis.setTypeface(mTfLight);
-        luxLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        luxLeftAxis.setAxisMaximum(1100f);
-        luxLeftAxis.setAxisMinimum(900f);
-        luxLeftAxis.setDrawGridLines(true);
-        luxLeftAxis.setGranularityEnabled(true);
-        //******Definere graf for lux SLUT******
-
-        getData();
-        return view;
     }
 
     public void getData()
@@ -194,15 +189,25 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
             @Override
             protected List<DataReading> doInBackground(Void... args) {
-                List<DataReading> data = dataRepository.getStationData(station, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
+               /* List<DataReading> data = dataRepository.getStationData(stationId, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));*/
+                List<DataReading> data = dataRepository.getStationData(stationId, (((WeatherStationTab) getActivity()).getStartDate()), (((WeatherStationTab) getActivity()).getEndDate()));
                 return data;
             }
 
             @Override
             protected void onPostExecute(List<DataReading> data) {
-                referenceTimestamp = data.get(618).getTimestamp().getTime()/1000;
-                setPressureData(data);
-                setLuxData(data);
+                if(!data.isEmpty()) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    referenceTimestamp = data.get(0).getTimestamp().getTime() / 1000;
+                    String string = sdf.format(referenceTimestamp * 1000);
+                    Log.d("Reference", "Reference tidspunktet er: " + string);
+                    setPressureData(data);
+                    setLuxData(data);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Intet data i det angivet tidsrum", Toast.LENGTH_SHORT).show();
+                }
             }
         }.execute();
     }
@@ -215,7 +220,7 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
 
     private void setPressureData(List<DataReading> data) {
         final ArrayList<Entry> pressureVals = new ArrayList<Entry>();
-        for (int i=618;i<data.size();i++)
+        for (int i=0;i<data.size();i++)
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
@@ -226,8 +231,7 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         }
         LineDataSet set1;
 
-        if (pressureChart.getData() != null &&
-                pressureChart.getData().getDataSetCount() > 0) {
+        if (pressureChart.getData() != null && pressureChart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) pressureChart.getData().getDataSetByIndex(0);
             set1.setValues(pressureVals);
             pressureChart.getData().notifyDataChanged();
@@ -263,12 +267,12 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
     }
     private void setLuxData(List<DataReading> data) {
         ArrayList<Entry> luxVals = new ArrayList<Entry>();
-        for (int i=618;i<data.size();i++)
+        for (int i=0;i<data.size();i++)
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
             float x = d.getTimestamp().getTime();
-            float y = (float) d.getAirReadings().getPressure();
+            float y = (float) d.getAirReadings().getTemperature();
             luxVals.add(new Entry(xNew, y));
         }
 
@@ -314,7 +318,6 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
             //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             cal.setTime(sdf.parse(date));// all done
-            Log.d("Tid", "Tiden sat fra grafen er:" + cal.getTime().toString());
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -331,6 +334,32 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
 
         return toNumber(hour, minute);
     }
+
+    private DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setFromDate(cal.getTime());
+            cal.set(Calendar.DATE, 7);
+            if (((WeatherStationTab) getActivity()).getEndDate().after(cal.getTime())) {
+                dateInputTo.callOnClick();
+            }
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, monthOfYear);
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
+            drawGraphs();
+            getData();
+        }
+    };
 
     public static float toNumber(int hour, int minute) {
         return hour + minute / 60f;

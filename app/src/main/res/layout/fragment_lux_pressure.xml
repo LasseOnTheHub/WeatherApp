@@ -20,7 +20,7 @@
 
 
             <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/luxchart"
+                android:id="@+id/pressurechart"
                 android:layout_width="match_parent"
                 android:layout_height="450dp" />
             <View
@@ -29,7 +29,7 @@
                 android:background="@android:color/darker_gray"/>
 
             <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/pressurechart"
+                android:id="@+id/luxchart"
                 android:layout_width="match_parent"
                 android:layout_height="450dp" />
 
