@@ -1,11 +1,9 @@
-package com.grp8.weatherapp.Model;
+package com.grp8.weatherapp.Logic;
 
-import android.app.Application;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Constants;
 
 /**
  * Created by Frederik on 07/01/2017.

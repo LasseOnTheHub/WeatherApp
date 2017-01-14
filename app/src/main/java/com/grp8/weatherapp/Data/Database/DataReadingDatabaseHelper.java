@@ -3,7 +3,7 @@ package com.grp8.weatherapp.Data.Database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.grp8.weatherapp.Data.Database.tables.ReadingsTable;
+import com.grp8.weatherapp.Data.Database.Tables.ReadingsTable;
 import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Entities.DataReading;
 
@@ -57,7 +57,13 @@ public class DataReadingDatabaseHelper
 
         try
         {
-            return mapper.map(new JSONObject(json));
+            JSONArray arr = new JSONArray(json);
+
+            if(arr.length() < 1)
+            {
+                throw new RuntimeException("Zero length JSON array returned from database.");
+            }
+            return mapper.map(arr.getJSONObject(0));
         }
         catch(JSONException e)
         {

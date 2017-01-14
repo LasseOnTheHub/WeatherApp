@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
@@ -104,7 +105,7 @@ public class MainActivityTab extends AppCompatActivity {
 
                 break;
             case R.id.logout_menu:
-                //TODO
+                //TODO: Add logout logic
                 break;
             default: break;
         }
@@ -115,7 +116,7 @@ public class MainActivityTab extends AppCompatActivity {
         return (MainFragment) getSupportFragmentManager().getFragments().get(0);
     }
 
-    private MapViewFragment getMapFragment() {
+    private MapViewFragment getMapFragment() { // FIXME: Remove?
         return (MapViewFragment) getSupportFragmentManager().getFragments().get(1);
     }
 
@@ -137,9 +138,10 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return position == 0 ? getString(R.string.ListTab) : getString(R.string.MapTab);
+            return position == 0 ? getString(R.string.ListTab) : getString(R.string.MapTab); // TODO: Add language strings
         }
     }
+
 
     @Override
     public void onBackPressed()

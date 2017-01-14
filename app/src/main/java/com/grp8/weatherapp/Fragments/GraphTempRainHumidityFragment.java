@@ -28,14 +28,14 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
-import com.grp8.weatherapp.Data.DataRepository;
+import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Formatters.DayAxisValueFormatter;
-import com.grp8.weatherapp.SupportingFiles.Formatters.DegreeAxisValueFormatter;
-import com.grp8.weatherapp.SupportingFiles.Formatters.DegreeValueFormatter;
-import com.grp8.weatherapp.SupportingFiles.Formatters.MMAxisValueFormatter;
-import com.grp8.weatherapp.SupportingFiles.Formatters.MMValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.DayAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.DegreeAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.DegreeValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.MMAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.MMValueFormatter;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 
 import java.text.ParseException;
@@ -58,8 +58,8 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
     //Grafer
     private LineChart humidityChart;
     private CombinedChart tempRainChart;
-    Typeface mTfLight;
-    DataRepository dataRepository;
+    Typeface        mTfLight;
+    IDataRepository dataRepository;
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat formatter;
 

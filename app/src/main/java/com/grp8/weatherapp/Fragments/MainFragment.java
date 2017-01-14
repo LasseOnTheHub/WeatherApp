@@ -6,10 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +21,15 @@ import android.widget.TextView;
 
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
-import com.grp8.weatherapp.Data.DataRepository;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
-import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.R;
+
 import com.grp8.weatherapp.SupportingFiles.Constants;
 import com.grp8.weatherapp.SupportingFiles.Utils;
 import com.grp8.weatherapp.TestData.WeatherStation;
+
+import com.grp8.weatherapp.Logic.Constants;
+
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -98,15 +97,11 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        Intent intent = new Intent(getActivity(), WeatherStationTab.class).putExtra(Constants.KEY_STATION_ID, (int) id);
 
-        Log.d("Clicked on item",String.valueOf(position));
-
-        Intent intent = new Intent(getActivity(), WeatherStationTab.class);
-        intent.putExtra(Constants.KEY_USERID, list.getAdapter().getItemId(position));
-        Log.d(" ID stashed",getActivity().getIntent().getExtras().getString(Constants.KEY_USERID));
         startActivity(intent);
-
     }
 
     public void toggleSearch() {

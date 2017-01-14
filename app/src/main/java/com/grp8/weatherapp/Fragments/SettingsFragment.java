@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.SupportingFiles.Constants;
+import com.grp8.weatherapp.Logic.Constants;
 
 /**
  * Created by Frederik on 06/01/2017.

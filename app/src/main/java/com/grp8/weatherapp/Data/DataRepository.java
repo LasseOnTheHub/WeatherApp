@@ -1,318 +1,141 @@
 package com.grp8.weatherapp.Data;
+/*
+ * Created by Thomas on 12-Jan-17.
+ */
 
-import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
-import com.grp8.weatherapp.Data.API.Exceptions.APINetworkException;
+import com.grp8.weatherapp.Data.API.APIDataProvider;
 import com.grp8.weatherapp.Data.API.Requests.APIDataReadingRequest;
 import com.grp8.weatherapp.Data.API.Requests.APIStationRequest;
-import com.grp8.weatherapp.Data.API.IDataProvider;
-
-import com.grp8.weatherapp.Data.Database.DataReadingDatabaseHelper;
-import com.grp8.weatherapp.Data.Database.Database;
-import com.grp8.weatherapp.Data.Database.StationDatabaseHelper;
 import com.grp8.weatherapp.Data.Mappers.IListableMapper;
-
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
-import com.grp8.weatherapp.SupportingFiles.Environment;
-import com.grp8.weatherapp.SupportingFiles.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
- * Created by Thomas on 03-Jan-17.
- */
-public class DataRepository
+public class DataRepository implements IDataRepository
 {
     private final static String TAG = "DataRepository";
 
     private int user;
 
-    private IListableMapper<Station>     stationMapper;
-    private IListableMapper<DataReading> readingMapper;
+    private APIDataProvider api;
 
-    private IDataProvider  provider;
-    private Database       database;
+    private IListableMapper<Station>     stations;
+    private IListableMapper<DataReading> readings;
 
-    private Map<Integer, Station>           stations = new HashMap<>();
-    private Map<Integer, List<DataReading>> readings = new LinkedHashMap<Integer, List<DataReading>>(Environment.API_CACHE_DATA_READING_MAX_SIZE)
+    private Map<Integer, Station> cache = new HashMap<>();
+
+    public DataRepository(APIDataProvider api, IListableMapper<Station> stations, IListableMapper<DataReading> readings)
     {
-        @Override
-        protected boolean removeEldestEntry(Entry<Integer, List<DataReading>> entry)
-        {
-            return size() > Environment.API_CACHE_DATA_READING_MAX_SIZE;
-        }
-    };
+        this.api = api;
 
-    private Context context;
-
-    /*
-     * Constructor is made package-local
-     */
-    DataRepository(IDataProvider provider, Database database, IListableMapper<Station> stationMapper, IListableMapper<DataReading> readingMapper, Context context)
-    {
-        this.provider = provider;
-        this.database = database;
-
-        this.stationMapper = stationMapper;
-        this.readingMapper = readingMapper;
-
-        this.context = context;
+        this.stations = stations;
+        this.readings = readings;
     }
 
+    @Override
+    public boolean authorize(int user)
+    {
+        return user == 5; // TODO: Add proper auth
+    }
+
+    @Override
     public void setUser(int user)
     {
         this.user = user;
     }
 
-    public boolean authorize(int id)
+    @Override
+    public void refresh() {}
+
+    @Override
+    public Station getStation(int id)
     {
-        if(id == 5)
+        if(this.cache.containsKey(id))
         {
-            this.setUser(id);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Refreshed the data repository by clearing caches
-     *
-     * @param hard Whether the SQLite database should be reset.
-     */
-    public void refresh(boolean hard)
-    {
-        this.stations.clear();
-        this.readings.clear();
-
-        if(hard)
-        {
-            this.database.reset();
-        }
-    }
-
-    /**
-     * Returns the number of stations in the object cache.
-     *
-     * @return Returns an integer.
-     */
-    public int getStationCount()
-    {
-        int count = this.stations.size();
-
-        if(count < 1)
-        {
-            count = StationDatabaseHelper.count(this.database);
+            return this.cache.get(id);
         }
 
-        return count;
+        String payload = this.api.fetch(new APIStationRequest(this.user, id));
+
+        try
+        {
+            return this.stations.map(new JSONObject(payload));
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
-    /**
-     * Fetches all stations associated with the current user
-     */
+    @Override
     public List<Station> getStations()
     {
-        if(this.user == 0)
+        if(Looper.getMainLooper().getThread() == Thread.currentThread())
         {
-            throw new RuntimeException("Missing user ID.");
+            return new ArrayList<>(this.cache.values());
         }
 
-        if(this.stations.size() > 0)
+        String payload = this.api.fetch(new APIStationRequest(this.user));
+
+        try
         {
-            return new ArrayList<>(this.stations.values());
-        }
-
-        List<Station> stations = StationDatabaseHelper.all(this.database);
-
-        if(stations.size() < 1)
-        {
-            Log.d(TAG, "Fetching weather stations from remote API");
-
-            if(!Utils.isNetworkAvailable(this.context))
-            {
-                if(Utils.isEmulator())
-                {
-                    Log.e(TAG, "Cannot access remote API", new APINetworkException());
-                }
-
-                return null;
-            }
-
-            String payload;
-
-            payload = this.provider.fetch(new APIStationRequest(this.user));
-
-            try
-            {
-                stations = this.stationMapper.map(new JSONArray(payload));
-            }
-            catch(JSONException e)
-            {
-                e.printStackTrace();
-                return null;
-            }
+            List<Station> stations = this.stations.map(new JSONArray(payload));
 
             for(Station station : stations)
             {
-                this.stations.put(station.getId(), station);
-
-                StationDatabaseHelper.add(this.database, station);
+                if(!this.cache.containsKey(station.getId()))
+                {
+                    this.cache.put(station.getId(), station);
+                }
             }
+
+            return stations;
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
         }
 
-        return stations;
+        return new ArrayList<>();
     }
 
-    /**
-     * Fetches a specific station associated with the current user and specified station ID
-     *
-     * @param id CLAFIS station ID
-     */
-    public Station getStation(int id)
+    @Override
+    public int getStationCount()
     {
-        if(this.user == 0)
+        return 3; // TODO: Make dynamic
+    }
+
+    @Override
+    public DataReading getStationData(int station)
+    {
+        APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
+
+        int ceiling = 5;
+        int counter = 0;
+
+        JSONArray json = null;
+
+        while(counter < ceiling)
         {
-            throw new RuntimeException("Missing user ID.");
-        }
-
-        if(this.stations.containsKey(id))
-        {
-            return this.stations.get(id);
-        }
-
-        Station station = StationDatabaseHelper.fetch(this.database, id);
-
-        if(station == null)
-        {
-            String payload;
-
-            payload = this.provider.fetch(new APIStationRequest(this.user, id));
+            String payload = this.api.fetch(request);
 
             try
             {
-                station = this.stationMapper.map(new JSONObject(payload));
-            }
-            catch(JSONException e)
-            {
-                e.printStackTrace();
-                return null;
-            }
-
-            this.stations.put(station.getId(), station);
-            StationDatabaseHelper.add(this.database, station);
-        }
-
-        return station;
-    }
-
-    /**
-     * Fetches the latest station data reading associated with the specified station ID
-     *
-     * @param station CLAFIS station ID
-     */
-    public DataReading getStationData(int station)
-    {
-        if(this.user == 0)
-        {
-            throw new RuntimeException("Missing user ID.");
-        }
-
-        if(Utils.isEmulator())
-        {
-            Log.d(TAG, "Attempting to fetch latest data reading from station: " + station);
-        }
-
-        if(!this.readings.isEmpty() && this.readings.containsKey(station))
-        {
-            List<DataReading> collection = this.readings.get(station);
-
-            if(collection.size() == 1)
-            {
-                return collection.get(0);
-            }
-
-            DataReading current = null;
-
-            for(DataReading item : collection)
-            {
-                if(current == null)
-                {
-                    current = item;
-                    continue;
-                }
-
-                if(current.getTimestamp().compareTo(item.getTimestamp()) < 0)
-                {
-                    current = item;
-                }
-            }
-
-            return current;
-        }
-
-        if(Utils.isEmulator())
-        {
-            Log.d(TAG, "Couldn't find matching data reading in object cache. Trying local database");
-        }
-
-        DataReading reading = DataReadingDatabaseHelper.latest(this.database, this.readingMapper, station);
-
-        if(reading == null)
-        {
-            if(Utils.isEmulator())
-            {
-                Log.d(TAG, "Couldn't find matching data reading in local database. Trying remote API");
-            }
-
-            if(!Utils.isNetworkAvailable(this.context))
-            {
-                if(Utils.isEmulator())
-                {
-                    Log.e(TAG, "Cannot access remote API", new APINetworkException());
-                }
-
-                return null;
-            }
-
-            APIDataReadingRequest request = new APIDataReadingRequest(this.user, station);
-
-            int ceiling = Environment.API_MAXIMUM_NUMBER_OF_RETRIES;
-            int counter = 0;
-
-            String    payload = "";
-            JSONArray json    = null;
-
-            if(!this.readings.containsKey(station))
-            {
-                this.readings.put(station, new ArrayList<DataReading>());
-            }
-
-            while(counter < ceiling)
-            {
-                payload = this.provider.fetch(request);
-
-                try
-                {
-                    json = new JSONArray(payload);
-                }
-                catch(JSONException e)
-                {
-                    e.printStackTrace();
-                    continue;
-                }
+                json = new JSONArray(payload);
 
                 if(json.length() > 0)
                 {
@@ -320,24 +143,6 @@ public class DataRepository
                 }
 
                 Log.d(TAG, "No data returned");
-
-                request.increaseBackwardsReadingDateInterval();
-                counter++;
-            }
-
-            if(counter == ceiling || json == null)
-            {
-                if(Utils.isEmulator())
-                {
-                    Log.w(TAG, "Reached maximum number of incremental retries. Returning null");
-                }
-
-                return null;
-            }
-
-            try
-            {
-                reading = this.readingMapper.map(json.getJSONObject(0));
             }
             catch(JSONException e)
             {
@@ -345,167 +150,42 @@ public class DataRepository
                 return null;
             }
 
-            /*
-             * Update timestamp to reflect manipulated data.
-             */
-            updateTimestampOnManipulatedReading(reading);
-
-            this.readings.get(station).add(reading);
-
-            DataReadingDatabaseHelper.add(this.database, reading.getID(), reading.getDeviceID(), reading.getTimestamp(), payload);
+            request.increaseBackwardsReadingDateInterval();
+            counter++;
         }
 
-        return reading;
-    }
-
-    /**
-     * Fetches all data reading with the specified date range associated with the
-     * specified station ID
-     *
-     * @param station CLAFIS station ID
-     * @param start   Beginning of date range
-     * @param end     End of date range
-     */
-    public List<DataReading> getStationData(int station, Date start, Date end)
-    {
-        if(this.user == 0)
+        if(counter == ceiling || json == null)
         {
-            throw new RuntimeException("Missing user ID.");
+            Log.w(TAG, "Reached maximum number of incremental retries. Returning null");
+            return null;
         }
-
-        if(start.compareTo(end) > 0)
-        {
-            throw new IllegalStateException("Start of date range cannot be after end of the range.");
-        }
-
-        if(!this.readings.isEmpty() && this.readings.containsKey(station))
-        {
-            List<DataReading> collection = this.readings.get(station);
-            List<DataReading> results    = new ArrayList<>();
-
-            for(DataReading entry : collection)
-            {
-                if(entry.getTimestamp().compareTo(start) > 0 || entry.getTimestamp().compareTo(end) < 0)
-                {
-                    results.add(entry);
-                }
-            }
-
-            return results;
-        }
-
-        List<DataReading> results = DataReadingDatabaseHelper.fetch(this.database, this.readingMapper, station, end, start);
-
-        if(results.size() < 1)
-        {
-            results = synchronizeDatabase(station, start, end);
-        }
-        else
-        {
-            /*
-             * Check if the result-set time range ends before the selection ends and more
-             * data may exists.
-             */
-            Date newestTimestamp = results.get(0).getTimestamp();
-
-            if(newestTimestamp.before(end))
-            {
-                List<DataReading> subsetAfter = synchronizeDatabase(station, newestTimestamp, end);
-
-                for(DataReading item : subsetAfter)
-                {
-                    results.add(item);
-                }
-            }
-
-            /*
-             * Check if the result-set time range starts after the selection starts and more
-             * data may exists
-             */
-            Date oldestTimestamp = results.get(results.size() - 1).getTimestamp();
-
-            if(oldestTimestamp.after(start))
-            {
-                List<DataReading> subsetBefore = synchronizeDatabase(station, start, oldestTimestamp);
-
-                for(DataReading item : subsetBefore)
-                {
-                    results.add(item);
-                }
-            }
-        }
-
-        Collections.sort(results, new Comparator<DataReading>()
-        {
-            @Override
-            public int compare(DataReading a, DataReading b)
-            {
-                return a.getTimestamp().compareTo(b.getTimestamp());
-            }
-        });
-
-        return results;
-    }
-
-    private List<DataReading> synchronizeDatabase(int station, Date start, Date end)
-    {
-        List<DataReading> results;
-
-        String    payload;
-        JSONArray items;
-
-        payload = this.provider.fetch(new APIDataReadingRequest(this.user, station, start, end));
 
         try
         {
-            items   = new JSONArray(payload);
-            results = this.readingMapper.map(items);
+            return this.readings.map(json.getJSONObject(0));
         }
         catch(JSONException e)
         {
             e.printStackTrace();
-
-            return new ArrayList<>();
         }
 
-        if(!this.readings.containsKey(station))
-        {
-            this.readings.put(station, new ArrayList<DataReading>());
-        }
-
-        for(int index = 0; index < results.size(); index++)
-        {
-            DataReading result = results.get(index);
-
-            /*
-             * Update reading to reflect manipulated timestamps
-             */
-            updateTimestampOnManipulatedReading(result);
-
-            this.readings.get(station).add(result);
-
-            try
-            {
-                DataReadingDatabaseHelper.add(this.database, result.getID(), result.getDeviceID(), result.getTimestamp(), items.getString(index));
-            }
-            catch(JSONException e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        return results;
+        return null;
     }
 
-    private void updateTimestampOnManipulatedReading(DataReading reading)
+    @Override
+    public List<DataReading> getStationData(int station, Date start, Date end)
     {
-        if(reading.getTimestamp().getTime() > Environment.API_VALID_DATE_OFFSET)
+        String payload = this.api.fetch(new APIDataReadingRequest(this.user, station, start, end));
+
+        try
         {
-            return;
+            return this.readings.map(new JSONArray(payload));
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
         }
 
-        long diff = System.currentTimeMillis() - Environment.API_VALID_DATE_OFFSET;
-
-        reading.setTimestamp(new Date(reading.getTimestamp().getTime() + diff));
+        return new ArrayList<>();
     }
 }

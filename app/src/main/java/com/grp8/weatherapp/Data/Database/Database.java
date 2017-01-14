@@ -8,9 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.grp8.weatherapp.Data.Database.tables.StationsTable;
-import com.grp8.weatherapp.Data.Database.tables.ReadingsTable;
-import com.grp8.weatherapp.SupportingFiles.Utils;
+import com.grp8.weatherapp.Data.Database.Tables.StationsTable;
+import com.grp8.weatherapp.Data.Database.Tables.ReadingsTable;
+import com.grp8.weatherapp.Logic.Utils;
 
 /*
  * Created by Thomas on 07-Jan-17.

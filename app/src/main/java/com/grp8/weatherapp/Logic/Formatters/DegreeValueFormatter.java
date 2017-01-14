@@ -1,4 +1,4 @@
-package com.grp8.weatherapp.SupportingFiles.Formatters;
+package com.grp8.weatherapp.Logic.Formatters;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
