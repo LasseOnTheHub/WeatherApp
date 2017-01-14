@@ -1,6 +1,5 @@
 package com.grp8.weatherapp.Fragments;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -11,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * Created by lasse on 11/21/16.
@@ -49,7 +48,7 @@ import java.util.List;
 public class MapViewFragment extends android.support.v4.app.Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
     MapView mMapView;
     private GoogleMap googleMap;
-    IDataRepository dataRepository;
+    IDataRepository repository;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     List<Station> stations;
@@ -59,7 +58,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_overview, container, false);
 
-        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
+        repository = DataRepositoryFactory.build(getActivity().getApplicationContext());
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -76,43 +75,81 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
             public void onMapReady(final GoogleMap mMap) {
                 googleMap = mMap;
 
-                try {
-                    new AsyncTask<Void, Void, Void>() {
+                try
+                {
+                    new AsyncTask<Void, Map<Station, DataReading>, Map<Station, DataReading>>()
+                    {
                         @Override
-                        protected Void doInBackground(Void... args) {
-                            try {
-                                stations = dataRepository.getStations();
-                                for (Station s :stations)
+                        protected Map<Station, DataReading> doInBackground(Void... args)
+                        {
+                            Map<Station, DataReading> results = new HashMap<>();
+
+                            try
+                            {
+                                List<Station> stations = repository.getStations();
+
+                                for(Station station : stations)
                                 {
-                                    dataReadings.add(dataRepository.getStationData(s.getId()));
+                                    DataReading reading = repository.getStationData(station.getId());
+
+                                    results.put(station, reading);
                                 }
-                            } catch (Exception e) {
+                            }
+                            catch(Exception e)
+                            {
                                 e.printStackTrace();
                                 return null;
                             }
-                            return null;
+
+                            return results;
                         }
 
                         @Override
-                        protected void onPostExecute(Void v) {
-                            if (stations == null) {
+                        protected void onPostExecute(Map<Station, DataReading> stations)
+                        {
+                            if(stations == null)
+                            {
                                 return;
                             }
+
                             getDeviceLocation();
+
                             List<Marker> markers = new ArrayList<>();
-                            dataRepository.setUser(5);
-                            for (final Station s : stations) {
-                                DataReading temporaryDataReading = new DataReading(0,0,new Date(),0,new Air(0,0,0),new Wind(0,0),new Soil(new int[0],new int[0]));
-                                if(dataReadings!=null)
-                                for (DataReading d: dataReadings) {
-                                    if (d.getID() ==s.getId()){
-                                        temporaryDataReading = d;
+
+                            for (final Map.Entry<Station, DataReading> entry : stations.entrySet())
+                            {
+/*                                DataReading temporaryDataReading = new DataReading(0,0,new Date(),0,new Air(0,0,0),new Wind(0,0),new Soil(new int[0],new int[0]));
+
+                                if(dataReadings != null)
+                                {
+                                    for (DataReading d: dataReadings) {
+                                        if (d.getID() == entry.getKey().getId()){
+                                            temporaryDataReading = d;
+                                        }
                                     }
                                 }
-                                String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),temporaryDataReading.getAirReadings().getTemperature()));
-                                int hum = temporaryDataReading.getAirReadings().getPressure();
-                                LatLng latLng = new LatLng(s.getLatitude(), s.getLongitude());
-                                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(s.getNotes()).snippet("Temperatur:"+tem+", Fugtighed:"+hum));
+                                */
+
+                                final Station station = entry.getKey();
+                                DataReading   reading = entry.getValue();
+
+                                String snippet;
+
+                                if(reading != null)
+                                {
+                                    String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),reading.getAirReadings().getTemperature()));
+
+                                    int hum = reading.getAirReadings().getHumidity();
+
+                                    snippet = "Temperatur: " + tem + ", Fugtighed: "+ hum + "%"; // FIXME: add language strings
+                                }
+                                else
+                                {
+                                    snippet = "No data available";
+                                }
+
+                                LatLng latLng = new LatLng(station.getLatitude(), station.getLongitude());
+                                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(station.getNotes()).snippet(snippet));
 
                                 markers.add(marker);
 
@@ -120,7 +157,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                                     @Override
                                     public void onInfoWindowClick(Marker marker) {
                                         Intent intent = new Intent(getActivity(), WeatherStationTab.class);
-                                        intent.putExtra(Constants.KEY_STATION_ID, s.getId());
+                                        intent.putExtra(Constants.KEY_STATION_ID, station.getId());
 
                                         startActivity(intent);
                                     }
