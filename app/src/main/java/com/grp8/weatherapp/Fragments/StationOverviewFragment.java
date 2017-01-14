@@ -12,7 +12,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
-import com.grp8.weatherapp.Model.SettingsManager;
+import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.Logic.Constants;
