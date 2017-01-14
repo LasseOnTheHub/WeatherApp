@@ -1,5 +1,7 @@
 package com.grp8.weatherapp.Logic.Formatters;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
@@ -22,6 +24,7 @@ public class HourAxisValueFormatter implements IAxisValueFormatter
         this.referenceTimestamp = referenceTimestamp;
         this.mDataFormat = new SimpleDateFormat("dd-HH:mm", Locale.ENGLISH);
         this.mDate = new Date();
+        Log.d("ReferenceTid","Tiden sat i ValueFormatteren er: "+mDataFormat.format(referenceTimestamp*1000));
     }
 
 
