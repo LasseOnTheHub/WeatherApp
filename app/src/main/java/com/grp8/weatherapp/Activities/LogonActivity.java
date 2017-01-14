@@ -47,16 +47,10 @@ public class LogonActivity extends AppCompatActivity {
         authroizer = new Authorizer();
     }
 
-
-    //TODO skal fjernes ved release
-    public void forceCrash(View view) {
-        throw new RuntimeException("This is a crash");
-    }
-
     public void login(View view) {
         if (userIDEditText.getText().toString().matches(""))
         {
-            Toast.makeText(this, "Indtast brugernavn", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Indtast brugernavn", Toast.LENGTH_SHORT).show(); // TODO: add lang string
         }
         else
         {

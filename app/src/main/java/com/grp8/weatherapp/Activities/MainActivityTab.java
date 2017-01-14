@@ -101,9 +101,6 @@ public class MainActivityTab extends AppCompatActivity {
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
-            case R.id.action_search:
-
-                break;
             case R.id.logout_menu:
                 //TODO: Add logout logic
                 break;
@@ -138,7 +135,7 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return position == 0 ? getString(R.string.ListTab) : getString(R.string.MapTab); // TODO: Add language strings
+            return position == 0 ? getString(R.string.listTab) : getString(R.string.mapTab);
         }
     }
 

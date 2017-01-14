@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-
 
 import com.grp8.weatherapp.Fragments.DatePickerFragment;
 import com.grp8.weatherapp.Fragments.GraphLuxPressure;
@@ -21,7 +19,7 @@ import com.grp8.weatherapp.R;
 
 import java.util.Date;
 
-public class    WeatherStationTab extends AppCompatActivity
+public class WeatherStationTab extends AppCompatActivity
 {
 
     private Date startDate = new Date(System.currentTimeMillis()-604800000);
@@ -60,7 +58,6 @@ public class    WeatherStationTab extends AppCompatActivity
 
         return true;
     }
-
 
     public void setFromDate(Date date) {
         startDate = date;
