@@ -120,7 +120,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                                     @Override
                                     public void onInfoWindowClick(Marker marker) {
                                         Intent intent = new Intent(getActivity(), WeatherStationTab.class);
-                                        intent.putExtra(Constants.KEY_USERID, s.getId());
+                                        intent.putExtra(Constants.KEY_STATION_ID, s.getId());
 
                                         startActivity(intent);
                                     }
