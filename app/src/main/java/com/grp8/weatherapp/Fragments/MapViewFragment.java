@@ -26,6 +26,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
+import com.grp8.weatherapp.Entities.Data.Air;
+import com.grp8.weatherapp.Entities.Data.Soil;
+import com.grp8.weatherapp.Entities.Data.Wind;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
@@ -35,6 +38,8 @@ import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
 import com.grp8.weatherapp.R;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -45,8 +50,10 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
     MapView mMapView;
     private GoogleMap googleMap;
     IDataRepository dataRepository;
-    
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    List<Station> stations;
+    List<DataReading> dataReadings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,31 +77,42 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                 googleMap = mMap;
 
                 try {
-                    new AsyncTask<Void, List<Station>, List<Station>>() {
+                    new AsyncTask<Void, Void, Void>() {
                         @Override
-                        protected List<Station> doInBackground(Void... args) {
+                        protected Void doInBackground(Void... args) {
                             try {
-                                return dataRepository.getStations();
+                                stations = dataRepository.getStations();
+                                for (Station s :stations)
+                                {
+                                    dataReadings.add(dataRepository.getStationData(s.getId()));
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
-
                                 return null;
                             }
+                            return null;
                         }
 
                         @Override
-                        protected void onPostExecute(List<Station> stations) {
+                        protected void onPostExecute(Void v) {
                             if (stations == null) {
                                 return;
                             }
                             getDeviceLocation();
                             List<Marker> markers = new ArrayList<>();
                             dataRepository.setUser(5);
-                            for (final Station station : stations) {
-                                DataReading data = dataRepository.getStationData(station.getId());
-                                //String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),data.getAirReadings().getTemperature()));
-                                LatLng latLng = new LatLng(station.getLatitude(), station.getLongitude());
-                                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(station.getNotes()+"\n test"));
+                            for (final Station s : stations) {
+                                DataReading temporaryDataReading = new DataReading(0,0,new Date(),0,new Air(0,0,0),new Wind(0,0),new Soil(new int[0],new int[0]));
+                                if(dataReadings!=null)
+                                for (DataReading d: dataReadings) {
+                                    if (d.getID() ==s.getId()){
+                                        temporaryDataReading = d;
+                                    }
+                                }
+                                String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(),temporaryDataReading.getAirReadings().getTemperature()));
+                                int hum = temporaryDataReading.getAirReadings().getPressure();
+                                LatLng latLng = new LatLng(s.getLatitude(), s.getLongitude());
+                                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(s.getNotes()).snippet("Temperatur:"+tem+", Fugtighed:"+hum));
 
                                 markers.add(marker);
 
@@ -102,7 +120,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                                     @Override
                                     public void onInfoWindowClick(Marker marker) {
                                         Intent intent = new Intent(getActivity(), WeatherStationTab.class);
-                                        intent.putExtra(Constants.KEY_USERID, station.getId());
+                                        intent.putExtra(Constants.KEY_USERID, s.getId());
 
                                         startActivity(intent);
                                     }
@@ -115,7 +133,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                                 builder.include(marker.getPosition());
                             }
                             LatLngBounds bounds = builder.build();
-                            int padding = 200; // offset from edges of the map in pixels
+                            int padding = 200;
                             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                             googleMap.moveCamera(cu);
                         }
