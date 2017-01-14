@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private TextView temp,windSpeed,airP, humidity, updated;
     private TableLayout tableLayout;
     private ProgressBar spinner;
+    private ImageView weatherWindow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +40,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         humidity = (TextView)stationOverview.findViewById(R.id.humidity);
         updated = (TextView)stationOverview.findViewById(R.id.updated);
         spinner = (ProgressBar)stationOverview.findViewById(R.id.spinner);
+
+        // ImageView declaration
+        weatherWindow = (ImageView)stationOverview.findViewById(R.id.weatherWindow);
 
         // setting spinner visible and loading text
         loadView();
@@ -86,12 +91,19 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         // set windspeed text and getting the appropriate unit
         String speed = String.valueOf(reading.getWindReadings().getSpeed());
+        windSpeed.setMaxWidth(315);
         windSpeed.setText(speed + " " + SettingsManager.getWindSpeedUnit(getActivity().getApplicationContext()));
 
         // set pressure text and getting the appropriate unit
         String pressure = String.valueOf(PressureConverter.getFormattedPressure(getActivity().getApplicationContext(),reading.getAirReadings().getPressure()));
         airP.setMaxWidth(315);
         airP.setText(pressure + " " + SettingsManager.getPressureUnit(getActivity().getApplicationContext()));
+        if(reading.getAirReadings().getPressure()<1000){
+            weatherWindow.setImageResource(R.mipmap.cloudy);
+        }
+        else {
+            weatherWindow.setImageResource(R.mipmap.sunny);
+        }
 
         // set humidity text and getting the appropriate unit
         String hum = String.valueOf(reading.getAirReadings().getHumidity());

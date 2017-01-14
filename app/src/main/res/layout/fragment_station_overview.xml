@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/WeatherWindow"
+            android:id="@+id/weatherWindow"
             android:layout_centerHorizontal="true"
             android:src="@mipmap/mockup"/>
 
@@ -105,6 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:maxLength="20"
                 android:text="Large Text"
                 android:layout_marginLeft="30dp"
                 android:id="@+id/windSpeed" />
