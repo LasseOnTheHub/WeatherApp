@@ -62,11 +62,6 @@ public class DataRepository implements IDataRepository
     @Override
     public Station getStation(int id)
     {
-        if(this.user == 0)
-        {
-            throw new RuntimeException("Missing user ID");
-        }
-
         if(this.cache.containsKey(id))
         {
             return this.cache.get(id);
