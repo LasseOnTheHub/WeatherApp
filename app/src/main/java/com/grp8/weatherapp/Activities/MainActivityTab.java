@@ -58,9 +58,21 @@ public class MainActivityTab extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_stationslist, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        //SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        //searchView.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mViewPager.setCurrentItem(0, true);
+                getMainFragment().getListAdapter().getFilter().filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                getMainFragment().getListAdapter().getFilter().filter(newText);
+                return true;
+            }
+        });
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {

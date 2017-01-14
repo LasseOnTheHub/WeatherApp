@@ -24,10 +24,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -60,15 +59,17 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
                 if (constraint != null && constraint.length() != 0) {
                     ArrayList<HashMap<Station,DataReading>> filterResultsData = new ArrayList<HashMap<Station,DataReading>>();
 
-                    for(int i = 0; i<getCount(); i++) {
+                    for(int i = 0; i<DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount(); i++) {
                         Station station = (Station) getItem(i);
-                        if (station.getNotes().contains(constraint)) {
+                        if (station.getNotes().toLowerCase().contains(constraint.toString().toLowerCase())) {
                             HashMap<Station, DataReading> map = new HashMap<Station, DataReading>();
                             map.put(station,DataRepositoryFactory.build(activity.getApplicationContext()).getStationData(station.getId()));
                             filterResultsData.add(map);
                         }
                     }
-                    searchResults = filterResultsData;
+                    searchResults = !filterResultsData.isEmpty() ? filterResultsData : new ArrayList<HashMap<Station,DataReading>>();
+                } else {
+                    searchResults = null;
                 }
                 return null;
             }
@@ -81,18 +82,15 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
     }
 
     private static class ViewHolder {
-        TextView stationTitle;
-        TextView timeLabel;
-        TextView tempLabel;
-        LinearLayout timeLayout;
-        LinearLayout oldContent;
-        LinearLayout errorLayout;
-        ProgressBar tempSpinner;
-        ProgressBar timeSpinner;
+        TextView stationTitle, timeLabel, tempLabel;
+        LinearLayout timeLayout, oldContent, errorLayout;
+        ProgressBar tempSpinner, timeSpinner;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
+        boolean loading = false;
 
         final Station station = (Station) getItem(position);
 
@@ -101,6 +99,7 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
         if (convertView == null) {
             // First load of element
             if (station != null) {
+                loading = true;
                 new AsyncTask<Void, DataReading, DataReading>() {
                     @Override
                     protected DataReading doInBackground(Void... arg0) {
@@ -140,33 +139,39 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
             // Only error layout is visible
             return convertView;
         }
-        Log.d("isSearching",String.valueOf(isSearching));
-        if (isSearching) {
-            if (searchResults != null) {
-                HashMap<Station, DataReading> map = searchResults.get(0);
-                Map.Entry<Station,DataReading> entry = (Map.Entry<Station, DataReading>) map.entrySet();
+        Log.d("getView isSearching",String.valueOf(isSearching));
+        if (isSearching && searchResults != null) {
+            HashMap<Station, DataReading> map = searchResults.get(0);
+            Iterator it = map.entrySet().iterator();
+            if (it.hasNext()) {
+                Map.Entry<Station, DataReading> entry = (Map.Entry<Station, DataReading>) it.next();
                 Station searchStation = entry.getKey();
                 DataReading searchReading = entry.getValue();
-                setTempLabel(viewHolder, searchReading);
-                setTimeLabel(viewHolder, searchReading);
-                viewHolder.stationTitle.setText(searchStation.getNotes());
-                return convertView;
+                if (searchStation != null) {
+                    viewHolder.stationTitle.setText(searchStation.getNotes());
+                    if (searchReading != null) {
+                        setTempLabel(viewHolder, searchReading);
+                        setTimeLabel(viewHolder, searchReading);
+                    }
+                }
             } else {
-                return convertView; // Search is clicked but not yet finished
             }
+            return convertView;
         }
 
-        // Setting up outlets for loading screen
-        viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
-        viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
-        viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
-        viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
-        viewHolder.tempSpinner.setVisibility(View.VISIBLE); // Spinner for temperature
-        viewHolder.timeSpinner.setVisibility(View.VISIBLE); // Spinner for time
-        viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
-        viewHolder.stationTitle.setVisibility(View.VISIBLE); // Label for station title
-        viewHolder.stationTitle.setText(station.getNotes()); // Setting the stations as title
-        // Spinners, clock image and title is visible
+        if (loading) {
+            // Setting up outlets for loading screen
+            viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
+            viewHolder.oldContent.setVisibility(View.GONE); // Layout for oldContent
+            viewHolder.timeLabel.setVisibility(View.GONE); // Label for time
+            viewHolder.errorLayout.setVisibility(View.GONE); // Layout for error
+            viewHolder.tempSpinner.setVisibility(View.VISIBLE); // Spinner for temperature
+            viewHolder.timeSpinner.setVisibility(View.VISIBLE); // Spinner for time
+            viewHolder.timeLayout.setVisibility(View.VISIBLE); // Layout for time
+            viewHolder.stationTitle.setVisibility(View.VISIBLE); // Label for station title
+            viewHolder.stationTitle.setText(station.getNotes()); // Setting the stations as title
+            // Spinners, clock image and title is visible
+        }
 
         return convertView;
     }
@@ -276,7 +281,11 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public int getCount() {
-        return DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount();
+        if (searchResults == null) {
+            return DataRepositoryFactory.build(activity.getApplicationContext()).getStationCount();
+        } else {
+            return searchResults.size();
+        }
     }
 
     @Override
@@ -286,6 +295,7 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
 
     public void toggleSearch() {
         isSearching = !isSearching;
+        searchResults = isSearching ? new ArrayList<HashMap<Station,DataReading>>() : null;
     }
 
 }

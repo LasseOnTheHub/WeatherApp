@@ -113,4 +113,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         ((WeatherStationsAdapter) list.getAdapter()).toggleSearch();
     }
 
+    public WeatherStationsAdapter getListAdapter() {
+        return (WeatherStationsAdapter) list.getAdapter();
+    }
+
 }
