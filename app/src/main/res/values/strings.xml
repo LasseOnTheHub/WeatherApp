@@ -47,6 +47,7 @@
     <string name="station_tabs_unknown">Unknown</string>
 
     <!-- Settings strings and arrays -->
+    <string name="settings_save_success">Changes to settings has been saved</string>
 
     <string name="temp">Temperature unit</string>
     <string-array name="temp_options_titles">
