@@ -26,6 +26,12 @@
     <string name="loadingTextOverview">Loading…</string>
     <string name="error">Error</string>
 
+    <!-- Map view -->
+    <string name="map_snippet_temperature">Temperature</string>
+    <string name="map_snippet_humidity">Humidity</string>
+    <string name="map_snippet_no_data">No data available</string>
+    <string name="map_snippet_load_failed">Could not load selected station</string>
+
     <!-- Font awesome icons -->
     <string name="icon_temp">&#xf02b;</string>
     <string name="no_search_results">Sorry, no weather stations matches your query</string>
