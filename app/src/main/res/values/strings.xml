@@ -41,6 +41,11 @@
     <string name="listTab">LIST</string>
     <string name="mapTab">MAP</string>
 
+    <string name="station_tabs_overview">Overview</string>
+    <string name="station_tabs_temperature_rain">Temp + rain</string>
+    <string name="station_tabs_pressure_lux">Pressure + lux</string>
+    <string name="station_tabs_unknown">Unknown</string>
+
     <!-- Settings strings and arrays -->
 
     <string name="temp">Temperature unit</string>
