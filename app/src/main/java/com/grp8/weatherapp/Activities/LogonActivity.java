@@ -1,9 +1,11 @@
 package com.grp8.weatherapp.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +58,8 @@ public class LogonActivity extends AppCompatActivity {
         this.userIDEditText     = (EditText) findViewById(R.id.userIDText);
         this.passwordIDEditText = (EditText) findViewById(R.id.userPasswordText);
 
-        final ImageView logo = (ImageView) findViewById(R.id.imageLogo);
-        final Button    btn  = (Button)    findViewById(R.id.loginButton);
+        @SuppressLint("WrongViewCast")
+        final AppCompatImageView logo = (AppCompatImageView) findViewById(R.id.imageLogo);
 
         View content = findViewById(R.id.logon_layout_content);
 
@@ -70,7 +72,7 @@ public class LogonActivity extends AppCompatActivity {
                 {
                     logo.setVisibility(View.GONE);
                 }
-                else // Keyboard is hidden
+                else if(bottom > oldBottom) // Keyboard is hidden
                 {
                     logo.setVisibility(View.VISIBLE);
                 }
