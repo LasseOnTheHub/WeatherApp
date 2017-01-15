@@ -22,7 +22,7 @@ public class HourAxisValueFormatter implements IAxisValueFormatter
 
     public HourAxisValueFormatter(long referenceTimestamp) {
         this.referenceTimestamp = referenceTimestamp;
-        this.mDataFormat = new SimpleDateFormat("dd-HH:mm", Locale.ENGLISH);
+        this.mDataFormat = new SimpleDateFormat(" dd/MM ", Locale.ENGLISH);
         this.mDate = new Date();
         Log.d("ReferenceTid","Tiden sat i ValueFormatteren er: "+mDataFormat.format(referenceTimestamp*1000));
     }

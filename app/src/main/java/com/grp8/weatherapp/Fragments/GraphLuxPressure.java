@@ -234,8 +234,10 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
         if (pressureChart.getData() != null && pressureChart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) pressureChart.getData().getDataSetByIndex(0);
             set1.setValues(pressureVals);
-            pressureChart.getData().notifyDataChanged();
+            set1.notifyDataSetChanged();
+
             pressureChart.notifyDataSetChanged();
+            pressureChart.invalidate();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(pressureVals, "Tryk");
@@ -266,6 +268,12 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
             pressureChart.invalidate();
         }
     }
+
+    private void refreshData()
+    {
+
+    }
+
     private void setLuxData(List<DataReading> data) {
         ArrayList<Entry> luxVals = new ArrayList<Entry>();
         for (int i=0;i<data.size();i++)
@@ -358,10 +366,24 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
             cal.set(Calendar.MONTH, monthOfYear);
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
+            removeDataSet();
             drawGraphs();
             getData();
         }
     };
+
+    private void removeDataSet() {
+
+        LineData data = pressureChart.getData();
+
+        if (data != null) {
+
+            data.removeDataSet(data.getDataSetByIndex(data.getDataSetCount() - 1));
+
+            pressureChart.notifyDataSetChanged();
+            pressureChart.invalidate();
+        }
+    }
 
     public static float toNumber(int hour, int minute) {
         return hour + minute / 60f;
