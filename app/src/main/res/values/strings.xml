@@ -9,6 +9,9 @@
     <string name="logon_hint_password">Password</string>
     <string name="logon_desc_logo">CLAFIS Logo</string>
     <string name="logon_input_default_uid">5</string>
+    <string name="logon_success">Success</string>
+    <string name="logon_failure">Invalid credentials</string>
+    <string name="logon_toast_username">Please provide a user ID</string>
 
     <string name="last_updated">Last updated</string>
     <string name="temperature">Temperature</string>
