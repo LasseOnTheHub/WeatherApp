@@ -29,8 +29,8 @@ import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Fragments.MainFragment;
 import com.grp8.weatherapp.Fragments.MapViewFragment;
 
-public class MainActivityTab extends AppCompatActivity {
-
+public class MainActivityTab extends AppCompatActivity
+{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private static final int TIME_INTERVAL = 3000; // // milliseconds, time passed between two back presses.
@@ -55,6 +55,17 @@ public class MainActivityTab extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.title_mainActivity);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if(intent != null && intent.getExtras().getBoolean("reload", false))
+        {
+            this.refresh();
+        }
     }
 
     @Override
@@ -96,13 +107,10 @@ public class MainActivityTab extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh_menu:
-                Log.d("Refresh","...");
-                DataRepositoryFactory.build(getApplicationContext()).refresh();
-                getMainFragment().load();
-                // getMapFragment.update();
+                this.refresh();
                 break;
             case R.id.settings_menu:
-                startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
+                startActivityForResult(new Intent(MainActivityTab.this, SettingsActivity.class), 1);
                 break;
             case R.id.logout_menu:
                 UserManager.getInstance(getApplicationContext()).logout();
@@ -114,6 +122,14 @@ public class MainActivityTab extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refresh()
+    {
+        Log.d("Refresh","...");
+        DataRepositoryFactory.build(getApplicationContext()).refresh();
+        getMainFragment().load();
+        // getMapFragment.update();
     }
 
     private MainFragment getMainFragment() {

@@ -1,15 +1,13 @@
 package com.grp8.weatherapp.Activities;
 
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.grp8.weatherapp.Fragments.SettingsFragment;
@@ -56,18 +54,17 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    public void onDestroy()
+    public void finish()
     {
-        super.onDestroy();
-
         if(this.changed)
         {
+            setResult(RESULT_OK, new Intent().putExtra("reload", true));
             Toast.makeText(this, R.string.settings_save_success, Toast.LENGTH_SHORT).show();
         }
+
+        super.finish();
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("Clicked on item",String.valueOf(position));
-    }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
 }
