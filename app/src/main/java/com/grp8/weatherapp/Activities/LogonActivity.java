@@ -1,24 +1,20 @@
 package com.grp8.weatherapp.Activities;
 
 import android.content.Intent;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.grp8.weatherapp.Logic.Authorizer;
+import io.fabric.sdk.android.Fabric;
+
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Logic.SettingsManager;
-import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.Logic.Utils;
-
-import io.fabric.sdk.android.Fabric;
+import com.grp8.weatherapp.R;
 
 public class LogonActivity extends AppCompatActivity {
 
