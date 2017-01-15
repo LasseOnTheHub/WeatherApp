@@ -4,6 +4,11 @@
     <string name="toast_exit">Press back again to exit</string>
     <string name="app_logout">Click here to sign out</string>
     <string name="logout_button">Sign out</string>
+    <string name="logon_btn_login">Login</string>
+    <string name="logon_hint_username">User ID</string>
+    <string name="logon_hint_password">Password</string>
+    <string name="logon_desc_logo">CLAFIS Logo</string>
+    <string name="logon_input_default_uid">5</string>
 
     <string name="last_updated">Last updated</string>
     <string name="temperature">Temperature</string>
