@@ -1,10 +1,17 @@
 package com.grp8.weatherapp.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -19,6 +26,7 @@ import com.grp8.weatherapp.R;
 public class LogonActivity extends AppCompatActivity {
 
     private EditText userIDEditText;
+    private EditText passwordIDEditText;
 
     private UserManager userManager;
 
@@ -45,7 +53,30 @@ public class LogonActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_logon);
 
-        this.userIDEditText = (EditText) findViewById(R.id.userIDText);
+        this.userIDEditText     = (EditText) findViewById(R.id.userIDText);
+        this.passwordIDEditText = (EditText) findViewById(R.id.userPasswordText);
+
+        final ImageView logo = (ImageView) findViewById(R.id.imageLogo);
+        final Button    btn  = (Button)    findViewById(R.id.loginButton);
+
+        View content = findViewById(R.id.logon_layout_content);
+
+        content.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
+        {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
+            {
+                if(bottom < oldBottom) // Keyboard is visible
+                {
+                    logo.setVisibility(View.GONE);
+                }
+                else // Keyboard is hidden
+                {
+                    logo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
     }
 
     public void login(View view)
