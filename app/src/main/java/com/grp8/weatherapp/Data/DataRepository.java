@@ -57,7 +57,10 @@ public class DataRepository implements IDataRepository
     }
 
     @Override
-    public void refresh() {}
+    public void refresh()
+    {
+        this.cache.clear();
+    }
 
     @Override
     public Station getStation(int id)
@@ -100,13 +103,7 @@ public class DataRepository implements IDataRepository
         {
             List<Station> stations = this.stations.map(new JSONArray(payload));
 
-            for(Station station : stations)
-            {
-                if(!this.cache.containsKey(station.getId()))
-                {
-                    this.cache.put(station.getId(), station);
-                }
-            }
+            this.addToCache(stations);
 
             return stations;
         }
@@ -202,5 +199,16 @@ public class DataRepository implements IDataRepository
         }
 
         return new ArrayList<>();
+    }
+
+    protected void addToCache(List<Station> stations)
+    {
+        for(Station station : stations)
+        {
+            if(!this.cache.containsKey(station.getId()))
+            {
+                this.cache.put(station.getId(), station);
+            }
+        }
     }
 }

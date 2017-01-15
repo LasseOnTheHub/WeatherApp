@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.grp8.weatherapp.Data.DataRepositoryFactory;
+import com.grp8.weatherapp.Logic.UserManager;
 import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
@@ -95,6 +97,7 @@ public class MainActivityTab extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refresh_menu:
                 Log.d("Refresh","...");
+                DataRepositoryFactory.build(getApplicationContext()).refresh();
                 getMainFragment().load();
                 // getMapFragment.update();
                 break;
@@ -102,11 +105,15 @@ public class MainActivityTab extends AppCompatActivity {
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
                 break;
             case R.id.logout_menu:
-                //TODO: Add logout logic
+                UserManager.getInstance(getApplicationContext()).logout();
+                startActivity(new Intent(MainActivityTab.this, LogonActivity.class));
+                finish();
                 break;
-            default: break;
+            default:
+                break;
         }
-        return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
     private MainFragment getMainFragment() {

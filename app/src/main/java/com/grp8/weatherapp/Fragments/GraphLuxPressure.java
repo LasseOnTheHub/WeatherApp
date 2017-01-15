@@ -65,7 +65,7 @@ public class GraphLuxPressure extends Fragment implements DatePickerFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lux_pressure, container, false);
         weatherStationTab = (WeatherStationTab)getActivity();
-        stationId = weatherStationTab.stationId;
+        stationId = weatherStationTab.getCurrentStationID();
 
         formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         dateInputTo = (TextView) view.findViewById(R.id.dateInputTo);
