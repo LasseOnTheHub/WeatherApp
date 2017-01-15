@@ -224,7 +224,8 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
     }
 
     private void showErrorState(ViewHolder viewHolder, Station station) {
-        viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
+        viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temperature
+        viewHolder.tempLabel.setText("N/A");
         viewHolder.timeLayout.setVisibility(View.INVISIBLE); // Layout for time (including old content)
         viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temperature (big one)
         viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time (little one)
