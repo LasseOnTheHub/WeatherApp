@@ -448,13 +448,15 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             humidityChart.invalidate();
         }*/
 
-        for (int i=humData.getDataSetCount();i==0;i--)
-        {
-            humData.removeDataSet(humData.getDataSetByIndex(i));
+        if (humData.getDataSetCount()>0) {
+            for (int i = humData.getDataSetCount(); i == 0; i--) {
+                humData.removeDataSet(humData.getDataSetByIndex(i));
+            }
         }
-        for (int i=tempRainData.getDataSetCount();i==0;i--)
-        {
-            tempRainData.removeDataSet(tempRainData.getDataSetByIndex(i));
+        if (tempRainData.getDataSetCount()>0) {
+            for (int i = tempRainData.getDataSetCount(); i == 0; i--) {
+                tempRainData.removeDataSet(tempRainData.getDataSetByIndex(i));
+            }
         }
 
         humidityChart.clear();

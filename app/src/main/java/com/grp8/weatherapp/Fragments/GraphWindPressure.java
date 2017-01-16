@@ -350,14 +350,15 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
             windChart.invalidate();
         }*/
 
-
-        for (int i=pressureData.getDataSetCount();i==0;i--)
-        {
-            pressureData.removeDataSet(pressureData.getDataSetByIndex(i));
+        if (pressureData.getDataSetCount()>0) {
+            for (int i = pressureData.getDataSetCount(); i == 0; i--) {
+                pressureData.removeDataSet(pressureData.getDataSetByIndex(i));
+            }
         }
-        for (int i=windData.getDataSetCount();i==0;i--)
-        {
-            windData.removeDataSet(windData.getDataSetByIndex(i));
+        if (windData.getDataSetCount()>0) {
+            for (int i = windData.getDataSetCount(); i == 0; i--) {
+                windData.removeDataSet(windData.getDataSetByIndex(i));
+            }
         }
 
         pressureChart.clear();
