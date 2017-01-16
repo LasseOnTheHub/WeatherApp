@@ -37,9 +37,7 @@ public class LogonActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
 
-        if (!Utils.isEmulator()) {
-            Fabric.with(this, new Crashlytics());
-        }
+        Fabric.with(this, new Crashlytics());
 
         this.userManager = UserManager.getInstance(getApplicationContext());
 
