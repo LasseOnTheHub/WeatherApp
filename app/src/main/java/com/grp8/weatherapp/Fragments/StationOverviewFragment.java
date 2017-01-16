@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
+import static android.content.ContentValues.TAG;
+
 public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
 
     private TextView temp, windSpeed, airP, humidity, updated;
@@ -30,6 +33,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private ImageView weatherWindow;
     private Handler handler = new Handler();
     private TaskCanceler asyncCanceler;
+    private boolean failed;
 
     private class DataRead extends AsyncTask<Void, DataReading, DataReading> {
         final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
@@ -48,7 +52,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         protected void onPostExecute(DataReading reading) {
             if (reading != null) {
                 updateView(reading);
-            } else errorView();
+            } else failed = true;
         }
     }
 
@@ -63,7 +67,8 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         public void run() {
             if (task.getStatus() == AsyncTask.Status.RUNNING)
                 task.cancel(true);
-            errorView();
+            failed = true;
+
         }
     }
 
@@ -73,7 +78,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         View   view;
         Intent intent = getActivity().getIntent();
 
-        if(intent != null && intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false))
+        if(intent != null && ((intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false)) || failed == true))
         {
             view = inflater.inflate(R.layout.fragment_station_overview_no_data, container, false);
 
@@ -94,14 +99,14 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
             updated = (TextView) view.findViewById(R.id.updated);
             spinner = (ProgressBar) view.findViewById(R.id.spinner);
 
+            // setting spinner visible and loading text
+            loadedView();
+
             // initiates asynctask and cancels it after 15 sec if it hasn't finished
             loadData();
 
             // ImageView declaration
             weatherWindow = (ImageView) view.findViewById(R.id.weatherWindow);
-
-            // setting spinner visible and loading text
-            loadedView();
 
             // TableLayout declaration
             tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
@@ -156,16 +161,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         airP.setText(R.string.loadingTextOverview);
         humidity.setText(R.string.loadingTextOverview);
         updated.setText(R.string.loadingTextOverview);
-    }
-
-    private void errorView() {
-        spinner.setVisibility(View.GONE);
-        temp.setText(R.string.error);
-        windSpeed.setText(R.string.error);
-        airP.setText(R.string.error);
-        humidity.setText(R.string.error);
-        updated.setText(R.string.error);
-
     }
 
     private void loadData() {
