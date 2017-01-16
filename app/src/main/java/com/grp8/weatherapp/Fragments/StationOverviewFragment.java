@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private TableLayout tableLayout;
     private ProgressBar spinner;
     private ImageView weatherWindow;
-    private Handler handler = new Handler();
+    private Handler handler;
     private TaskCanceler asyncCanceler;
     private boolean failed;
 
@@ -52,7 +54,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         protected void onPostExecute(DataReading reading) {
             if (reading != null) {
                 updateView(reading);
-            } else failed = true;
+            } else {
+                failed = true;
+                refresh(); }
         }
     }
 
@@ -65,24 +69,24 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         @Override
         public void run() {
-            if (task.getStatus() == AsyncTask.Status.RUNNING)
+            if (task.getStatus() == AsyncTask.Status.RUNNING) {
                 task.cancel(true);
-            failed = true;
-
+                failed = true;
+                refresh();
+            }
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View   view;
         Intent intent = getActivity().getIntent();
 
-        if(intent != null && ((intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false)) || failed == true))
+        if(intent != null && ((intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false)) || failed))
         {
             view = inflater.inflate(R.layout.fragment_station_overview_no_data, container, false);
 
-            Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/fontawesome-webfont.ttf");
+            Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
             TextView icon = (TextView) view.findViewById(R.id.error_icon);
 
             icon.setTypeface(font);
@@ -164,6 +168,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
 
     private void loadData() {
+        handler = new Handler();
         DataRead task = new DataRead();
         asyncCanceler = new TaskCanceler(task);
         handler.postDelayed(asyncCanceler, 15 * 1000);
@@ -171,6 +176,13 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         if (asyncCanceler != null && handler != null) {
             handler.removeCallbacks(asyncCanceler);
         }
+    }
+    private void refresh() {
+       Fragment stationOverviewFragment = getFragmentManager().findFragmentByTag("FRAGMENT");
+       FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
+       fragTransaction.detach(stationOverviewFragment);
+       fragTransaction.attach(stationOverviewFragment);
+       fragTransaction.commit();
     }
 
 }
