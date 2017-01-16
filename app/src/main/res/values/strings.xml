@@ -52,8 +52,8 @@
     <string name="station_overview_error_text">Could not load any recent data from the station. Please use graphs to select an appropriate time range to display data within</string>
 
     <string name="station_tabs_overview">Overview</string>
-    <string name="station_tabs_temperature_rain">Temp + rain</string>
-    <string name="station_tabs_pressure_lux">Pressure + lux</string>
+    <string name="station_tabs_temperature_rain">Temp + Rain</string>
+    <string name="station_tabs_pressure_wind">Pressure + Wind</string>
     <string name="station_tabs_unknown">Unknown</string>
 
     <!-- Settings strings and arrays -->

@@ -16,7 +16,7 @@ import com.grp8.weatherapp.Entities.Station;
 import com.grp8.weatherapp.Fragments.GraphTempRainHumidityFragment;
 import com.grp8.weatherapp.Fragments.StationOverviewFragment;
 import com.grp8.weatherapp.Fragments.DatePickerFragment;
-import com.grp8.weatherapp.Fragments.GraphLuxPressure;
+import com.grp8.weatherapp.Fragments.GraphWindPressure;
 import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.R;
 
@@ -127,7 +127,7 @@ public class WeatherStationTab extends AppCompatActivity
             }
             else
             {
-                return new GraphLuxPressure();
+                return new GraphWindPressure();
             }
         }
 
@@ -151,7 +151,7 @@ public class WeatherStationTab extends AppCompatActivity
                     resource = R.string.station_tabs_temperature_rain;
                     break;
                 case 2 :
-                    resource = R.string.station_tabs_pressure_lux;
+                    resource = R.string.station_tabs_pressure_wind;
                     break;
             }
 
