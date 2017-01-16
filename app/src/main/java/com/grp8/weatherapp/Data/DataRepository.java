@@ -1,14 +1,14 @@
 package com.grp8.weatherapp.Data;
+
 /*
  * Created by Thomas on 12-Jan-17.
  */
-
 import android.os.Looper;
-import android.util.Log;
 
 import com.grp8.weatherapp.Data.API.APIDataProvider;
 import com.grp8.weatherapp.Data.API.Requests.APIDataReadingRequest;
 import com.grp8.weatherapp.Data.API.Requests.APIStationRequest;
+import com.grp8.weatherapp.Data.Cache.CacheEntry;
 import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
@@ -25,8 +25,6 @@ import java.util.Map;
 
 public class DataRepository implements IDataRepository
 {
-    private final static String TAG = "DataRepository";
-
     private int user;
 
     private APIDataProvider api;
@@ -34,7 +32,7 @@ public class DataRepository implements IDataRepository
     private IListableMapper<Station>     stations;
     private IListableMapper<DataReading> readings;
 
-    private Map<Integer, Station> cache = new HashMap<>();
+    private Map<Integer, CacheEntry> cache = new HashMap<>();
 
     public DataRepository(APIDataProvider api, IListableMapper<Station> stations, IListableMapper<DataReading> readings)
     {
@@ -67,7 +65,7 @@ public class DataRepository implements IDataRepository
     {
         if(this.cache.containsKey(id))
         {
-            return this.cache.get(id);
+            return this.cache.get(id).getStation();
         }
 
         String payload = this.api.fetch(new APIStationRequest(this.user, id));
@@ -94,16 +92,29 @@ public class DataRepository implements IDataRepository
 
         if(Looper.getMainLooper().getThread() == Thread.currentThread())
         {
-            return new ArrayList<>(this.cache.values());
+            List<Station> results = new ArrayList<>();
+
+            for(CacheEntry entry : this.cache.values())
+            {
+                results.add(entry.getStation());
+            }
+
+            return results;
         }
 
         String payload = this.api.fetch(new APIStationRequest(this.user));
 
         try
         {
-            List<Station> stations = this.stations.map(new JSONArray(payload));
+            List<Station>             stations = this.stations.map(new JSONArray(payload));
+            Map<Station, DataReading> map      = new HashMap<>();
 
-            this.addToCache(stations);
+            for(Station station : stations)
+            {
+                map.put(station, this.getStationData(station.getId()));
+            }
+
+            this.addToCache(map);
 
             return stations;
         }
@@ -149,7 +160,7 @@ public class DataRepository implements IDataRepository
                     break;
                 }
 
-                Log.d(TAG, "No data returned");
+                System.out.println("No data returned");
             }
             catch(JSONException e)
             {
@@ -163,7 +174,7 @@ public class DataRepository implements IDataRepository
 
         if(counter == ceiling || json == null)
         {
-            Log.w(TAG, "Reached maximum number of incremental retries. Returning null");
+            System.out.println("Reached maximum number of incremental retries. Returning null");
             return null;
         }
 
@@ -201,14 +212,23 @@ public class DataRepository implements IDataRepository
         return new ArrayList<>();
     }
 
-    protected void addToCache(List<Station> stations)
+    protected void addToCache(Map<Station, DataReading> stations)
     {
-        for(Station station : stations)
+        for(Station station : stations.keySet())
         {
             if(!this.cache.containsKey(station.getId()))
             {
-                this.cache.put(station.getId(), station);
+                this.cache.put(station.getId(), new CacheEntry(station, stations.get(station)));
+            }
+            else
+            {
+                this.cache.get(station.getId()).setReading(stations.get(station));
             }
         }
+    }
+
+    public List<CacheEntry> getCache()
+    {
+        return new ArrayList<>(this.cache.values());
     }
 }

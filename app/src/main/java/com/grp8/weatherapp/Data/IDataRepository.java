@@ -3,11 +3,13 @@ package com.grp8.weatherapp.Data;
 /*
  * Created by Thomas on 12-Jan-17.
  */
+import com.grp8.weatherapp.Data.Cache.CacheEntry;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface IDataRepository
 {
@@ -67,4 +69,6 @@ public interface IDataRepository
      * @param end     End of date range
      */
     public List<DataReading> getStationData(int station, Date start, Date end);
+
+    public List<CacheEntry> getCache();
 }
