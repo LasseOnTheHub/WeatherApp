@@ -8,9 +8,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.TabLayout;
-import android.util.Log;
 import android.view.MenuItem;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.Station;
@@ -64,6 +64,21 @@ public class WeatherStationTab extends AppCompatActivity
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager()));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position != 0 && shouldShowNoDataToastOnGraphAppearance) {
+                    Toast.makeText(getApplicationContext(), R.string.no_data, Toast.LENGTH_LONG).show();
+                    shouldShowNoDataToastOnGraphAppearance = false;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -111,14 +126,6 @@ public class WeatherStationTab extends AppCompatActivity
     public Date getEndDate()
     {
         return this.endDate;
-    }
-
-    public boolean shouldShowNoDataToastOnGraphAppearance() {
-        return shouldShowNoDataToastOnGraphAppearance;
-    }
-
-    public void setShouldShowNoDataToastOnGraphAppearance() {
-        shouldShowNoDataToastOnGraphAppearance = false;
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter

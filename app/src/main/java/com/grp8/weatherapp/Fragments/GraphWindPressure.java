@@ -6,13 +6,11 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -182,15 +180,6 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         PressureYLeftAxis.setGranularityEnabled(true);
 
         pressureChart.setNoDataText("Der er desværre ingen data i denne periode");
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser && ((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()) {
-            Toast.makeText(getActivity(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
-            ((WeatherStationTab) getActivity()).setShouldShowNoDataToastOnGraphAppearance();
-        }
-        super.setUserVisibleHint(isVisibleToUser);
     }
 
     public void getData()
