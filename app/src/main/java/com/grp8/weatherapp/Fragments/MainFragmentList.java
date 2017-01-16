@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationAdapter;
-import com.grp8.weatherapp.Adapters.WeatherStationsAdapter;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
@@ -88,7 +87,10 @@ public class MainFragmentList extends ListFragment implements Filterable {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        startActivity(new Intent(getActivity(), WeatherStationTab.class).putExtra(Constants.KEY_STATION_ID, (int) id));
+        Intent intent = new Intent(getActivity(), WeatherStationTab.class);
+        intent.putExtra(Constants.KEY_STATION_ID, (int) id);
+        intent.putExtra(Constants.KEY_STATION_NO_DATA, readings.get(position) == null);
+        startActivity(intent);
     }
 
     public void load() {
