@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.os.Bundle;
 
@@ -28,6 +29,7 @@ public class WeatherStationTab extends AppCompatActivity
     private Date endDate = new Date();
 
     private int stationID;
+    private boolean shouldShowNoDataToastOnGraphAppearance = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,6 +39,10 @@ public class WeatherStationTab extends AppCompatActivity
         setContentView(R.layout.activity_main_tab);
 
         this.stationID = getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
+
+        if (getIntent().getExtras().getBoolean(Constants.KEY_STATION_NO_DATA, false)) {
+            shouldShowNoDataToastOnGraphAppearance = true;
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Station station = DataRepositoryFactory.build(getApplicationContext()).getStation(this.stationID);
@@ -105,6 +111,14 @@ public class WeatherStationTab extends AppCompatActivity
     public Date getEndDate()
     {
         return this.endDate;
+    }
+
+    public boolean shouldShowNoDataToastOnGraphAppearance() {
+        return shouldShowNoDataToastOnGraphAppearance;
+    }
+
+    public void setShouldShowNoDataToastOnGraphAppearance() {
+        shouldShowNoDataToastOnGraphAppearance = false;
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter

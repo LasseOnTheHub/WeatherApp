@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Logic.SettingsManager;
@@ -24,8 +24,6 @@ import com.grp8.weatherapp.Logic.Converters.PressureConverter;
 import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
-
-import static android.content.ContentValues.TAG;
 
 public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
 

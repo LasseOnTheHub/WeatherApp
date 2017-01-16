@@ -3,6 +3,7 @@ package com.grp8.weatherapp.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Adapters.WeatherStationAdapter;
+import com.grp8.weatherapp.Data.Cache.CacheEntry;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
@@ -43,12 +45,6 @@ public class MainFragmentList extends ListFragment implements Filterable {
     private LinearLayout backgroundViewNoResults;
     private RelativeLayout backgroundViewLoading;
 
-    public MainFragmentList() {
-        super();
-        setRetainInstance(true);
-        // Fragment doesn't get recreated
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_stationlist, container, false);
@@ -61,28 +57,23 @@ public class MainFragmentList extends ListFragment implements Filterable {
         backgroundText          =   (TextView) view.findViewById(R.id.no_results_text);
         backgroundViewLoading.setVisibility(View.GONE);
         backgroundViewNoResults.setVisibility(View.GONE);
-
+        resetData();
         if (savedInstanceState != null) {
             // Orientation change or app getting resumed
-            // stations = Cached stations from DataRepository
-            // readings = Cached readings from DataRepository
+            List<CacheEntry> cache = DataRepositoryFactory.build(getActivity().getApplicationContext()).getCache();
+            for (CacheEntry entry : cache) {
+                stations.add(entry.getStation());
+                readings.add(entry.getReading());
+            }
             getListView().setEmptyView(backgroundViewNoResults);
             backgroundViewNoResults.setVisibility(View.VISIBLE);
         } else {
             // App runs for the first time
-            resetData();
             getListView().setEmptyView(backgroundViewLoading);
             backgroundViewLoading.setVisibility(View.VISIBLE);
             new LoadTask().execute();
         }
         setAdapter();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Saving state
-        outState.putBoolean("isSearching", isSearching);
     }
 
     @Override

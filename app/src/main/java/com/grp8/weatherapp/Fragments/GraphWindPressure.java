@@ -180,6 +180,15 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         pressureChart.setNoDataText("Der er desværre ingen data i denne periode");
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser && ((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()) {
+            Toast.makeText(getActivity(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
+            ((WeatherStationTab) getActivity()).setShouldShowNoDataToastOnGraphAppearance();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
     public void getData()
     {
         try{
@@ -198,10 +207,6 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
                     String string = sdf.format(referenceTimestamp * 1000);
                     setPressureData(data);
                     setWindData(data);
-                }
-                else
-                {
-                    Toast.makeText(getActivity(), "Intet data i det angivet tidsrum", Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute();

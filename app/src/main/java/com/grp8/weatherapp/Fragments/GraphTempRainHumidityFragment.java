@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,21 +35,19 @@ import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.Logic.Formatters.DayAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.DegreeAxisValueFormatter;
-import com.grp8.weatherapp.Logic.Formatters.DegreeValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MMAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MMValueFormatter;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
+import static java.lang.Math.min;
 
 /**
  * Created by lbirk on 08-01-2017.
@@ -90,8 +89,10 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
                 cal.setTime(((WeatherStationTab) getActivity()).getEndDate());
                 DatePickerDialog dialog = new DatePickerDialog(getContext(), dateToListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
                 dialog.getDatePicker().setMinDate(((WeatherStationTab) getActivity()).getStartDate().getTime());
-                dialog.getDatePicker().setMaxDate(((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000);
-                dialog.setTitle("Choose end date");
+                long weekMax = ((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000;
+                long timeMax = System.currentTimeMillis()+86400000;
+                dialog.getDatePicker().setMaxDate(weekMax > timeMax ? timeMax : weekMax);
+                dialog.setTitle(R.string.end_date);
                 dialog.show();
             }
         });
@@ -102,7 +103,8 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             public void onClick(View v) {
                 cal.setTime(((WeatherStationTab) getActivity()).getStartDate());
                 DatePickerDialog dialog = new DatePickerDialog(getContext(), dateFromListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-                dialog.setTitle("Choose start date");
+                dialog.getDatePicker().setMaxDate(System.currentTimeMillis()+86400000);
+                dialog.setTitle(R.string.start_date);
                 dialog.show();
             }
         });
@@ -217,6 +219,15 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser && ((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()) {
+            Toast.makeText(getActivity(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
+            ((WeatherStationTab) getActivity()).setShouldShowNoDataToastOnGraphAppearance();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
     public void getData()
     {
         try{
@@ -236,10 +247,6 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
                         Log.d("Reference", "Reference tidspunktet sat i temprain er: " + string);
                         setTempRainChart(data);
                         setHumidityData(data);
-                    }
-                    else
-                    {
-                        Toast.makeText(getActivity(), "Intet data i det angivet tidsrum", Toast.LENGTH_SHORT).show();
                     }
                 }
             }.execute();
@@ -336,7 +343,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             tempRainChart.invalidate();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(tempVals, "Temperatur");
+            set1 = new LineDataSet(tempVals, getString(R.string.temperature));
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set1.setCubicIntensity(0.1f);
             set1.setDrawCircles(false);
@@ -374,7 +381,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             float y = (float) d.getRainfall();
             rainVals.add(new BarEntry(xNew, y));
         }
-        BarDataSet set1 = new BarDataSet(rainVals, "Nedbør");
+        BarDataSet set1 = new BarDataSet(rainVals, getString(R.string.downpour));
         set1.setColor(Color.rgb(60, 220, 78));
         set1.setValueTextColor(Color.rgb(60, 220, 78));
         set1.setValueTextSize(10f);
@@ -409,10 +416,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             cal.set(Calendar.MONTH, monthOfYear);
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             ((WeatherStationTab) getActivity()).setFromDate(cal.getTime());
-            cal.set(Calendar.DATE, 7);
-            if (((WeatherStationTab) getActivity()).getEndDate().after(cal.getTime())) {
-                dateInputTo.callOnClick();
-            }
+            dateInputTo.callOnClick();
         }
     };
 

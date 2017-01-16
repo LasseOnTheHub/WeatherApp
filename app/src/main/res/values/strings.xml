@@ -12,9 +12,13 @@
     <string name="logon_success">Success</string>
     <string name="logon_failure">Invalid credentials</string>
     <string name="logon_toast_username">Please provide a user ID</string>
+    <string name="no_data">Intet data i det angivne tidsrum</string>
+    <string name="start_date">Choose start date</string>
+    <string name="end_date">Choose end date</string>
 
     <string name="last_updated">Last updated</string>
     <string name="temperature">Temperature</string>
+    <string name="downpour">Downpour</string>
     <string name="humidity">Humidity</string>
     <string name="wind_speed">Wind speed</string>
     <string name="air_pressure">Air pressure</string>
@@ -49,7 +53,7 @@
 
     <!-- Station overview -->
     <string name="station_overview_error_icon">&#xf071;</string>
-    <string name="station_overview_error_text">Could not load any recent data from the station. Please use graphs to select an appropriate time range to display data within</string>
+    <string name="station_overview_error_text">Could not load any recent data from the station. Please use graphs to select an appropriate time range to display data within.</string>
 
     <string name="station_tabs_overview">Overview</string>
     <string name="station_tabs_temperature_rain">Temp + Rain</string>
@@ -57,7 +61,7 @@
     <string name="station_tabs_unknown">Unknown</string>
 
     <!-- Settings strings and arrays -->
-    <string name="settings_save_success">Changes to settings has been saved</string>
+    <string name="settings_save_success">Changes to settings has been saved.</string>
 
     <string name="temp">Temperature unit</string>
     <string-array name="temp_options_titles">
