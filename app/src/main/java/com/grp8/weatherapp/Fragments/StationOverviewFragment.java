@@ -1,7 +1,12 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +25,17 @@ import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
+import static android.content.ContentValues.TAG;
+
 public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
 
     private TextView temp, windSpeed, airP, humidity, updated;
     private TableLayout tableLayout;
     private ProgressBar spinner;
     private ImageView weatherWindow;
-    private Handler handler = new Handler();
+    private Handler handler;
     private TaskCanceler asyncCanceler;
+    private boolean failed;
 
     private class DataRead extends AsyncTask<Void, DataReading, DataReading> {
         final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
@@ -46,7 +54,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         protected void onPostExecute(DataReading reading) {
             if (reading != null) {
                 updateView(reading);
-            } else errorView();
+            } else {
+                failed = true;
+                refresh(); }
         }
     }
 
@@ -59,37 +69,54 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         @Override
         public void run() {
-            if (task.getStatus() == AsyncTask.Status.RUNNING)
+            if (task.getStatus() == AsyncTask.Status.RUNNING) {
                 task.cancel(true);
-            errorView();
+                failed = true;
+                refresh();
+            }
         }
     }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View   view;
+        Intent intent = getActivity().getIntent();
 
-        // TextView declaration
-        temp = (TextView) stationOverview.findViewById(R.id.temp);
-        windSpeed = (TextView) stationOverview.findViewById(R.id.windSpeed);
-        airP = (TextView) stationOverview.findViewById(R.id.airP);
-        humidity = (TextView) stationOverview.findViewById(R.id.humidity);
-        updated = (TextView) stationOverview.findViewById(R.id.updated);
-        spinner = (ProgressBar) stationOverview.findViewById(R.id.spinner);
+        if(intent != null && ((intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false)) || failed))
+        {
+            view = inflater.inflate(R.layout.fragment_station_overview_no_data, container, false);
 
-        // initiates asynctask and cancels it after 15 sec if it hasn't finished
-        loadData();
+            Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
+            TextView icon = (TextView) view.findViewById(R.id.error_icon);
 
-        // ImageView declaration
-        weatherWindow = (ImageView) stationOverview.findViewById(R.id.weatherWindow);
+            icon.setTypeface(font);
+        }
+        else
+        {
+            view = inflater.inflate(R.layout.fragment_station_overview, container, false);
 
-        // setting spinner visible and loading text
-        loadedView();
+            // TextView declaration
+            temp = (TextView) view.findViewById(R.id.temp);
+            windSpeed = (TextView) view.findViewById(R.id.windSpeed);
+            airP = (TextView) view.findViewById(R.id.airP);
+            humidity = (TextView) view.findViewById(R.id.humidity);
+            updated = (TextView) view.findViewById(R.id.updated);
+            spinner = (ProgressBar) view.findViewById(R.id.spinner);
 
-        // TableLayout declaration
-        tableLayout = (TableLayout) stationOverview.findViewById(R.id.tableLayoutt);
+            // setting spinner visible and loading text
+            loadedView();
 
-        return stationOverview;
+            // initiates asynctask and cancels it after 15 sec if it hasn't finished
+            loadData();
+
+            // ImageView declaration
+            weatherWindow = (ImageView) view.findViewById(R.id.weatherWindow);
+
+            // TableLayout declaration
+            tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
+        }
+
+        return view;
     }
 
     @Override
@@ -140,17 +167,8 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         updated.setText(R.string.loadingTextOverview);
     }
 
-    private void errorView() {
-        spinner.setVisibility(View.GONE);
-        temp.setText(R.string.error);
-        windSpeed.setText(R.string.error);
-        airP.setText(R.string.error);
-        humidity.setText(R.string.error);
-        updated.setText(R.string.error);
-
-    }
-
     private void loadData() {
+        handler = new Handler();
         DataRead task = new DataRead();
         asyncCanceler = new TaskCanceler(task);
         handler.postDelayed(asyncCanceler, 15 * 1000);
@@ -158,6 +176,13 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         if (asyncCanceler != null && handler != null) {
             handler.removeCallbacks(asyncCanceler);
         }
+    }
+    private void refresh() {
+       Fragment stationOverviewFragment = getFragmentManager().findFragmentByTag("FRAGMENT");
+       FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
+       fragTransaction.detach(stationOverviewFragment);
+       fragTransaction.attach(stationOverviewFragment);
+       fragTransaction.commit();
     }
 
 }

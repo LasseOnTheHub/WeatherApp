@@ -1,22 +1,26 @@
 package com.grp8.weatherapp.Activities;
 
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.grp8.weatherapp.Fragments.SettingsFragment;
 import com.grp8.weatherapp.R;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private ListView list;
+    private boolean changed = false;
+
+    public void setChangedStatus(boolean status)
+    {
+        this.changed = true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +53,18 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void finish()
+    {
+        if(this.changed)
+        {
+            setResult(RESULT_OK, new Intent().putExtra("reload", true));
+            Toast.makeText(this, R.string.settings_save_success, Toast.LENGTH_SHORT).show();
+        }
+
+        super.finish();
+    }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("Clicked on item",String.valueOf(position));
-    }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
 }

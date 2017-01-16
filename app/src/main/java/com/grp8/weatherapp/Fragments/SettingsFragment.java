@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
+import com.grp8.weatherapp.Activities.SettingsActivity;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Constants;
 
@@ -15,6 +16,8 @@ import com.grp8.weatherapp.Logic.Constants;
  */
 
 public class SettingsFragment extends PreferenceFragment {
+
+    private boolean ready = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,7 @@ public class SettingsFragment extends PreferenceFragment {
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_WS_UNIT));
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_LANG));
 
-        Preference button = (Preference)findPreference(getString(R.string.app_logout));
+        Preference button = findPreference(getString(R.string.app_logout));
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -34,6 +37,8 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        this.ready = true;
     }
 
     @Override
@@ -68,6 +73,12 @@ public class SettingsFragment extends PreferenceFragment {
                     index >= 0
                             ? listPreference.getEntries()[index]
                             : null);
+
+            if(ready)
+            {
+                ((SettingsActivity) getActivity()).setChangedStatus(true);
+            }
+
             return true;
         }
     };

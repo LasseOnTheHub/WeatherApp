@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/error_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:textAlignment="center"
+        android:textColor="#E23232"
+        android:textSize="80sp"
+        android:text="@string/station_overview_error_icon"
+    />
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_below="@+id/error_icon"
+        android:layout_height="wrap_content"
+        android:layout_width="240dp"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:text="@string/station_overview_error_text"
+    />
+
+</RelativeLayout>

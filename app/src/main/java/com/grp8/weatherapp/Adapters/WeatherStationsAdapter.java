@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.Fragments.MainFragment;
 import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
 
@@ -112,7 +113,14 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
                     }
 
                     @Override
-                    protected void onPostExecute(DataReading result) {
+                    protected void onPostExecute(DataReading result)
+                    {
+                        // Mark station as having no recent data in the main fragment
+                        if(result == null)
+                        {
+                            MainFragment.markStationAsOutdated(station.getId());
+                        }
+
                         updateListItem(position, result);
                     }
                 }.execute();
@@ -224,7 +232,8 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
     }
 
     private void showErrorState(ViewHolder viewHolder, Station station) {
-        viewHolder.tempLabel.setVisibility(View.INVISIBLE); // Label for temperature
+        viewHolder.tempLabel.setVisibility(View.VISIBLE); // Label for temperature
+        viewHolder.tempLabel.setText("N/A");
         viewHolder.timeLayout.setVisibility(View.INVISIBLE); // Layout for time (including old content)
         viewHolder.tempSpinner.setVisibility(View.GONE); // Spinner for temperature (big one)
         viewHolder.timeSpinner.setVisibility(View.GONE); // Spinner for time (little one)

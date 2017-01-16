@@ -1,42 +1,40 @@
 package com.grp8.weatherapp.Fragments;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.view.View;
+import android.util.Log;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
+import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
-import com.grp8.weatherapp.Entities.Data.Air;
-import com.grp8.weatherapp.Entities.Data.Soil;
-import com.grp8.weatherapp.Entities.Data.Wind;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
-import com.grp8.weatherapp.Activities.WeatherStationTab;
 
-import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
+import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.R;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,17 +43,22 @@ import java.util.Map;
  * Created by lasse on 11/21/16.
  */
 
-public class MapViewFragment extends android.support.v4.app.Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
-    MapView mMapView;
+public class MapViewFragment extends android.support.v4.app.Fragment implements ActivityCompat.OnRequestPermissionsResultCallback
+{
+    private final static String TAG = "MapView";
+    private final static int    MAP_PADDING = 200;
+
+    private MapView   mMapView;
     private GoogleMap googleMap;
-    IDataRepository repository;
+    private IDataRepository repository;
+
+    private Map<String, Integer> markerIDs = new HashMap<>();
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    List<Station> stations;
-    List<DataReading> dataReadings;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View rootView = inflater.inflate(R.layout.fragment_map_overview, container, false);
 
         repository = DataRepositoryFactory.build(getActivity().getApplicationContext());
@@ -64,16 +67,21 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-        try {
+        try
+        {
             MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
+        }
+        catch(Exception e)
+        {
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
+        mMapView.getMapAsync(new OnMapReadyCallback()
+        {
             @Override
-            public void onMapReady(final GoogleMap mMap) {
-                googleMap = mMap;
+            public void onMapReady(final GoogleMap map)
+            {
+                googleMap = map;
 
                 try
                 {
@@ -116,22 +124,12 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
 
                             List<Marker> markers = new ArrayList<>();
 
-                            for (final Map.Entry<Station, DataReading> entry : stations.entrySet())
+                            for(final Map.Entry<Station, DataReading> entry : stations.entrySet())
                             {
-/*                                DataReading temporaryDataReading = new DataReading(0,0,new Date(),0,new Air(0,0,0),new Wind(0,0),new Soil(new int[0],new int[0]));
-
-                                if(dataReadings != null)
-                                {
-                                    for (DataReading d: dataReadings) {
-                                        if (d.getID() == entry.getKey().getId()){
-                                            temporaryDataReading = d;
-                                        }
-                                    }
-                                }
-                                */
-
                                 final Station station = entry.getKey();
                                 DataReading   reading = entry.getValue();
+
+                                Log.d("MAP", "Stations: " + station.getId() + " - " + station.getNotes());
 
                                 String snippet;
 
@@ -141,24 +139,37 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
 
                                     int hum = reading.getAirReadings().getHumidity();
 
-                                    snippet = "Temperatur: " + tem + ", Fugtighed: "+ hum + "%"; // FIXME: add language strings
+                                    snippet = getString(R.string.map_snippet_temperature) + ": " + tem + ", " + getString(R.string.map_snippet_humidity) +": " + hum + "%";
                                 }
                                 else
                                 {
-                                    snippet = "No data available";
+                                    snippet = getString(R.string.map_snippet_no_data);
                                 }
 
                                 LatLng latLng = new LatLng(station.getLatitude(), station.getLongitude());
-                                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(station.getNotes()).snippet(snippet));
+                                Marker marker = map.addMarker(new MarkerOptions().position(latLng).title(station.getNotes()).snippet(snippet));
 
                                 markers.add(marker);
 
-                                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                                    @Override
-                                    public void onInfoWindowClick(Marker marker) {
-                                        Intent intent = new Intent(getActivity(), WeatherStationTab.class);
-                                        intent.putExtra(Constants.KEY_STATION_ID, station.getId());
+                                /*
+                                 * Associated auto-generated map ID with station ID.
+                                 */
+                                markerIDs.put(marker.getId(), station.getId());
 
+                                map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
+                                {
+                                    @Override
+                                    public void onInfoWindowClick(Marker marker)
+                                    {
+                                        if(!markerIDs.containsKey(marker.getId()))
+                                        {
+                                            Log.e(TAG, "Failed to find station ID associated with marker: " + marker.getId());
+
+                                            Toast.makeText(getActivity(), R.string.map_snippet_load_failed, Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        Intent intent = new Intent(getActivity(), WeatherStationTab.class).putExtra(Constants.KEY_STATION_ID, markerIDs.get(marker.getId()));
                                         startActivity(intent);
                                     }
                                 });
@@ -166,18 +177,20 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
 
                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                            for (Marker marker : markers) {
+                            for(Marker marker : markers)
+                            {
                                 builder.include(marker.getPosition());
                             }
-                            if (!markers.isEmpty()) {
-                                LatLngBounds bounds = builder.build();
-                                int padding = 200;
-                                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                                googleMap.moveCamera(cu);
+
+                            if(!markers.isEmpty())
+                            {
+                                map.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), MAP_PADDING));
                             }
                         }
                     }.execute();
-                } catch (Exception e) {
+                }
+                catch(Exception e)
+                {
                     e.printStackTrace();
                 }
             }
@@ -185,36 +198,41 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
         return rootView;
     }
 
-    private void getDeviceLocation() {
-        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                googleMap.setMyLocationEnabled(true);
+    private void getDeviceLocation()
+    {
+        if(ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            try
+            {
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setCompassEnabled(true);
             }
-            catch (SecurityException se)
+            catch(SecurityException se)
             {
                 se.printStackTrace();
             }
-        } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST_CODE);
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(getActivity(), new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,@NonNull String permissions[],@NonNull int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    try {
-                        googleMap.setMyLocationEnabled(true);
-                    }
-                    catch (SecurityException se)
-                    {
-                        se.printStackTrace();
-                    }
-                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                }
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
+    {
+        if(requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+            try
+            {
+                googleMap.setMyLocationEnabled(true);
             }
+            catch(SecurityException e)
+            {
+                e.printStackTrace();
+            }
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
         }
     }
 

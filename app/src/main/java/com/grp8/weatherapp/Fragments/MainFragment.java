@@ -18,6 +18,9 @@ import com.grp8.weatherapp.Logic.Constants;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 /**
@@ -30,6 +33,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     private TextView spinnerText, backgroundText;
 
     private RelativeLayout spinnerFrame; // Background spinner
+
+    private static List<Integer> nodata = new ArrayList<>();
 
     private class LoadTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -62,6 +67,11 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         return mainFrag;
     }
 
+    public static void markStationAsOutdated(int station)
+    {
+        nodata.add(station);
+    }
+
     public void load() {
 
         if (list == null) {
@@ -75,6 +85,12 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
             spinnerText.setText(R.string.loadingText);
             new LoadTask().execute();
         }
+
+        /*
+         * This method is called when refresh is called and should therefore also
+         * clear any stations marked as containing no recent data.
+         */
+        nodata.clear();
     }
 
     private void updateList() {
@@ -86,7 +102,13 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        Intent intent = new Intent(getActivity(), WeatherStationTab.class).putExtra(Constants.KEY_STATION_ID, (int) id);
+        Intent intent = new Intent(getActivity(), WeatherStationTab.class);
+
+        System.out.println(nodata);
+        System.out.println(nodata.contains((int) id));
+
+        intent.putExtra(Constants.KEY_STATION_ID, (int) id);
+        intent.putExtra(Constants.KEY_STATION_NO_DATA, nodata.contains((int) id));
 
         startActivity(intent);
     }

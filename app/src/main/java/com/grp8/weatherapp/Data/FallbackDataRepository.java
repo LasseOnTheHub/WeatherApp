@@ -59,8 +59,6 @@ public class FallbackDataRepository extends DataRepository
             return stations;
         }
 
-        System.out.println("demo");
-
         Map<Integer, Double[]> positions = new Hashtable<>();
 
         positions.put(0, new Double[]{ 60.426426, 24.377971 });
@@ -73,6 +71,8 @@ public class FallbackDataRepository extends DataRepository
 
             stations.add(new Station(index + 1, 1, "Demo station " + (index + 1), pos[0], pos[1]));
         }
+
+        super.addToCache(stations);
 
         return stations;
     }
