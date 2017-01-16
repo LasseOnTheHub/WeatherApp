@@ -1,11 +1,11 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -219,15 +218,6 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         xAxis.setAxisMinimum(0f);
         xAxis.setGranularity(0f);
 
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser && ((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()) {
-            Toast.makeText(getActivity(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
-            ((WeatherStationTab) getActivity()).setShouldShowNoDataToastOnGraphAppearance();
-        }
-        super.setUserVisibleHint(isVisibleToUser);
     }
 
     public void getData()
