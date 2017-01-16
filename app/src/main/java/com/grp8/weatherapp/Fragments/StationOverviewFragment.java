@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +54,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         protected void onPostExecute(DataReading reading) {
             if (reading != null) {
                 updateView(reading);
-            } else failed = true;
+            } else
+                failed = true;
+                refresh();
         }
     }
 
@@ -67,18 +71,17 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         public void run() {
             if (task.getStatus() == AsyncTask.Status.RUNNING)
                 task.cancel(true);
-            failed = true;
-
+                failed = true;
+                refresh();
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View   view;
         Intent intent = getActivity().getIntent();
 
-        if(intent != null && ((intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false)) || failed == true))
+        if(intent != null && ((intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false)) || failed))
         {
             view = inflater.inflate(R.layout.fragment_station_overview_no_data, container, false);
 
@@ -171,6 +174,13 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         if (asyncCanceler != null && handler != null) {
             handler.removeCallbacks(asyncCanceler);
         }
+    }
+    private void refresh() {
+        Fragment stationOverviewFragment = getFragmentManager().findFragmentByTag("FRAGMENT");
+        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
+        fragTransaction.detach(stationOverviewFragment);
+        fragTransaction.attach(stationOverviewFragment);
+        fragTransaction.commit();
     }
 
 }
