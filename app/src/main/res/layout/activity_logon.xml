@@ -61,7 +61,7 @@
         android:layout_height="70dp"
         android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorAccent"
         android:text="@string/logon_btn_login"
         android:textColor="#FFFFFF"
         android:textSize="25sp"
