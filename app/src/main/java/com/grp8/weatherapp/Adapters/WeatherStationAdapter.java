@@ -39,7 +39,6 @@ public class WeatherStationAdapter extends BaseAdapter {
         this.readings = readings;
         this.inflater = inflater;
         this.context = context;
-        Log.d("New adapter","created");
     }
 
     private static class ViewHolder {

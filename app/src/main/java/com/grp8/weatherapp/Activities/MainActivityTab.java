@@ -85,6 +85,7 @@ public class MainActivityTab extends AppCompatActivity
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 getMainFragmentList().toggleSearch();
+                mViewPager.setCurrentItem(0);
                 return true;
             }
 
@@ -154,6 +155,7 @@ public class MainActivityTab extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
+        mViewPager.setCurrentItem(0);
         if (backPressed + TIME_INTERVAL > System.currentTimeMillis())
         {
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
