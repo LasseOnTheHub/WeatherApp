@@ -108,7 +108,9 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
                 dialog.show();
             }
         });
-
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
+        dateInputTo.setTypeface(font);
+        dateInputFrom.setTypeface(font);
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
 
         //Grafer
@@ -452,11 +454,13 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
     @Override
     public void setToDate(Date date) {
-        dateInputTo.setText(formatter.format(date));
+        String text = getString(R.string.calendar_icon) + "  " + formatter.format(date);
+        dateInputTo.setText(text);
     }
 
     @Override
     public void setFromDate(Date date) {
-        dateInputFrom.setText(formatter.format(date));
+        String text = getString(R.string.calendar_icon) + "  " + formatter.format(date);
+        dateInputFrom.setText(text);
     }
 }

@@ -38,7 +38,8 @@
 
     <!-- Font awesome icons -->
     <string name="icon_temp">&#xf02b;</string>
-    <string name="no_search_results">Sorry, no weather stations matches your query</string>
+    <string name="calendar_icon">&#xf073;</string>
+    <string name="no_search_results">Sorry, no weather stations matches your query.</string>
     <string name="no_stations">Oops, you currently don\'t own any stations.\nVisit http://www.clafis-project.eu for more information.</string>
 
     <!-- Activity titles -->

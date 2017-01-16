@@ -85,6 +85,10 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
                 dialog.show();
             }
         });
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
+        dateInputTo.setTypeface(font);
+        dateInputFrom.setTypeface(font);
+        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
 
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
         //TODO: Gør denne generisk
@@ -359,11 +363,13 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
 
     @Override
     public void setToDate(Date date) {
-        dateInputTo.setText(formatter.format(date));
+        String text = getString(R.string.calendar_icon) + "  " + formatter.format(date);
+        dateInputTo.setText(text);
     }
 
     @Override
     public void setFromDate(Date date) {
-        dateInputFrom.setText(formatter.format(date));
+        String text = getString(R.string.calendar_icon) + "  " + formatter.format(date);
+        dateInputFrom.setText(text);
     }
 }
