@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -30,6 +31,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Formatters.DayAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.DegreeAxisValueFormatter;
@@ -62,9 +65,10 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
     IDataRepository dataRepository;
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat formatter;
-
-/*    String dtStart = "";
-    String dtEnd = "";*/
+    long            referenceTimestamp;
+    MyMarkerView    myMarkerView;
+    int             stationId;
+    WeatherStationTab weatherStationTab;
 
     //Dato vælger
     private TextView dateInputFrom;
@@ -74,12 +78,9 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         View view = inflater.inflate(R.layout.fragment_temp_rain_humidity, container, false);
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
+        weatherStationTab = (WeatherStationTab)getActivity();
+        stationId = weatherStationTab.getCurrentStationID();
 
-        //Grafer
-        humidityChart = (LineChart) view.findViewById(R.id.humiditychart);
-        tempRainChart = (CombinedChart) view.findViewById(R.id.tempandrainchart);
-
-        //Datovælger
         formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         dateInputTo = (TextView) view.findViewById(R.id.dateInputTo);
         setToDate(((WeatherStationTab) getActivity()).getEndDate());
@@ -106,14 +107,81 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             }
         });
 
-        //******Definere graf for temperatur og nedbør START******
+        dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
 
+        //Grafer
+        humidityChart = (LineChart) view.findViewById(R.id.humiditychart);
+        tempRainChart = (CombinedChart) view.findViewById(R.id.tempandrainchart);
+
+        getData();
+        drawGraphs();
+
+        return view;
+    }
+
+    public void drawGraphs()
+    {
+        defineTemperatureAndRainGraph();
+        defineHumidityGraph();
+    }
+
+
+    private void defineHumidityGraph()
+    {
+        humidityChart.getDescription().setEnabled(false);
+        humidityChart.setBackgroundColor(Color.rgb(250,250,250));
+        humidityChart.setDrawGridBackground(false);
+        humidityChart.setViewPortOffsets(120f, 100f, 120f, 100f);
+
+        //Sætter fugtigheds legend
+        Legend humidityLegend = humidityChart.getLegend();
+        humidityLegend.setWordWrapEnabled(true);
+        humidityLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        humidityLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        humidityLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        humidityLegend.setDrawInside(false);
+
+        //Definere fugtigheds X-aksens udseende
+        XAxis humidityXAxis = humidityChart.getXAxis();
+        humidityXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        humidityXAxis.setAxisMinimum(0f);
+        humidityXAxis.setGranularity(1f);
+        humidityXAxis.setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
+
+        //Definere fugtigheds venstre Y-akses udseende
+        YAxis HumidityYleftAxis = humidityChart.getAxisLeft();
+        HumidityYleftAxis.setTypeface(mTfLight);
+        HumidityYleftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        HumidityYleftAxis.setAxisMaximum(100);
+        HumidityYleftAxis.setAxisMinimum(0f);
+        HumidityYleftAxis.setDrawGridLines(true);
+        HumidityYleftAxis.setGranularityEnabled(true);
+        HumidityYleftAxis.setSpaceTop(5);
+        HumidityYleftAxis.setSpaceBottom(5);
+        HumidityYleftAxis.setValueFormatter(new PercentFormatter());
+
+        //Definere fugtigheds højre Y-akses udseende.
+        YAxis humidityYRightAxis = humidityChart.getAxisRight();
+        humidityYRightAxis.setTypeface(mTfLight);
+        humidityYRightAxis.setTextColor(Color.RED);
+        humidityYRightAxis.setAxisMaximum(100);
+        humidityYRightAxis.setAxisMinimum(0);
+        humidityYRightAxis.setDrawGridLines(false);
+        humidityYRightAxis.setDrawZeroLine(false);
+        humidityYRightAxis.setGranularityEnabled(false);
+        humidityYRightAxis.setSpaceTop(5);
+        humidityYRightAxis.setSpaceBottom(5);
+        humidityYRightAxis.setValueFormatter(new PercentFormatter());
+    }
+
+    private void defineTemperatureAndRainGraph()
+    {
         tempRainChart.getDescription().setEnabled(false);
         tempRainChart.setBackgroundColor(Color.rgb(250,250,250));
         tempRainChart.setDrawGridBackground(false);
         tempRainChart.setDrawBarShadow(false);
         tempRainChart.setHighlightFullBarEnabled(false);
-        tempRainChart.setViewPortOffsets(100f, 100f, 100f, 100f);
+        tempRainChart.setViewPortOffsets(100f, 100f, 120f, 100f);
 
         //Tegner linjen oven på bars
         tempRainChart.setDrawOrder(new CombinedChart.DrawOrder[]{
@@ -130,131 +198,84 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         //Definere nedbørs højre Y-akse
         YAxis tempRainYRightAxis = tempRainChart.getAxisRight();
         tempRainYRightAxis.setDrawGridLines(false);
-        tempRainYRightAxis.setAxisMinimum(100f); // this replaces setStartAtZero(true)
-        //tempRainYRightAxis.setAxisMaximum(40f);
+        tempRainYRightAxis.setSpaceTop(5);
+        tempRainYRightAxis.setAxisMinimum(0);
         tempRainYRightAxis.setValueFormatter(new MMAxisValueFormatter());
 
         //Definere temperatur og nedbørs venstre Y-akse
-        YAxis leftAxis = tempRainChart.getAxisLeft();
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setValueFormatter(new DegreeAxisValueFormatter());
+        YAxis tempRainYLeftAxis = tempRainChart.getAxisLeft();
+        tempRainYLeftAxis.setDrawGridLines(false);
+        tempRainYLeftAxis.setSpaceTop(5);
+        tempRainYLeftAxis.setSpaceBottom(5);
+        tempRainYLeftAxis.setValueFormatter(new DegreeAxisValueFormatter());
 
         //Definere temperatur og nedbørs X-akse
         XAxis xAxis = tempRainChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisMinimum(0f);
         xAxis.setGranularity(0f);
-        //xAxis.setValueFormatter(new DayAxisValueFormatter(tempRainChart));
 
-        CombinedData data = new CombinedData();
-
-        data.setData(generateTemperatureLineData());
-        //data.setData(generateRainBarData());
-        data.setValueTypeface(mTfLight);
-
-        //xAxis.setAxisMaximum(data.getXMax() + 0.25f);
-
-        tempRainChart.setData(data);
-
-
-        //******Definere graf for temperatur og nedbør SLUT******
-
-
-        //******Definere graf for fugtighede START******
-
-        humidityChart.getDescription().setEnabled(false);
-        humidityChart.setBackgroundColor(Color.rgb(250,250,250));
-        humidityChart.setDrawGridBackground(false);
-        humidityChart.setViewPortOffsets(100f, 100f, 100f, 100f);
-
-        //Sætter fugtigheds legend
-        Legend humidityLegend = humidityChart.getLegend();
-        humidityLegend.setWordWrapEnabled(true);
-        humidityLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        humidityLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        humidityLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        humidityLegend.setDrawInside(false);
-
-        //Definere fugtigheds X-aksens udseende
-        XAxis humidityXAxis = humidityChart.getXAxis();
-        humidityXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        humidityXAxis.setAxisMinimum(0f);
-        humidityXAxis.setGranularity(1f);
-        humidityXAxis.setValueFormatter(new DayAxisValueFormatter(humidityChart));
-
-        //Definere fugtigheds venstre Y-akses udseende
-        YAxis HumidityYleftAxis = humidityChart.getAxisLeft();
-        HumidityYleftAxis.setTypeface(mTfLight);
-        humidityChart.getAxisRight().setDrawLabels(false);
-        humidityChart.getAxisRight().setDrawGridLines(false);
-        HumidityYleftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        HumidityYleftAxis.setAxisMaximum(100);
-        HumidityYleftAxis.setAxisMinimum(0f);
-        HumidityYleftAxis.setDrawGridLines(true);
-        HumidityYleftAxis.setGranularityEnabled(true);
-        HumidityYleftAxis.setValueFormatter(new PercentFormatter());
-
-        //Definere højre Y-akses udseende.
-        YAxis humidityYRightAxis = humidityChart.getAxisRight();
-        humidityYRightAxis.setTypeface(mTfLight);
-        humidityYRightAxis.setTextColor(Color.RED);
-        humidityYRightAxis.setAxisMaximum(100);
-        humidityYRightAxis.setAxisMinimum(0);
-        humidityYRightAxis.setDrawGridLines(false);
-        humidityYRightAxis.setDrawZeroLine(false);
-        humidityYRightAxis.setGranularityEnabled(false);
-        humidityYRightAxis.setValueFormatter(new PercentFormatter());
-        //******Definere graf for fugtighede SLUT******
-
-
-        setHumidityData();
-        return view;
     }
 
-    private void setHumidityData() {
+    public void getData()
+    {
+        try{
+            new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
+                @Override
+                protected List<DataReading> doInBackground(Void... args) {
+                    List<DataReading> data = dataRepository.getStationData(stationId, (((WeatherStationTab) getActivity()).getStartDate()), (((WeatherStationTab) getActivity()).getEndDate()));
+                    return data;
+                }
 
-        //Dummy Data
+                @Override
+                protected void onPostExecute(List<DataReading> data) {
+                    if(!data.isEmpty()) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        referenceTimestamp = data.get(0).getTimestamp().getTime() / 1000;
+                        String string = sdf.format(referenceTimestamp * 1000);
+                        Log.d("Reference", "Reference tidspunktet sat i temprain er: " + string);
+                        setTempRainChart(data);
+                        setHumidityData(data);
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(), "Intet data i det angivet tidsrum", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }.execute();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void setHumidityData(List<DataReading> data) {
         ArrayList<Entry> earthVals = new ArrayList<Entry>();
-        earthVals.add(new Entry(1, 6));
-        earthVals.add(new Entry(2, 8));
-        earthVals.add(new Entry(2, 9));
-        earthVals.add(new Entry(3, 10));
-        earthVals.add(new Entry(4, 10));
-        earthVals.add(new Entry(5, 5));
-        earthVals.add(new Entry(6, -0));
-        earthVals.add(new Entry(7, -5));
-        earthVals.add(new Entry(8, -5));
-        earthVals.add(new Entry(9, 0));
-
-        //Dummy Data
         ArrayList<Entry> airVals = new ArrayList<Entry>();
-        airVals.add(new Entry(1, 10));
-        airVals.add(new Entry(2, 20));
-        airVals.add(new Entry(2, 15));
-        airVals.add(new Entry(3, 13));
-        airVals.add(new Entry(4, 12));
-        airVals.add(new Entry(5, 5));
-        airVals.add(new Entry(6, 10));
-        airVals.add(new Entry(7, 8));
-        airVals.add(new Entry(8, 7));
-        airVals.add(new Entry(9, 5));
 
+        for (int i=0;i<data.size();i++)
+        {
+            DataReading d = data.get(i);
+            long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
+            float earthY = (float) d.getAirReadings().getHumidity();
+            float airY = (float) d.getSoilReadings().getMoisture()[1];
+            earthVals.add(new Entry(xNew, earthY));
+            airVals.add(new Entry(xNew, airY));
+        }
         LineDataSet set1, set2;
-
         if (humidityChart.getData() != null &&
                 humidityChart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) humidityChart.getData().getDataSetByIndex(0);
             set2 = (LineDataSet) humidityChart.getData().getDataSetByIndex(1);
             set1.setValues(earthVals);
             set2.setValues(airVals);
-            humidityChart.getData().notifyDataChanged();
-            humidityChart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(earthVals, "Jordfugtighed");
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set1.setCubicIntensity(0.1f);
-            set1.setDrawCircles(true);
+            set1.setDrawCircles(false);
             set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
             set1.setCircleColor(Color.BLACK);
@@ -268,169 +289,120 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             // create a dataset and give it a type
             set2 = new LineDataSet(airVals, "Luftfugtighed");
             set2.setAxisDependency(YAxis.AxisDependency.RIGHT);
-/*            set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-            set2.setCubicIntensity(0.1f);
-            set2.setColor(Color.RED);
-            set2.setCircleColor(Color.BLACK);*/
             set2.setLineWidth(2f);
-            //set2.setCircleRadius(3f);
-            //set2.setFillAlpha(65);
-            //set2.setFillColor(Color.RED);
-            //set2.setDrawCircleHole(false);
             set2.setHighLightColor(Color.rgb(244, 117, 117));
+            set2.setDrawCircles(false);
             set2.setValueFormatter(new PercentFormatter());
+            humidityChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
+            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
+            humidityChart.setMarker(myMarkerView);
 
             // create a data object with the datasets
-            LineData data = new LineData(set1, set2);
-            data.setValueTextColor(Color.BLACK);
-            data.setValueTextSize(9f);
+            LineData d = new LineData(set1, set2);
+            d.setValueTextColor(Color.BLACK);
+            d.setValueTextSize(9f);
 
             // set data
-            humidityChart.setData(data);
+            humidityChart.setData(d);
+            d.notifyDataChanged();
+            humidityChart.notifyDataSetChanged();
+            humidityChart.invalidate();
         }
-    }
-
-    private Date convertDateFromStringToDate(String date)
-    {
-        Calendar cal = Calendar.getInstance();
-        try {
-            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            cal.setTime(sdf.parse(date));// all done
-            Log.d("Tid", "Tiden sat fra grafen er:" + cal.getTime().toString());
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            //return null;
-        }
-        return cal.getTime();
-    }
-
-    public static float toNumber(Date now) {
-        GregorianCalendar c = new GregorianCalendar();
-        c.setTime(now);
-        int hour = c.get(Calendar.HOUR_OF_DAY);// 0-23
-        int minute = c.get(Calendar.MINUTE);// 0-59
-
-        return toNumber(hour, minute);
     }
 
     public static float toNumber(int hour, int minute) {
         return hour + minute / 60f;
     }
 
-    private LineData generateTemperatureLineData() {
-
-        LineData d = new LineData();
+    private LineData setTemperatureData(List<DataReading> data) {
+        LineData lineData = new LineData();
         final ArrayList<Entry> tempVals = new ArrayList<Entry>();
 
-        final String dtStart = "2015-01-01 00:00";
-        final String dtEnd = "2017-01-01 00:00";
-
-        try {
-            new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
-                @Override
-                protected List<DataReading> doInBackground(Void... args) {
-                    List<DataReading> data = dataRepository.getStationData(2, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
-                    return data;
-                }
-
-                @Override
-                protected void onPostExecute(List<DataReading> data) {
-                    for (DataReading d : data) {
-                        float x = toNumber(d.getTimestamp());
-                        float y = (float) d.getAirReadings().getTemperature();
-                        tempVals.add(new Entry(x, y));
-                    }
-                }
-            }.execute();
-        }
-        catch(Exception e)
+        for (int i=0;i<data.size();i++)
         {
-            e.printStackTrace();
+            DataReading d = data.get(i);
+            long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
+            float x = d.getTimestamp().getTime();
+            float y = (float) d.getAirReadings().getTemperature();
+            tempVals.add(new Entry(xNew, y));
         }
-        tempVals.add(new Entry(1, 20));
-        LineDataSet set = new LineDataSet(tempVals, "Temperatur");
-        set.setColor(Color.rgb(242, 72, 0));
-        set.setLineWidth(2.5f);
-        set.setCircleColor(Color.rgb(242, 72, 0));
-        set.setCircleRadius(0f);
-        set.setFillColor(Color.rgb(240, 238, 70));
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setCubicIntensity(0.0f);
-        set.setDrawValues(false);
-        set.setValueTextSize(10f);
-        set.setValueTextColor(Color.rgb(242, 72, 0));
-        set.setValueFormatter(new DegreeValueFormatter());
+        LineDataSet set1;
 
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        d.addDataSet(set);
-        return d;
+        if (tempRainChart.getData() != null && tempRainChart.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) tempRainChart.getData().getDataSetByIndex(0);
+            set1.setValues(tempVals);
+            set1.notifyDataSetChanged();
+            tempRainChart.notifyDataSetChanged();
+            tempRainChart.invalidate();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(tempVals, "Temperatur");
+            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            set1.setCubicIntensity(0.1f);
+            set1.setDrawCircles(false);
+            set1.setDrawValues(false);
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setColor(ColorTemplate.getHoloBlue());
+            set1.setCircleColor(Color.BLACK);
+            set1.setLineWidth(2f);
+            set1.setFillAlpha(100);
+            set1.setFillColor(ColorTemplate.getHoloBlue());
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
+            tempRainChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
+            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
+            tempRainChart.setMarker(myMarkerView);
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+            // create a data object with the datasets
+            lineData.addDataSet(set1);
+            lineData.notifyDataChanged();
+            tempRainChart.notifyDataSetChanged();
+            tempRainChart.invalidate();
+        }
+        return lineData;
     }
 
 
-    private BarData generateRainBarData() {
+    private BarData setRainBarData(List<DataReading> data) {
 
         final ArrayList<BarEntry> rainVals = new ArrayList<BarEntry>();
-        final String dtStart = "2015-01-01 00:00";
-        final String dtEnd = "2017-01-01 00:00";
 
-        try {
-            new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
-                @Override
-                protected List<DataReading> doInBackground(Void... args) {
-                    List<DataReading> data = dataRepository.getStationData(2, convertDateFromStringToDate(dtStart), convertDateFromStringToDate(dtEnd));
-                    return data;
-                }
-
-                @Override
-                protected void onPostExecute(List<DataReading> data) {
-                    for (DataReading d : data) {
-                        float x = toNumber(d.getTimestamp());
-                        float y = (float) d.getAirReadings().getPressure();
-                        rainVals.add(new BarEntry(x, y));
-                    }
-                }
-            }.execute();
-        }
-        catch(Exception e)
+        for (int i=0;i<data.size();i++)
         {
-            e.printStackTrace();
+            DataReading d = data.get(i);
+            long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
+            float y = (float) d.getRainfall();
+            rainVals.add(new BarEntry(xNew, y));
         }
-        rainVals.add(new BarEntry(1f,1.2f));
-/*        rainVals.add(new BarEntry(1f,1.2f));
-        rainVals.add(new BarEntry(2f,1.0f));
-        rainVals.add(new BarEntry(2f,2.0f));
-        rainVals.add(new BarEntry(2f,3.0f));
-        rainVals.add(new BarEntry(3f,0.5f));
-        rainVals.add(new BarEntry(4f,1.0f));
-        rainVals.add(new BarEntry(5f,5.9f));
-        rainVals.add(new BarEntry(6f,2.0f));
-        rainVals.add(new BarEntry(7f,1.7f));
-        rainVals.add(new BarEntry(8f,1.5f));
-        rainVals.add(new BarEntry(9f,1.2f));*/
-
-
-/*        rainVals.add(new BarEntry(1451660400,1,2));
-        rainVals.add(new BarEntry(1451685600,1,6));
-        rainVals.add(new BarEntry(1451721600,2));
-        rainVals.add(new BarEntry(1451743200,2,5));
-        rainVals.add(new BarEntry(1451761200,3));*/
-
         BarDataSet set1 = new BarDataSet(rainVals, "Nedbør");
         set1.setColor(Color.rgb(60, 220, 78));
         set1.setValueTextColor(Color.rgb(60, 220, 78));
         set1.setValueTextSize(10f);
         set1.setAxisDependency(YAxis.AxisDependency.RIGHT);
         set1.setValueFormatter(new MMValueFormatter());
-
-        float barWidth = 0.90f; //
         BarData d = new BarData(set1);
-        d.setBarWidth(barWidth);
+        d.setBarWidth(0.90f);
+
+        d.notifyDataChanged();
+/*        tempRainChart.notifyDataSetChanged();
+        tempRainChart.invalidate();*/
+
         return d;
     }
 
-    DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
+    private void setTempRainChart(List<DataReading> d)
+    {
+        CombinedData data = new CombinedData();
+        data.setData(setTemperatureData(d));
+        data.setData(setRainBarData(d));
+        data.setValueTypeface(mTfLight);
+        tempRainChart.setData(data);
+        data.notifyDataChanged();
+        tempRainChart.notifyDataSetChanged();
+        tempRainChart.invalidate();
+    }
+
+    private DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             cal.set(Calendar.YEAR, year);
@@ -444,15 +416,65 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         }
     };
 
-    DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             cal.set(Calendar.YEAR, year);
             cal.set(Calendar.MONTH, monthOfYear);
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             ((WeatherStationTab) getActivity()).setToDate(cal.getTime());
+            removeDataSet();
+            getData();
+            drawGraphs();
         }
     };
+
+    private void removeDataSet() {
+
+        CombinedData tempRainData = tempRainChart.getData();
+        LineData humData = humidityChart.getData();
+
+/*        if (tempRainData.getDataSetCount()>=0) {
+            tempRainData.removeDataSet(tempRainData.getDataSetByIndex(tempRainData.getDataSetCount()-1));
+            tempRainData.removeDataSet(tempRainData.getDataSetByIndex(tempRainData.getDataSetCount()-1));
+            tempRainChart.notifyDataSetChanged();
+            tempRainChart.invalidate();
+        }
+
+        if (humData.getDataSetCount()>=0) {
+            humData.removeDataSet(humData.getDataSetByIndex(humData.getDataSetCount()-1));
+            humData.removeDataSet(humData.getDataSetByIndex(humData.getDataSetCount()-1));
+            humidityChart.notifyDataSetChanged();
+            humidityChart.invalidate();
+        }*/
+
+        for (int i=humData.getDataSetCount();i==0;i--)
+        {
+            humData.removeDataSet(humData.getDataSetByIndex(i));
+        }
+        for (int i=tempRainData.getDataSetCount();i==0;i--)
+        {
+            tempRainData.removeDataSet(tempRainData.getDataSetByIndex(i));
+        }
+
+        humidityChart.clear();
+        tempRainChart.clear();
+
+        tempRainChart.notifyDataSetChanged();
+        tempRainChart.invalidate();
+        humidityChart.notifyDataSetChanged();
+        humidityChart.invalidate();
+
+
+    }
+    //TODO: Denne skal kaldes fra det andet graf-fragment for at synkronisere datoer.
+    public void synchronizeDate()
+    {
+        removeDataSet();
+        drawGraphs();
+        getData();
+    }
+
 
     @Override
     public void setToDate(Date date) {
