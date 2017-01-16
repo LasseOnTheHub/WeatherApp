@@ -34,19 +34,15 @@ import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
 import com.grp8.weatherapp.R;
-import com.grp8.weatherapp.Logic.Formatters.DayAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.DegreeAxisValueFormatter;
-import com.grp8.weatherapp.Logic.Formatters.DegreeValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MMAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MMValueFormatter;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -217,6 +213,18 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser && ((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()) {
+            Log.d("Showing toast",String.valueOf(isVisibleToUser));
+            Log.d("Showing toast",String.valueOf(((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()));
+            Toast.makeText(getActivity(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
+            ((WeatherStationTab) getActivity()).setShouldShowNoDataToastOnGraphAppearance();
+            Log.d("Showing toast next time",String.valueOf(((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()));
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
     public void getData()
     {
         try{
@@ -236,10 +244,6 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
                         Log.d("Reference", "Reference tidspunktet sat i temprain er: " + string);
                         setTempRainChart(data);
                         setHumidityData(data);
-                    }
-                    else
-                    {
-                        Toast.makeText(getActivity(), "Intet data i det angivet tidsrum", Toast.LENGTH_SHORT).show();
                     }
                 }
             }.execute();
