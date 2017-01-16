@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import com.grp8.weatherapp.Activities.WeatherStationTab;
+import com.grp8.weatherapp.Data.Cache.CacheEntry;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
@@ -57,7 +58,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_map_overview, container, false);
 
@@ -92,6 +93,13 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                         {
                             Map<Station, DataReading> results = new HashMap<>();
 
+                            if (savedInstanceState != null || DataRepositoryFactory.build(getActivity().getApplicationContext()).getCache().size() != 0) {
+                                List<CacheEntry> cache = DataRepositoryFactory.build(getActivity().getApplicationContext()).getCache();
+                                for (CacheEntry entry : cache) {
+                                    results.put(entry.getStation(), entry.getReading());
+                                }
+                                return results;
+                            }
                             try
                             {
                                 List<Station> stations = repository.getStations();
