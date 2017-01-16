@@ -204,7 +204,8 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
         {
             try
             {
-                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setCompassEnabled(true);
             }
             catch(SecurityException se)
             {
@@ -230,8 +231,8 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
             {
                 e.printStackTrace();
             }
-
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
         }
     }
 
