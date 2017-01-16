@@ -1,7 +1,5 @@
 package com.grp8.weatherapp.Activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
@@ -14,20 +12,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.grp8.weatherapp.Fragments.MainFragmentList;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Logic.UserManager;
 import com.grp8.weatherapp.R;
 
-import com.grp8.weatherapp.Fragments.MainFragment;
 import com.grp8.weatherapp.Fragments.MapViewFragment;
 
 public class MainActivityTab extends AppCompatActivity
