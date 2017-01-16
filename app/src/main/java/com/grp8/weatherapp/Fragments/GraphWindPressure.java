@@ -170,6 +170,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         PressureYLeftAxis.setTypeface(mTfLight);
         pressureChart.getAxisRight().setDrawLabels(false);
         pressureChart.getAxisRight().setDrawGridLines(false);
+        pressureChart.getDescription().setEnabled(false);
         PressureYLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
         PressureYLeftAxis.setSpaceTop(5);
         PressureYLeftAxis.setSpaceBottom(5);
@@ -335,32 +336,6 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
     };
 
     private void removeDataSet() {
-
-        LineData pressureData = pressureChart.getData();
-        LineData windData = windChart.getData();
-
-/*        if (pressureData.getDataSetCount()>0) {
-            pressureData.removeDataSet(pressureData.getDataSetByIndex(pressureData.getDataSetCount()-1));
-            pressureChart.notifyDataSetChanged();
-            pressureChart.invalidate();
-        }
-        if (windData.getDataSetCount()>0) {
-            windData.removeDataSet(windData.getDataSetByIndex(windData.getDataSetCount()-1));
-            windChart.notifyDataSetChanged();
-            windChart.invalidate();
-        }*/
-
-        if (pressureData.getDataSetCount()>0) {
-            for (int i = pressureData.getDataSetCount(); i == 0; i--) {
-                pressureData.removeDataSet(pressureData.getDataSetByIndex(i));
-            }
-        }
-        if (windData.getDataSetCount()>0) {
-            for (int i = windData.getDataSetCount(); i == 0; i--) {
-                windData.removeDataSet(windData.getDataSetByIndex(i));
-            }
-        }
-
         pressureChart.clear();
         windChart.clear();
         pressureChart.notifyDataSetChanged();

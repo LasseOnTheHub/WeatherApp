@@ -430,44 +430,12 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
     };
 
     private void removeDataSet() {
-
-        CombinedData tempRainData = tempRainChart.getData();
-        LineData humData = humidityChart.getData();
-
-/*        if (tempRainData.getDataSetCount()>=0) {
-            tempRainData.removeDataSet(tempRainData.getDataSetByIndex(tempRainData.getDataSetCount()-1));
-            tempRainData.removeDataSet(tempRainData.getDataSetByIndex(tempRainData.getDataSetCount()-1));
-            tempRainChart.notifyDataSetChanged();
-            tempRainChart.invalidate();
-        }
-
-        if (humData.getDataSetCount()>=0) {
-            humData.removeDataSet(humData.getDataSetByIndex(humData.getDataSetCount()-1));
-            humData.removeDataSet(humData.getDataSetByIndex(humData.getDataSetCount()-1));
-            humidityChart.notifyDataSetChanged();
-            humidityChart.invalidate();
-        }*/
-
-        if (humData.getDataSetCount()>0) {
-            for (int i = humData.getDataSetCount(); i == 0; i--) {
-                humData.removeDataSet(humData.getDataSetByIndex(i));
-            }
-        }
-        if (tempRainData.getDataSetCount()>0) {
-            for (int i = tempRainData.getDataSetCount(); i == 0; i--) {
-                tempRainData.removeDataSet(tempRainData.getDataSetByIndex(i));
-            }
-        }
-
         humidityChart.clear();
         tempRainChart.clear();
-
         tempRainChart.notifyDataSetChanged();
         tempRainChart.invalidate();
         humidityChart.notifyDataSetChanged();
         humidityChart.invalidate();
-
-
     }
     //TODO: Denne skal kaldes fra det andet graf-fragment for at synkronisere datoer.
     public void synchronizeDate()
