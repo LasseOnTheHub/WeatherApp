@@ -46,7 +46,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/spinner_layout">
+            android:id="@+id/spinner_layout"
+            android:visibility="gone">
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -72,7 +73,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="9dp"
-            android:id="@+id/stationlist"/>
+            android:id="@android:id/list"/>
 
     </RelativeLayout>
 

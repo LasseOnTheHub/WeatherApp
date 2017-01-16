@@ -1,7 +1,5 @@
 package com.grp8.weatherapp.Activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
@@ -14,19 +12,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.grp8.weatherapp.Fragments.MainFragmentList;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Logic.UserManager;
 import com.grp8.weatherapp.R;
 
-import com.grp8.weatherapp.Fragments.MainFragment;
 import com.grp8.weatherapp.Fragments.MapViewFragment;
 
 public class MainActivityTab extends AppCompatActivity
@@ -77,26 +71,26 @@ public class MainActivityTab extends AppCompatActivity
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mViewPager.setCurrentItem(0, true);
-                getMainFragment().getListAdapter().getFilter().filter(query);
+                getMainFragmentList().getFilter().filter(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                getMainFragment().getListAdapter().getFilter().filter(newText);
+                getMainFragmentList().getFilter().filter(newText);
                 return true;
             }
         });
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                getMainFragment().toggleSearch();
+                getMainFragmentList().toggleSearch();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                getMainFragment().toggleSearch();
+                getMainFragmentList().toggleSearch();
                 return true;
             }
         });
@@ -126,18 +120,12 @@ public class MainActivityTab extends AppCompatActivity
 
     private void refresh()
     {
-        Log.d("Refresh","...");
         DataRepositoryFactory.build(getApplicationContext()).refresh();
-        getMainFragment().load();
-        // getMapFragment.update();
+        getMainFragmentList().load();
     }
 
-    private MainFragment getMainFragment() {
-        return (MainFragment) getSupportFragmentManager().getFragments().get(0);
-    }
-
-    private MapViewFragment getMapFragment() { // FIXME: Remove?
-        return (MapViewFragment) getSupportFragmentManager().getFragments().get(1);
+    private MainFragmentList getMainFragmentList() {
+        return (MainFragmentList) getSupportFragmentManager().getFragments().get(0);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -148,7 +136,7 @@ public class MainActivityTab extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            return position == 0 ? new MainFragment() : new MapViewFragment();
+            return position == 0 ? new MainFragmentList() : new MapViewFragment();
         }
 
         @Override
