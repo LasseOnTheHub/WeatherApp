@@ -33,7 +33,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private TableLayout tableLayout;
     private ProgressBar spinner;
     private ImageView weatherWindow;
-    private Handler handler = new Handler();
+    private Handler handler;
     private TaskCanceler asyncCanceler;
     private boolean failed;
 
@@ -54,9 +54,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         protected void onPostExecute(DataReading reading) {
             if (reading != null) {
                 updateView(reading);
-            } else
+            } else {
                 failed = true;
-                refresh();
+                refresh(); }
         }
     }
 
@@ -69,10 +69,11 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         @Override
         public void run() {
-            if (task.getStatus() == AsyncTask.Status.RUNNING)
+            if (task.getStatus() == AsyncTask.Status.RUNNING) {
                 task.cancel(true);
                 failed = true;
                 refresh();
+            }
         }
     }
     @Override
@@ -85,7 +86,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         {
             view = inflater.inflate(R.layout.fragment_station_overview_no_data, container, false);
 
-            Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/fontawesome-webfont.ttf");
+            Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fontawesome-webfont.ttf");
             TextView icon = (TextView) view.findViewById(R.id.error_icon);
 
             icon.setTypeface(font);
@@ -167,6 +168,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
 
     private void loadData() {
+        handler = new Handler();
         DataRead task = new DataRead();
         asyncCanceler = new TaskCanceler(task);
         handler.postDelayed(asyncCanceler, 15 * 1000);
@@ -176,11 +178,11 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         }
     }
     private void refresh() {
-        Fragment stationOverviewFragment = getFragmentManager().findFragmentByTag("FRAGMENT");
-        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
-        fragTransaction.detach(stationOverviewFragment);
-        fragTransaction.attach(stationOverviewFragment);
-        fragTransaction.commit();
+       Fragment stationOverviewFragment = getFragmentManager().findFragmentByTag("FRAGMENT");
+       FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
+       fragTransaction.detach(stationOverviewFragment);
+       fragTransaction.attach(stationOverviewFragment);
+       fragTransaction.commit();
     }
 
 }
