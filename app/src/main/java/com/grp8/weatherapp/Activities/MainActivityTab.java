@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.grp8.weatherapp.Fragments.MainFragmentList;
 import com.grp8.weatherapp.R;
 
 import com.grp8.weatherapp.Fragments.MainFragment;
@@ -64,26 +65,26 @@ public class MainActivityTab extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mViewPager.setCurrentItem(0, true);
-                getMainFragment().getListAdapter().getFilter().filter(query);
+                getMainFragmentList().getFilter().filter(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                getMainFragment().getListAdapter().getFilter().filter(newText);
+                getMainFragmentList().getFilter().filter(newText);
                 return true;
             }
         });
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                getMainFragment().toggleSearch();
+                getMainFragmentList().toggleSearch();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                getMainFragment().toggleSearch();
+                getMainFragmentList().toggleSearch();
                 return true;
             }
         });
@@ -94,9 +95,7 @@ public class MainActivityTab extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh_menu:
-                Log.d("Refresh","...");
-                getMainFragment().load();
-                // getMapFragment.update();
+                getMainFragmentList().load();
                 break;
             case R.id.settings_menu:
                 startActivity(new Intent(MainActivityTab.this, SettingsActivity.class));
@@ -109,12 +108,8 @@ public class MainActivityTab extends AppCompatActivity {
         return true;
     }
 
-    private MainFragment getMainFragment() {
-        return (MainFragment) getSupportFragmentManager().getFragments().get(0);
-    }
-
-    private MapViewFragment getMapFragment() { // FIXME: Remove?
-        return (MapViewFragment) getSupportFragmentManager().getFragments().get(1);
+    private MainFragmentList getMainFragmentList() {
+        return (MainFragmentList) getSupportFragmentManager().getFragments().get(0);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -125,7 +120,7 @@ public class MainActivityTab extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return position == 0 ? new MainFragment() : new MapViewFragment();
+            return position == 0 ? new MainFragmentList() : new MapViewFragment();
         }
 
         @Override
