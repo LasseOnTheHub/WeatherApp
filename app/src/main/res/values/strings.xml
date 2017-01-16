@@ -16,6 +16,7 @@
 
     <string name="last_updated">Last updated</string>
     <string name="temperature">Temperature</string>
+    <string name="downpour">Downpour</string>
     <string name="humidity">Humidity</string>
     <string name="wind_speed">Wind speed</string>
     <string name="air_pressure">Air pressure</string>
