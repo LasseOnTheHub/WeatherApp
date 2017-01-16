@@ -7,19 +7,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.grp8.weatherapp.Fragments.SettingsFragment;
 import com.grp8.weatherapp.R;
 
-public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class SettingsActivity extends AppCompatActivity {
 
     private boolean changed = false;
 
     public void setChangedStatus(boolean status)
     {
-        this.changed = true;
+        this.changed = status;
     }
 
     @Override
@@ -34,8 +33,10 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setTitle("Settings");
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("Settings");
+        }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,6 +66,4 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         super.finish();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
 }

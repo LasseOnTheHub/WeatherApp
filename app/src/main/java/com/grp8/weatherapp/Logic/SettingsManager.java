@@ -14,26 +14,20 @@ public class SettingsManager {
     public static String getTempUnit(Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(Constants.KEY_TEMP_UNIT, context.getResources().getStringArray(R.array.temp_options_values)[0]);
+                .getString(Constants.KEY_TEMP_UNIT, "");
     }
 
     public static String getPressureUnit(Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(Constants.KEY_PRESS_UNIT, context.getResources().getStringArray(R.array.pressure_options)[0]);
+                .getString(Constants.KEY_PRESS_UNIT, "");
 
     }
 
     public static String getWindSpeedUnit(Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(Constants.KEY_WS_UNIT, context.getResources().getStringArray(R.array.windspeed_values)[0]);
-    }
-
-    public static String getLanguage(Context context) {
-        return PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getString(Constants.KEY_LANG, context.getResources().getStringArray(R.array.language_options)[0]);
+                .getString(Constants.KEY_WS_UNIT, "");
     }
 
     public static void setupSettings(Context context) {
@@ -62,14 +56,5 @@ public class SettingsManager {
                     .putString(Constants.KEY_WS_UNIT, ws)
                     .apply();
         }
-        if (getLanguage(context).equals("")) {
-            String lang = context.getResources().getStringArray(R.array.language_options)[0];
-            PreferenceManager
-                    .getDefaultSharedPreferences(context)
-                    .edit()
-                    .putString(Constants.KEY_LANG, lang)
-                    .apply();
-        }
-
     }
 }
