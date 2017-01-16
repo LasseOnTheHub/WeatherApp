@@ -13,6 +13,8 @@
     <string name="logon_failure">Invalid credentials</string>
     <string name="logon_toast_username">Please provide a user ID</string>
     <string name="no_data">Intet data i det angivne tidsrum</string>
+    <string name="start_date">Choose start date</string>
+    <string name="end_date">Choose end date</string>
 
     <string name="last_updated">Last updated</string>
     <string name="temperature">Temperature</string>

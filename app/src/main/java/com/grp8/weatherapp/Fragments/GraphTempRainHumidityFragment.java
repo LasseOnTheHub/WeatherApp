@@ -92,7 +92,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
                 long weekMax = ((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000;
                 long timeMax = System.currentTimeMillis()+86400000;
                 dialog.getDatePicker().setMaxDate(weekMax > timeMax ? timeMax : weekMax);
-                dialog.setTitle("Choose end date");
+                dialog.setTitle(R.string.end_date);
                 dialog.show();
             }
         });
@@ -104,7 +104,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
                 cal.setTime(((WeatherStationTab) getActivity()).getStartDate());
                 DatePickerDialog dialog = new DatePickerDialog(getContext(), dateFromListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
                 dialog.getDatePicker().setMaxDate(System.currentTimeMillis()+86400000);
-                dialog.setTitle("Choose start date");
+                dialog.setTitle(R.string.start_date);
                 dialog.show();
             }
         });
