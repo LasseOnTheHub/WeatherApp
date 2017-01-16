@@ -1,5 +1,7 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -66,30 +68,46 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View stationOverview = inflater.inflate(R.layout.fragment_station_overview, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View   view;
+        Intent intent = getActivity().getIntent();
 
-        // TextView declaration
-        temp = (TextView) stationOverview.findViewById(R.id.temp);
-        windSpeed = (TextView) stationOverview.findViewById(R.id.windSpeed);
-        airP = (TextView) stationOverview.findViewById(R.id.airP);
-        humidity = (TextView) stationOverview.findViewById(R.id.humidity);
-        updated = (TextView) stationOverview.findViewById(R.id.updated);
-        spinner = (ProgressBar) stationOverview.findViewById(R.id.spinner);
+        if(intent != null && intent.getBooleanExtra(Constants.KEY_STATION_NO_DATA, false))
+        {
+            view = inflater.inflate(R.layout.fragment_station_overview_no_data, container, false);
 
-        // initiates asynctask and cancels it after 15 sec if it hasn't finished
-        loadData();
+            Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/fontawesome-webfont.ttf");
+            TextView icon = (TextView) view.findViewById(R.id.error_icon);
 
-        // ImageView declaration
-        weatherWindow = (ImageView) stationOverview.findViewById(R.id.weatherWindow);
+            icon.setTypeface(font);
+        }
+        else
+        {
+            view = inflater.inflate(R.layout.fragment_station_overview, container, false);
 
-        // setting spinner visible and loading text
-        loadedView();
+            // TextView declaration
+            temp = (TextView) view.findViewById(R.id.temp);
+            windSpeed = (TextView) view.findViewById(R.id.windSpeed);
+            airP = (TextView) view.findViewById(R.id.airP);
+            humidity = (TextView) view.findViewById(R.id.humidity);
+            updated = (TextView) view.findViewById(R.id.updated);
+            spinner = (ProgressBar) view.findViewById(R.id.spinner);
 
-        // TableLayout declaration
-        tableLayout = (TableLayout) stationOverview.findViewById(R.id.tableLayoutt);
+            // initiates asynctask and cancels it after 15 sec if it hasn't finished
+            loadData();
 
-        return stationOverview;
+            // ImageView declaration
+            weatherWindow = (ImageView) view.findViewById(R.id.weatherWindow);
+
+            // setting spinner visible and loading text
+            loadedView();
+
+            // TableLayout declaration
+            tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
+        }
+
+        return view;
     }
 
     @Override

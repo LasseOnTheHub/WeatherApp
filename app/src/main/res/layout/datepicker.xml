@@ -28,7 +28,6 @@
 
              <TextView
                  android:id="@+id/dateInputFrom"
-                 android:layout_toRightOf="@id/dateTextLabelFrom"
                  android:layout_width="120dip"
                  android:layout_height="40dip"
                  android:background="@drawable/border"
@@ -61,7 +60,6 @@
 
              <TextView
                  android:id="@+id/dateInputTo"
-                 android:layout_toRightOf="@id/dateTextLabelFrom"
                  android:layout_width="120dip"
                  android:layout_height="40dip"
                  android:background="@drawable/border"

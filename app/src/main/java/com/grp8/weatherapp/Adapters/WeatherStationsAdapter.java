@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Entities.Station;
+import com.grp8.weatherapp.Fragments.MainFragment;
 import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
 
@@ -112,7 +113,14 @@ public class WeatherStationsAdapter extends BaseAdapter implements Filterable {
                     }
 
                     @Override
-                    protected void onPostExecute(DataReading result) {
+                    protected void onPostExecute(DataReading result)
+                    {
+                        // Mark station as having no recent data in the main fragment
+                        if(result == null)
+                        {
+                            MainFragment.markStationAsOutdated(station.getId());
+                        }
+
                         updateListItem(position, result);
                     }
                 }.execute();

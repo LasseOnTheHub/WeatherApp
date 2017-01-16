@@ -47,6 +47,10 @@
     <string name="listTab">LIST</string>
     <string name="mapTab">MAP</string>
 
+    <!-- Station overview -->
+    <string name="station_overview_error_icon">&#xf071;</string>
+    <string name="station_overview_error_text">Could not load any recent data from the station. Please use graphs to select an appropriate time range to display data within</string>
+
     <string name="station_tabs_overview">Overview</string>
     <string name="station_tabs_temperature_rain">Temp + rain</string>
     <string name="station_tabs_pressure_lux">Pressure + lux</string>
