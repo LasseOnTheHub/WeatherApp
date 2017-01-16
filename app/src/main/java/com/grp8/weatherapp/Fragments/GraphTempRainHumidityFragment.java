@@ -216,11 +216,8 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser && ((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()) {
-            Log.d("Showing toast",String.valueOf(isVisibleToUser));
-            Log.d("Showing toast",String.valueOf(((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()));
             Toast.makeText(getActivity(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
             ((WeatherStationTab) getActivity()).setShouldShowNoDataToastOnGraphAppearance();
-            Log.d("Showing toast next time",String.valueOf(((WeatherStationTab) getActivity()).shouldShowNoDataToastOnGraphAppearance()));
         }
         super.setUserVisibleHint(isVisibleToUser);
     }
