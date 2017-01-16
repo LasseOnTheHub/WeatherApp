@@ -33,23 +33,9 @@
             android:title="@string/windspeed" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="Language">
-        <!-- Language -->
-        <ListPreference
-            android:defaultValue="English"
-            android:entries="@array/language_options"
-            android:entryValues="@array/language_options"
-            android:key="app_language"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:title="@string/langauge" />
-
-    </PreferenceCategory>
-
+    <!--Logout -->
     <PreferenceCategory
         android:title="Account">
-        <!--Logout -->
         <Preference
             android:title="@string/logout_button"
             android:summary="@string/app_logout"

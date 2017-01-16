@@ -1,13 +1,18 @@
 package com.grp8.weatherapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.grp8.weatherapp.Activities.LogonActivity;
+import com.grp8.weatherapp.Activities.MainActivityTab;
 import com.grp8.weatherapp.Activities.SettingsActivity;
+import com.grp8.weatherapp.Logic.UserManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Constants;
 
@@ -27,13 +32,14 @@ public class SettingsFragment extends PreferenceFragment {
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_TEMP_UNIT));
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_PRESS_UNIT));
         bindPreferenceSummaryToValue(findPreference(Constants.KEY_WS_UNIT));
-        bindPreferenceSummaryToValue(findPreference(Constants.KEY_LANG));
 
         Preference button = findPreference(getString(R.string.app_logout));
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                //TODO
+                UserManager.getInstance(getActivity().getApplicationContext()).logout();
+                getActivity().startActivity(new Intent(getActivity(), LogonActivity.class));
+                getActivity().finish();
                 return true;
             }
         });
@@ -63,16 +69,10 @@ public class SettingsFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
-            // For list preferences, look up the correct display value in
-            // the preference's 'entries' list.
             ListPreference listPreference = (ListPreference) preference;
             int index = listPreference.findIndexOfValue(stringValue);
 
-            // Set the summary to reflect the new value.
-            preference.setSummary(
-                    index >= 0
-                            ? listPreference.getEntries()[index]
-                            : null);
+            preference.setSummary( index >= 0 ? listPreference.getEntries()[index] : null);
 
             if(ready)
             {
