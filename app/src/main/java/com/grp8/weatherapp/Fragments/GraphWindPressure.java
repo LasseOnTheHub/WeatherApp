@@ -24,6 +24,8 @@ import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Logic.Formatters.PressureAxisValueFormatter;
+import com.grp8.weatherapp.Logic.Formatters.WindAxisValueFormatter;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
@@ -119,7 +121,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         windChart.getDescription().setEnabled(false);
         windChart.setBackgroundColor(Color.rgb(250,250,250));
         windChart.setDrawGridBackground(false);
-        windChart.setViewPortOffsets(100f, 100f, 100f, 100f);
+        windChart.setViewPortOffsets(130f, 100f, 100f, 100f);
 
         //Definere wind's legend
         Legend windLegend = windChart.getLegend();
@@ -144,14 +146,14 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         windLeftAxis.setSpaceBottom(5);
         windLeftAxis.setDrawGridLines(true);
         windLeftAxis.setGranularityEnabled(true);
-        //******Definere graf for wind SLUT******
+        windLeftAxis.setValueFormatter(new WindAxisValueFormatter());
     }
 
     public void definePressureGraph()
     {
         pressureChart.setBackgroundColor(Color.rgb(250,250,250));
         pressureChart.setDrawGridBackground(false);
-        pressureChart.setViewPortOffsets(100f, 100f, 100f, 100f);
+        pressureChart.setViewPortOffsets(130f, 100f, 100f, 100f);
         pressureChart.getDescription().setEnabled(false);
         //pressureChart.setMarker(myMarkerView);
 
@@ -180,6 +182,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         PressureYLeftAxis.setSpaceBottom(5);
         PressureYLeftAxis.setDrawGridLines(true);
         PressureYLeftAxis.setGranularityEnabled(true);
+        PressureYLeftAxis.setValueFormatter(new PressureAxisValueFormatter());
 
         pressureChart.setNoDataText("Der er desværre ingen data i denne periode");
     }
@@ -292,8 +295,9 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
             set1.setFillColor(ColorTemplate.getHoloBlue());
             set1.setHighLightColor(Color.rgb(244, 117, 117));
             myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
-            pressureChart.setMarker(myMarkerView);
+            windChart.setMarker(myMarkerView);
             windChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
+
 
             // create a data object with the datasets
             LineData lineData = new LineData(set1);

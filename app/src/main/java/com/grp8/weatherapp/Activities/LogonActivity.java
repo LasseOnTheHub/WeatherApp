@@ -55,6 +55,7 @@ public class LogonActivity extends AppCompatActivity {
 
         this.userIDEditText     = (EditText) findViewById(R.id.userIDText);
         this.passwordIDEditText = (EditText) findViewById(R.id.userPasswordText);
+        userIDEditText.setText("5");
 
         @SuppressLint("WrongViewCast")
         final AppCompatImageView logo = (AppCompatImageView) findViewById(R.id.imageLogo);

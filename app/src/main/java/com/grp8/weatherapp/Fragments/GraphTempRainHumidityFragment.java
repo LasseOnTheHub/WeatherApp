@@ -192,7 +192,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
         //Definere temperatur og nedbørs legend
         Legend tempRainLegend = tempRainChart.getLegend();
-        tempRainLegend.setWordWrapEnabled(true);
+        tempRainLegend.setWordWrapEnabled(false);
         tempRainLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         tempRainLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         tempRainLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
@@ -200,7 +200,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
         //Definere nedbørs højre Y-akse
         YAxis tempRainYRightAxis = tempRainChart.getAxisRight();
-        tempRainYRightAxis.setDrawGridLines(false);
+        tempRainYRightAxis.setDrawGridLines(true);
         tempRainYRightAxis.setSpaceTop(5);
         tempRainYRightAxis.setAxisMinimum(0);
         tempRainYRightAxis.setValueFormatter(new MMAxisValueFormatter());
@@ -275,14 +275,10 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set1.setCubicIntensity(0.1f);
             set1.setDrawCircles(false);
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
             set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
-            set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-            set1.setFillAlpha(100);
-            set1.setFillColor(ColorTemplate.getHoloBlue());
-            set1.setHighLightColor(Color.rgb(244, 117, 117));
             set1.setValueFormatter(new PercentFormatter());
 
             // create a dataset and give it a type
@@ -383,9 +379,6 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         d.setBarWidth(0.90f);
 
         d.notifyDataChanged();
-/*        tempRainChart.notifyDataSetChanged();
-        tempRainChart.invalidate();*/
-
         return d;
     }
 
