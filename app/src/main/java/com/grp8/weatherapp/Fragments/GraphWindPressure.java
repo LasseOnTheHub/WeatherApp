@@ -67,8 +67,10 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
                 cal.setTime(((WeatherStationTab) getActivity()).getEndDate());
                 DatePickerDialog dialog = new DatePickerDialog(getContext(), dateToListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
                 dialog.getDatePicker().setMinDate(((WeatherStationTab) getActivity()).getStartDate().getTime());
-                dialog.getDatePicker().setMaxDate(((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000);
-                dialog.setTitle("Choose end date");
+                long weekMax = ((WeatherStationTab) getActivity()).getStartDate().getTime()+604800000;
+                long timeMax = System.currentTimeMillis();
+                dialog.getDatePicker().setMaxDate(weekMax > timeMax ? timeMax : weekMax);
+                dialog.setTitle(R.string.end_date);
                 dialog.show();
             }
         });
@@ -79,7 +81,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
             public void onClick(View v) {
                 cal.setTime(((WeatherStationTab) getActivity()).getStartDate());
                 DatePickerDialog dialog = new DatePickerDialog(getContext(), dateFromListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-                dialog.setTitle("Choose start date");
+                dialog.setTitle(R.string.start_date);
                 dialog.show();
             }
         });
