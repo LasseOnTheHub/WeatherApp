@@ -15,7 +15,6 @@
         android:text="@string/station_overview_error_icon"
     />
     <TextView
-        android:id="@+id/error_text"
         android:layout_below="@+id/error_icon"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

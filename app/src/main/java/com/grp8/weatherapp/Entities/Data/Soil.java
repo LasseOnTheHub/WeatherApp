@@ -6,8 +6,8 @@ package com.grp8.weatherapp.Entities.Data;
 
 public class Soil
 {
-    private int[] moisture;
-    private int[] temperature;
+    private final int[] moisture;
+    private final int[] temperature;
 
     public Soil(int[] moisture, int[] temperature)
     {

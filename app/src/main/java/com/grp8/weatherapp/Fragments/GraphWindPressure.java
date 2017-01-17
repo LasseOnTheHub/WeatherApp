@@ -44,20 +44,19 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
 
     private LineChart pressureChart;
     private LineChart windChart;
-    Typeface        mTfLight;
-    IDataRepository dataRepository;
-    long            referenceTimestamp;
-    MyMarkerView    myMarkerView;
-    WeatherStationTab weatherStationTab;
-    int stationId;
-    Calendar cal = Calendar.getInstance();
-    SimpleDateFormat formatter;
+    private Typeface        mTfLight;
+    private IDataRepository dataRepository;
+    private long            referenceTimestamp;
+    private MyMarkerView    myMarkerView;
+    private int stationId;
+    private final Calendar cal = Calendar.getInstance();
+    private SimpleDateFormat formatter;
     private TextView dateInputFrom;
     private TextView dateInputTo;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wind_pressure, container, false);
-        weatherStationTab = (WeatherStationTab)getActivity();
+        WeatherStationTab weatherStationTab = (WeatherStationTab) getActivity();
         stationId = weatherStationTab.getCurrentStationID();
 
         formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -109,13 +108,13 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         return view;
     }
 
-    public void drawGraphs()
+    private void drawGraphs()
     {
         definePressureGraph();
         defineWindGraph();
     }
 
-    public void defineWindGraph()
+    private void defineWindGraph()
     {
         //******Definere graf for wind START******
         windChart.getDescription().setEnabled(false);
@@ -149,7 +148,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         windLeftAxis.setValueFormatter(new WindAxisValueFormatter());
     }
 
-    public void definePressureGraph()
+    private void definePressureGraph()
     {
         pressureChart.setBackgroundColor(Color.rgb(250,250,250));
         pressureChart.setDrawGridBackground(false);
@@ -187,7 +186,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         pressureChart.setNoDataText("Der er desværre ingen data i denne periode");
     }
 
-    public void getData()
+    private void getData()
     {
         try{
         new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
@@ -202,7 +201,6 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
                 if(!data.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     referenceTimestamp = data.get(0).getTimestamp().getTime() / 1000;
-                    String string = sdf.format(referenceTimestamp * 1000);
                     setPressureData(data);
                     setWindData(data);
                 }
@@ -216,13 +214,11 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
     }
 
     private void setPressureData(List<DataReading> data) {
-        final ArrayList<Entry> pressureVals = new ArrayList<Entry>();
+        final ArrayList<Entry> pressureVals = new ArrayList<>();
         for (int i=0;i<data.size();i++)
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
-
-            float x = d.getTimestamp().getTime();
             float y = (float) d.getAirReadings().getPressure();
             pressureVals.add(new Entry(xNew, y));
         }
@@ -250,7 +246,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
             set1.setFillColor(ColorTemplate.getHoloBlue());
             set1.setHighLightColor(Color.rgb(244, 117, 117));
             pressureChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
-            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
+            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), referenceTimestamp);
             pressureChart.setMarker(myMarkerView);
 
             // create a data object with the datasets
@@ -263,13 +259,12 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
     }
 
     private void setWindData(List<DataReading> data) {
-        ArrayList<Entry> vals = new ArrayList<Entry>();
+        ArrayList<Entry> vals = new ArrayList<>();
         for (int i=0;i<data.size();i++)
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
-            float x = d.getTimestamp().getTime();
-            float y = (float) d.getWindReadings().getSpeed();vals.add(new Entry(xNew, y));
+             float y = (float) d.getWindReadings().getSpeed();vals.add(new Entry(xNew, y));
         }
 
         LineDataSet set1;
@@ -294,7 +289,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
             set1.setFillAlpha(100);
             set1.setFillColor(ColorTemplate.getHoloBlue());
             set1.setHighLightColor(Color.rgb(244, 117, 117));
-            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
+            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), referenceTimestamp);
             windChart.setMarker(myMarkerView);
             windChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
 
@@ -312,7 +307,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
     }
     }
 
-    private DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
+    private final DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             cal.set(Calendar.YEAR, year);
@@ -326,7 +321,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         }
     };
 
-    private DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
+    private final DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             cal.set(Calendar.YEAR, year);
@@ -346,14 +341,6 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         pressureChart.invalidate();
         windChart.notifyDataSetChanged();
         windChart.invalidate();
-    }
-
-    //TODO: Denne skal kaldes fra det andet graf-fragment for at synkronisere datoer.
-    public void synchronizeDate()
-    {
-        removeDataSet();
-        drawGraphs();
-        getData();
     }
 
     @Override

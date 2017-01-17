@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
 import com.grp8.weatherapp.Logic.SettingsManager;
@@ -28,11 +27,8 @@ import io.fabric.sdk.android.services.concurrency.AsyncTask;
 public class StationOverviewFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
 
     private TextView temp, windSpeed, airP, humidity, updated;
-    private TableLayout tableLayout;
     private ProgressBar spinner;
     private ImageView weatherWindow;
-    private Handler handler;
-    private TaskCanceler asyncCanceler;
     private boolean failed;
 
     private class DataRead extends AsyncTask<Void, DataReading, DataReading> {
@@ -59,7 +55,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
 
     public class TaskCanceler implements Runnable {
-        private AsyncTask task;
+        private final AsyncTask task;
 
         public TaskCanceler(AsyncTask task) {
             this.task = task;
@@ -111,7 +107,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
             weatherWindow = (ImageView) view.findViewById(R.id.weatherWindow);
 
             // TableLayout declaration
-            tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
+            TableLayout tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
         }
 
         return view;
@@ -166,9 +162,9 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     }
 
     private void loadData() {
-        handler = new Handler();
+        Handler handler = new Handler();
         DataRead task = new DataRead();
-        asyncCanceler = new TaskCanceler(task);
+        TaskCanceler asyncCanceler = new TaskCanceler(task);
         handler.postDelayed(asyncCanceler, 15 * 1000);
         task.execute();
         if (asyncCanceler != null && handler != null) {

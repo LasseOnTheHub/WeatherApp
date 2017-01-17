@@ -50,7 +50,6 @@
         android:layout_width="450dp"
         android:layout_height="70dp"
         android:text="Login"
-        android:id="@+id/loginButton"
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
         android:textSize="50px"

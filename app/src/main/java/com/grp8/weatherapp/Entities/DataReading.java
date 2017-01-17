@@ -1,7 +1,5 @@
 package com.grp8.weatherapp.Entities;
 
-import android.util.Log;
-
 import com.grp8.weatherapp.Entities.Data.*;
 import java.util.Date;
 
@@ -10,15 +8,15 @@ import java.util.Date;
  */
 public class DataReading
 {
-    private int id;
-    private int device;
+    private final int id;
+    private final int device;
     private Date date;
 
-    private double rain;
+    private final double rain;
 
-    private Air air;
-    private Wind wind;
-    private Soil soil;
+    private final Air air;
+    private final Wind wind;
+    private final Soil soil;
 
     public DataReading(int id, int device, Date date, double rain, Air air, Wind wind, Soil soil)
     {

@@ -6,11 +6,9 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.grp8.weatherapp.Activities.LogonActivity;
-import com.grp8.weatherapp.Activities.MainActivityTab;
 import com.grp8.weatherapp.Activities.SettingsActivity;
 import com.grp8.weatherapp.Logic.UserManager;
 import com.grp8.weatherapp.R;
@@ -65,7 +63,7 @@ public class SettingsFragment extends PreferenceFragment {
                         .getString(preference.getKey(), ""));
     }
 
-    private Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -76,7 +74,7 @@ public class SettingsFragment extends PreferenceFragment {
 
             if(ready)
             {
-                ((SettingsActivity) getActivity()).setChangedStatus(true);
+                ((SettingsActivity) getActivity()).setChangedStatus();
             }
 
             return true;

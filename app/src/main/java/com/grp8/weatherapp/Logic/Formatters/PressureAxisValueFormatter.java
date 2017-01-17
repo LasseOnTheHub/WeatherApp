@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 
 public class PressureAxisValueFormatter implements IAxisValueFormatter
 {
-    private DecimalFormat mFormat;
+    private final DecimalFormat mFormat;
 
     public PressureAxisValueFormatter() {
         mFormat = new DecimalFormat("####");

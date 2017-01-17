@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
 public class MMValueFormatter implements IValueFormatter
 {
 
-    private DecimalFormat mFormat;
+    private final DecimalFormat mFormat;
     
     public MMValueFormatter() {
         mFormat = new DecimalFormat("###.#");

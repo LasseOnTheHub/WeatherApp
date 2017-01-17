@@ -17,11 +17,12 @@
         android:contentDescription="@string/logon_desc_logo"/>
 
     <RelativeLayout
-        android:id="@+id/logon_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:isScrollContainer="false"
         android:layout_alignParentBottom="true"
-        android:isScrollContainer="false">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/userIDTextLayout"
@@ -34,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:hint="@string/logon_hint_username"/>
+            android:hint="@string/logon_hint_username" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -55,7 +56,6 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/loginButton"
         android:layout_below="@+id/userPasswordTextLayout"
         android:layout_width="300dp"
         android:layout_height="70dp"

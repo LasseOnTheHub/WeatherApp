@@ -25,7 +25,6 @@ import com.grp8.weatherapp.Fragments.MapViewFragment;
 
 public class MainActivityTab extends AppCompatActivity
 {
-    private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private static final int TIME_INTERVAL = 3000; // // milliseconds, time passed between two back presses.
     private long backPressed;
@@ -36,7 +35,7 @@ public class MainActivityTab extends AppCompatActivity
         setContentView(R.layout.activity_main_tab);
         setupActionBar();
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);

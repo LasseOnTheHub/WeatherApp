@@ -42,8 +42,7 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginTop="3dp"
-            app:srcCompat="@drawable/clock"
-            android:id="@+id/time_image" />
+            app:srcCompat="@drawable/clock" />
 
         <TextView
             android:text="13:52"
@@ -86,7 +85,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/timeLayout"
-        android:id="@+id/title_layout"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="5dp"

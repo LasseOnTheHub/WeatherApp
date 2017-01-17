@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 
 public class WindAxisValueFormatter implements IAxisValueFormatter
 {
-    private DecimalFormat mFormat;
+    private final DecimalFormat mFormat;
 
     public WindAxisValueFormatter() {
         mFormat = new DecimalFormat("####");

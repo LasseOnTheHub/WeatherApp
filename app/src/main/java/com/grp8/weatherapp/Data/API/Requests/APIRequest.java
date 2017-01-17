@@ -16,20 +16,20 @@ import java.util.Map;
  */
 public abstract class APIRequest
 {
-    protected final static String TAG = "APIRequest";
+    final static String TAG = "APIRequest";
 
     private static final String SERVER_ADDRESS = "130.226.195.167";
     private static final int    SERVER_PORT    = 8080;
 
-    private String              path;
-    private Map<String, String> parameters = new HashMap<>();
+    private final String              path;
+    private final Map<String, String> parameters = new HashMap<>();
 
-    protected APIRequest(String path)
+    APIRequest(String path)
     {
         this.path = path;
     }
 
-    protected void addParameter(String key, String value)
+    void addParameter(String key, String value)
     {
         this.parameters.put(key, value);
     }

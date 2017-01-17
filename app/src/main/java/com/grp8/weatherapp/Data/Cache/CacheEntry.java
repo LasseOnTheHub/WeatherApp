@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class CacheEntry
 {
-    private Station     station;
+    private final Station     station;
     private DataReading reading;
 
     public CacheEntry(Station station, DataReading reading)

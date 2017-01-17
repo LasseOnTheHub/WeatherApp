@@ -5,9 +5,9 @@ package com.grp8.weatherapp.Entities.Data;
  */
 public class Air
 {
-    private int pressure;
-    private int humidity;
-    private double temperature;
+    private final int pressure;
+    private final int humidity;
+    private final double temperature;
 
     public Air(int pressure, int humidity, double temperature)
     {

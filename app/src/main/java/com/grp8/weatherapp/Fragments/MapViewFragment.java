@@ -53,7 +53,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
     private GoogleMap googleMap;
     private IDataRepository repository;
 
-    private Map<String, Integer> markerIDs = new HashMap<>();
+    private final Map<String, Integer> markerIDs = new HashMap<>();
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 

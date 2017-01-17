@@ -23,7 +23,7 @@ import java.util.Random;
  */
 public class FallbackDataRepository extends DataRepository
 {
-    private Context context;
+    private final Context context;
 
     public FallbackDataRepository(Context context, APIDataProvider api, IListableMapper<Station> stations, IListableMapper<DataReading> readings)
     {
