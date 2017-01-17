@@ -5,8 +5,8 @@ package com.grp8.weatherapp.Entities.Data;
  */
 public class Wind
 {
-    private double speed;
-    private int    direction;
+    private final double speed;
+    private final int    direction;
 
     public Wind(double speed, int direction)
     {

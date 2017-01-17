@@ -16,7 +16,7 @@ public class UserManager
 
     private static final String KEY_USER_ID = "user-id";
 
-    private SharedPreferences prefs;
+    private final SharedPreferences prefs;
 
     private int     userID    = 0;
     private boolean validated = false;

@@ -16,7 +16,7 @@ public class APIException extends RuntimeException
        this("API exception: " + previous.getMessage(), previous);
     }
 
-    public APIException(String message, Throwable previous)
+    APIException(String message, Throwable previous)
     {
         super(message, previous);
     }

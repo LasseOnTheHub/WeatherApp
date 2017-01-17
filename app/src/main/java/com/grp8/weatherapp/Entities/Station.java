@@ -5,13 +5,13 @@ package com.grp8.weatherapp.Entities;
  */
 public class Station
 {
-    private int id;
-    private int type;
+    private final int id;
+    private final int type;
 
-    private String notes;
+    private final String notes;
 
-    private double latitude;
-    private double longitude;
+    private final double latitude;
+    private final double longitude;
 
     public Station(int id, int type, String notes, double latitude, double longitude)
     {

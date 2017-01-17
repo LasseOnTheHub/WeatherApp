@@ -16,9 +16,9 @@ import java.util.Locale;
 public class HourAxisValueFormatter implements IAxisValueFormatter
 {
 
-    private long referenceTimestamp; // minimum timestamp in your data set
-    private DateFormat mDataFormat;
-    private Date mDate;
+    private final long referenceTimestamp; // minimum timestamp in your data set
+    private final DateFormat mDataFormat;
+    private final Date mDate;
 
     public HourAxisValueFormatter(long referenceTimestamp) {
         this.referenceTimestamp = referenceTimestamp;

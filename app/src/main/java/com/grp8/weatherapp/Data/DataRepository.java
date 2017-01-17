@@ -27,14 +27,14 @@ public class DataRepository implements IDataRepository
 {
     private int user;
 
-    private APIDataProvider api;
+    private final APIDataProvider api;
 
-    private IListableMapper<Station>     stations;
-    private IListableMapper<DataReading> readings;
+    private final IListableMapper<Station>     stations;
+    private final IListableMapper<DataReading> readings;
 
-    private Map<Integer, CacheEntry> cache = new HashMap<>();
+    private final Map<Integer, CacheEntry> cache = new HashMap<>();
 
-    public DataRepository(APIDataProvider api, IListableMapper<Station> stations, IListableMapper<DataReading> readings)
+    DataRepository(APIDataProvider api, IListableMapper<Station> stations, IListableMapper<DataReading> readings)
     {
         this.api = api;
 
@@ -212,7 +212,7 @@ public class DataRepository implements IDataRepository
         return new ArrayList<>();
     }
 
-    protected void addToCache(Map<Station, DataReading> stations)
+    void addToCache(Map<Station, DataReading> stations)
     {
         for(Station station : stations.keySet())
         {

@@ -16,9 +16,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     private boolean changed = false;
 
-    public void setChangedStatus(boolean status)
+    public void setChangedStatus()
     {
-        this.changed = status;
+        this.changed = true;
     }
 
     @Override

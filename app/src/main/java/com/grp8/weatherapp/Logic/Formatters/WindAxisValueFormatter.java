@@ -5,16 +5,19 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.text.DecimalFormat;
 
-public class DegreeAxisValueFormatter implements IAxisValueFormatter
+/**
+ * Created by lbirk on 17-01-2017.
+ */
+
+public class WindAxisValueFormatter implements IAxisValueFormatter
 {
     private final DecimalFormat mFormat;
 
-    public DegreeAxisValueFormatter() {
-        mFormat = new DecimalFormat("###.#");
+    public WindAxisValueFormatter() {
+        mFormat = new DecimalFormat("####");
     }
-
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        return mFormat.format(value) + (char) 0x00B0+"C";
+        return mFormat.format(value) + " m/s";
     }
 }

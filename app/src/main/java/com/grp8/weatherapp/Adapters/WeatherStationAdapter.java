@@ -1,7 +1,6 @@
 package com.grp8.weatherapp.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +26,11 @@ import java.util.Locale;
 
 public class WeatherStationAdapter extends BaseAdapter {
 
-    private List<Station> stations;
-    private List<DataReading> readings;
-    private SimpleDateFormat formatter = new SimpleDateFormat("MMM d HH:mm yyyy", Locale.getDefault());
-    private LayoutInflater inflater;
-    private Context context;
+    private final List<Station> stations;
+    private final List<DataReading> readings;
+    private final SimpleDateFormat formatter = new SimpleDateFormat("MMM d HH:mm yyyy", Locale.getDefault());
+    private final LayoutInflater inflater;
+    private final Context context;
 
     public WeatherStationAdapter(List<Station> stations, List<DataReading> readings, LayoutInflater inflater, Context context) {
         super();

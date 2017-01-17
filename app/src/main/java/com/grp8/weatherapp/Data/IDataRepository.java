@@ -9,7 +9,6 @@ import com.grp8.weatherapp.Entities.Station;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface IDataRepository
 {
@@ -20,45 +19,45 @@ public interface IDataRepository
      *
      * @return Returns TRUE if the authorization was successful, FALSE otherwise.
      */
-    public boolean authorize(int user);
+    boolean authorize(int user);
 
     /**
      * Sets the current user.
      *
      * @param user A CLAFIS user ID.
      */
-    public void setUser(int user);
+    void setUser(int user);
 
     /**
      * Refreshes the data source.
      */
-    public void refresh();
+    void refresh();
 
     /**
      * Fetches a specific station associated with the current user and specified station ID
      *
      * @param id CLAFIS station ID
      */
-    public Station getStation(int id);
+    Station getStation(int id);
 
     /**
      * Fetches all stations associated with the current user
      */
-    public List<Station> getStations();
+    List<Station> getStations();
 
     /**
      * Returns the number of stations.
      *
      * @return Returns an integer.
      */
-    public int getStationCount();
+    int getStationCount();
 
     /**
      * Fetches the latest station data reading associated with the specified station ID
      *
      * @param station CLAFIS station ID
      */
-    public DataReading getStationData(int station);
+    DataReading getStationData(int station);
 
     /**
      * Fetches all data reading with the specified date range associated with the
@@ -68,7 +67,7 @@ public interface IDataRepository
      * @param start   Beginning of date range
      * @param end     End of date range
      */
-    public List<DataReading> getStationData(int station, Date start, Date end);
+    List<DataReading> getStationData(int station, Date start, Date end);
 
-    public List<CacheEntry> getCache();
+    List<CacheEntry> getCache();
 }

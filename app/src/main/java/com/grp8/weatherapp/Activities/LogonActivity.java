@@ -1,19 +1,12 @@
 package com.grp8.weatherapp.Activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -28,7 +21,6 @@ import com.grp8.weatherapp.R;
 public class LogonActivity extends AppCompatActivity {
 
     private EditText userIDEditText;
-    private EditText passwordIDEditText;
 
     private UserManager userManager;
 
@@ -54,7 +46,8 @@ public class LogonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_logon);
 
         this.userIDEditText     = (EditText) findViewById(R.id.userIDText);
-        this.passwordIDEditText = (EditText) findViewById(R.id.userPasswordText);
+        EditText passwordIDEditText = (EditText) findViewById(R.id.userPasswordText);
+        userIDEditText.setText("5");
 
         @SuppressLint("WrongViewCast")
         final AppCompatImageView logo = (AppCompatImageView) findViewById(R.id.imageLogo);

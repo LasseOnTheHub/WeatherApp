@@ -20,13 +20,13 @@ import java.util.Locale;
 
 public class MyMarkerView extends MarkerView {
 
-    private TextView tvContent;
-    private long referenceTimestamp;  // minimum timestamp in your data set
-    private DateFormat mDataFormat;
-    private Date mDate;
+    private final TextView tvContent;
+    private final long referenceTimestamp;  // minimum timestamp in your data set
+    private final DateFormat mDataFormat;
+    private final Date mDate;
 
-    public MyMarkerView (Context context, int layoutResource, long referenceTimestamp) {
-        super(context, layoutResource);
+    public MyMarkerView(Context context, long referenceTimestamp) {
+        super(context, R.layout.custom_marker_view);
         // this markerview only displays a textview
         tvContent = (TextView) findViewById(R.id.tvContent);
         this.referenceTimestamp = referenceTimestamp;
@@ -43,20 +43,6 @@ public class MyMarkerView extends MarkerView {
         tvContent.setText(e.getY() +" - d."+ getTimedate(currentTimestamp)); // set the entry-value as the display text
         super.refreshContent(e, highlight);
     }
-
-/*    @Override
-    public int getXOffset(float xpos) {
-        // this will center the marker-view horizontally
-        return -(getWidth() / 2);
-    }
-
-    @Override
-    public int getYOffset(float ypos) {
-        // this will cause the marker-view to be above the selected value
-        return -getHeight();
-    }*/
-
-
     @Override
     public MPPointF getOffset() {
         return new MPPointF((float)-(getWidth() / 2), (float)-getHeight());

@@ -6,7 +6,6 @@ import com.grp8.weatherapp.Entities.Data.Air;
 import com.grp8.weatherapp.Entities.Data.Soil;
 import com.grp8.weatherapp.Entities.Data.Wind;
 import com.grp8.weatherapp.Entities.DataReading;
-import com.grp8.weatherapp.Entities.Station;
 
 import org.junit.Test;
 

@@ -1,6 +1,5 @@
 package com.grp8.weatherapp.Fragments;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -46,8 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static java.lang.Math.min;
-
 /**
  * Created by lbirk on 08-01-2017.
  */
@@ -59,14 +56,13 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
     //Grafer
     private LineChart humidityChart;
     private CombinedChart tempRainChart;
-    Typeface        mTfLight;
-    IDataRepository dataRepository;
-    Calendar cal = Calendar.getInstance();
-    SimpleDateFormat formatter;
-    long            referenceTimestamp;
-    MyMarkerView    myMarkerView;
-    int             stationId;
-    WeatherStationTab weatherStationTab;
+    private Typeface        mTfLight;
+    private IDataRepository dataRepository;
+    private final Calendar cal = Calendar.getInstance();
+    private SimpleDateFormat formatter;
+    private long            referenceTimestamp;
+    private MyMarkerView    myMarkerView;
+    private int             stationId;
 
     //Dato vælger
     private TextView dateInputFrom;
@@ -76,7 +72,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         View view = inflater.inflate(R.layout.fragment_temp_rain_humidity, container, false);
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
         dataRepository = DataRepositoryFactory.build(getActivity().getApplicationContext());
-        weatherStationTab = (WeatherStationTab)getActivity();
+        WeatherStationTab weatherStationTab = (WeatherStationTab) getActivity();
         stationId = weatherStationTab.getCurrentStationID();
 
         formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -122,7 +118,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         return view;
     }
 
-    public void drawGraphs()
+    private void drawGraphs()
     {
         defineTemperatureAndRainGraph();
         defineHumidityGraph();
@@ -192,7 +188,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
         //Definere temperatur og nedbørs legend
         Legend tempRainLegend = tempRainChart.getLegend();
-        tempRainLegend.setWordWrapEnabled(true);
+        tempRainLegend.setWordWrapEnabled(false);
         tempRainLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         tempRainLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         tempRainLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
@@ -200,7 +196,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
         //Definere nedbørs højre Y-akse
         YAxis tempRainYRightAxis = tempRainChart.getAxisRight();
-        tempRainYRightAxis.setDrawGridLines(false);
+        tempRainYRightAxis.setDrawGridLines(true);
         tempRainYRightAxis.setSpaceTop(5);
         tempRainYRightAxis.setAxisMinimum(0);
         tempRainYRightAxis.setValueFormatter(new MMAxisValueFormatter());
@@ -220,7 +216,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
     }
 
-    public void getData()
+    private void getData()
     {
         try{
             new AsyncTask<Void, List<DataReading>, List<DataReading>>() {
@@ -250,8 +246,8 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
     }
 
     private void setHumidityData(List<DataReading> data) {
-        ArrayList<Entry> earthVals = new ArrayList<Entry>();
-        ArrayList<Entry> airVals = new ArrayList<Entry>();
+        ArrayList<Entry> earthVals = new ArrayList<>();
+        ArrayList<Entry> airVals = new ArrayList<>();
 
         for (int i=0;i<data.size();i++)
         {
@@ -275,14 +271,10 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set1.setCubicIntensity(0.1f);
             set1.setDrawCircles(false);
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
             set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
-            set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-            set1.setFillAlpha(100);
-            set1.setFillColor(ColorTemplate.getHoloBlue());
-            set1.setHighLightColor(Color.rgb(244, 117, 117));
             set1.setValueFormatter(new PercentFormatter());
 
             // create a dataset and give it a type
@@ -293,7 +285,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             set2.setDrawCircles(false);
             set2.setValueFormatter(new PercentFormatter());
             humidityChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
-            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
+            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), referenceTimestamp);
             humidityChart.setMarker(myMarkerView);
 
             // create a data object with the datasets
@@ -315,13 +307,12 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
     private LineData setTemperatureData(List<DataReading> data) {
         LineData lineData = new LineData();
-        final ArrayList<Entry> tempVals = new ArrayList<Entry>();
+        final ArrayList<Entry> tempVals = new ArrayList<>();
 
         for (int i=0;i<data.size();i++)
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
-            float x = d.getTimestamp().getTime();
             float y = (float) d.getAirReadings().getTemperature();
             tempVals.add(new Entry(xNew, y));
         }
@@ -348,7 +339,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             set1.setFillColor(ColorTemplate.getHoloBlue());
             set1.setHighLightColor(Color.rgb(244, 117, 117));
             tempRainChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
-            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), R.layout.custom_marker_view, referenceTimestamp);
+            myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), referenceTimestamp);
             tempRainChart.setMarker(myMarkerView);
             set1.setAxisDependency(YAxis.AxisDependency.LEFT);
 
@@ -364,7 +355,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
 
     private BarData setRainBarData(List<DataReading> data) {
 
-        final ArrayList<BarEntry> rainVals = new ArrayList<BarEntry>();
+        final ArrayList<BarEntry> rainVals = new ArrayList<>();
 
         for (int i=0;i<data.size();i++)
         {
@@ -383,9 +374,6 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         d.setBarWidth(0.90f);
 
         d.notifyDataChanged();
-/*        tempRainChart.notifyDataSetChanged();
-        tempRainChart.invalidate();*/
-
         return d;
     }
 
@@ -401,7 +389,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         tempRainChart.invalidate();
     }
 
-    private DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
+    private final DatePickerDialog.OnDateSetListener dateFromListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             cal.set(Calendar.YEAR, year);
@@ -412,7 +400,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         }
     };
 
-    private DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
+    private final DatePickerDialog.OnDateSetListener dateToListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             cal.set(Calendar.YEAR, year);
