@@ -1,7 +1,5 @@
 package com.grp8.weatherapp.Data.Mappers;
 
-import android.text.TextUtils;
-
 import com.grp8.weatherapp.Entities.Data.Air;
 import com.grp8.weatherapp.Entities.Data.Soil;
 import com.grp8.weatherapp.Entities.Data.Wind;
@@ -20,36 +18,6 @@ import java.util.List;
  */
 public class DataReadingMapper implements IListableMapper<DataReading>
 {
-    @Override
-    public List<DataReading> map(String[] collection)
-    {
-        try
-        {
-            return this.map(new JSONArray(TextUtils.join(",", collection)));
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
-    @Override
-    public DataReading map(String json)
-    {
-        try
-        {
-            return this.map(new JSONObject(json));
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
     @Override
     public List<DataReading> map(JSONArray collection)
     {

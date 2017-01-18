@@ -7,6 +7,8 @@ import com.grp8.weatherapp.Entities.Data.Soil;
 import com.grp8.weatherapp.Entities.Data.Wind;
 import com.grp8.weatherapp.Entities.DataReading;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.util.Date;
@@ -29,7 +31,7 @@ public class DataReadingMapperTest
         String payload = "{\"id\":1,\"timestamp\":946684800,\"rfaddress\":1,\"rainfall\":0.0,\"relativeAirHumidity\":10,\"windDirection\":0,\"windSpeed\":0.0,\"lux\":0.0,\"airTemp\":10,\"deviceID\":1,\"airPressure\":1000,\"soilMoistureOne\":0,\"soilMoistureTwo\":0,\"soilMoistureThree\":0,\"soilMoistureFour\":0,\"soilTemperatureOne\":0,\"soilTemperatureTwo\":0,\"soilTemperatureThree\":0,\"soilTemperatureFour\":0,\"leafWetness\":0}";
 
         DataReading expected = new DataReading(1, 1, new Date(946684800), 0.0, new Air(1000, 10, 10), new Wind(0.0, 0), new Soil(new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}));
-        DataReading result   = mapper.map(payload);
+        DataReading result   = mapper.map(new JSONObject(payload));
 
         assertEquals(expected.getID(),        result.getID());
         assertEquals(expected.getTimestamp(), result.getTimestamp());
@@ -57,7 +59,7 @@ public class DataReadingMapperTest
         payloads[0] = "{\"id\":1,\"timestamp\":946684800,\"rfaddress\":1,\"rainfall\":0.0,\"relativeAirHumidity\":10,\"windDirection\":0,\"windSpeed\":0.0,\"lux\":0.0,\"airTemp\":10,\"deviceID\":1,\"airPressure\":1000,\"soilMoistureOne\":0,\"soilMoistureTwo\":0,\"soilMoistureThree\":0,\"soilMoistureFour\":0,\"soilTemperatureOne\":0,\"soilTemperatureTwo\":0,\"soilTemperatureThree\":0,\"soilTemperatureFour\":0,\"leafWetness\":0}";
         payloads[1] = "{\"id\":2,\"timestamp\":946684800,\"rfaddress\":2,\"rainfall\":0.0,\"relativeAirHumidity\":20,\"windDirection\":0,\"windSpeed\":0.0,\"lux\":0.0,\"airTemp\":20,\"deviceID\":2,\"airPressure\":1000,\"soilMoistureOne\":0,\"soilMoistureTwo\":0,\"soilMoistureThree\":0,\"soilMoistureFour\":0,\"soilTemperatureOne\":0,\"soilTemperatureTwo\":0,\"soilTemperatureThree\":0,\"soilTemperatureFour\":0,\"leafWetness\":0}";
 
-        List<DataReading> results = mapper.map(payloads);
+        List<DataReading> results = mapper.map(new JSONArray("[" + payloads[0] + "," + payloads[1] + "]"));
 
         assertEquals(results.size(), 2);
 

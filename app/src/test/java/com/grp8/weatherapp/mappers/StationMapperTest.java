@@ -4,6 +4,8 @@ import com.grp8.weatherapp.Data.Mappers.IListableMapper;
 import com.grp8.weatherapp.Data.Mappers.StationMapper;
 import com.grp8.weatherapp.Entities.Station;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class StationMapperTest
         String  payload  = "{\"id\": 1,\"deviceType\": 1,\"notes\": \"notes\",\"latitude\": 10.0,\"longitude\": 20.0\n}";
 
         Station expected = new Station(1, 1, "notes", 10.0, 20.0);
-        Station result   = mapper.map(payload);
+        Station result   = mapper.map(new JSONObject(payload));
 
         assertEquals(expected.getId(), result.getId());
         assertEquals(expected.getType(), result.getType());
@@ -43,7 +45,7 @@ public class StationMapperTest
         payloads[0] = "{\"id\": 1,\"deviceType\": 1,\"notes\": \"notes\",\"latitude\": 10.0,\"longitude\": 20.0\n}";
         payloads[1] = "{\"id\": 2,\"deviceType\": 1,\"notes\": \"notes\",\"latitude\": 20.0,\"longitude\": 30.0\n}";
 
-        List<Station> results = mapper.map(payloads);
+        List<Station> results = mapper.map(new JSONArray("[" + payloads[0] + "," + payloads[1] + "]"));
 
         assertEquals(results.size(), 2);
 

@@ -10,8 +10,6 @@ import java.util.List;
  */
 public interface IListableMapper<T>
 {
-    List<T> map(String[] collection); // FIXME: Remove before release
-
     /**
      * Maps multiple instances of the specified type into a list.
      *
@@ -20,8 +18,6 @@ public interface IListableMapper<T>
      * @return A list of instances of the specified type.
      */
     List<T> map(JSONArray collection);
-
-    T map(String json); // FIXME: Remove before release
 
     /**
      * Maps a single instance of the specified type.

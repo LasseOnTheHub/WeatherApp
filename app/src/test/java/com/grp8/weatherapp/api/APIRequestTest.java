@@ -83,19 +83,19 @@ public class APIRequestTest
         cal.add(Calendar.HOUR_OF_DAY, -1);
         Date minusOneHour = cal.getTime();
 
-        cal.add(Calendar.HOUR_OF_DAY, -1);
+        cal.add(Calendar.HOUR_OF_DAY, -2);
         Date minusTwoHours = cal.getTime();
 
-        cal.add(Calendar.HOUR_OF_DAY, -2);
+        cal.add(Calendar.HOUR_OF_DAY, -6);
         Date minusFourHours = cal.getTime();
 
         assertEquals("Interval: -1 hour", BASE_URL + "/weather-station/1?endDate=" + end + "&startDate=" + df.format(minusOneHour).replaceAll(" ", "%20"), request.build());
 
         request.increaseBackwardsReadingDateInterval();
-        assertEquals("Interval: -2 hours", BASE_URL + "/weather-station/1?endDate=" + end + "&startDate=" + df.format(minusTwoHours).replaceAll(" ", "%20"), request.build());
+        assertEquals("Interval: -3 hours", BASE_URL + "/weather-station/1?endDate=" + end + "&startDate=" + df.format(minusTwoHours).replaceAll(" ", "%20"), request.build());
 
         request.increaseBackwardsReadingDateInterval();
-        assertEquals("Interval: -4 hours", BASE_URL + "/weather-station/1?endDate=" + end + "&startDate=" + df.format(minusFourHours).replaceAll(" ", "%20"), request.build());
+        assertEquals("Interval: -9 hours", BASE_URL + "/weather-station/1?endDate=" + end + "&startDate=" + df.format(minusFourHours).replaceAll(" ", "%20"), request.build());
     }
 
     @Test

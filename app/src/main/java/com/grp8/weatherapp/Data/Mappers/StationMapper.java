@@ -1,7 +1,5 @@
 package com.grp8.weatherapp.Data.Mappers;
 
-import android.text.TextUtils;
-
 import com.grp8.weatherapp.Entities.Station;
 
 import org.json.JSONArray;
@@ -17,36 +15,6 @@ import java.util.List;
 
 public class StationMapper implements IListableMapper<Station>
 {
-    @Override
-    public List<Station> map(String[] collection)
-    {
-        try
-        {
-            return this.map(new JSONArray(TextUtils.join(",", collection)));
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
-    @Override
-    public Station map(String json)
-    {
-        try
-        {
-            return this.map(new JSONObject(json));
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
     @Override
     public List<Station> map(JSONArray collection)
     {
