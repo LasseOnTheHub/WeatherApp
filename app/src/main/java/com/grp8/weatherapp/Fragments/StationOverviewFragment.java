@@ -24,6 +24,7 @@ import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.Logic.Converters.PressureConverter;
 import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
@@ -35,6 +36,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private ImageView weatherWindow;
     private boolean failed;
     private TableLayout tableLayout;
+    private SimpleDateFormat format = new SimpleDateFormat("MMM d HH:mm", Locale.getDefault());
 
     private class DataRead extends AsyncTask<Void, DataReading, DataReading> {
         final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
@@ -154,7 +156,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         // Set last updated text and getting the appropriate unit
         updated.setMaxWidth(315);
-        updated.setText(String.valueOf(reading.getTimestamp()));
+        updated.setText(format.format(reading.getTimestamp()));
     }
 
     private void loadedView() {
