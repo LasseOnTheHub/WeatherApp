@@ -100,9 +100,6 @@ public class MainActivityTab extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refresh_menu:
-                this.refresh();
-                break;
             case R.id.settings_menu:
                 startActivityForResult(new Intent(MainActivityTab.this, SettingsActivity.class), 1);
                 break;
