@@ -24,6 +24,8 @@ import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Logic.Converters.PressureConverter;
+import com.grp8.weatherapp.Logic.Converters.WindConverter;
 import com.grp8.weatherapp.Logic.Formatters.PressureAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.WindAxisValueFormatter;
 import com.grp8.weatherapp.R;
@@ -145,7 +147,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         windLeftAxis.setSpaceBottom(5);
         windLeftAxis.setDrawGridLines(true);
         windLeftAxis.setGranularityEnabled(true);
-        windLeftAxis.setValueFormatter(new WindAxisValueFormatter());
+        windLeftAxis.setValueFormatter(new WindAxisValueFormatter(getActivity().getApplicationContext()));
     }
 
     private void definePressureGraph()
@@ -181,7 +183,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         PressureYLeftAxis.setSpaceBottom(5);
         PressureYLeftAxis.setDrawGridLines(true);
         PressureYLeftAxis.setGranularityEnabled(true);
-        PressureYLeftAxis.setValueFormatter(new PressureAxisValueFormatter());
+        PressureYLeftAxis.setValueFormatter(new PressureAxisValueFormatter(getActivity().getApplicationContext()));
         pressureChart.setNoDataText("Der er desværre ingen data i denne periode");
     }
 
@@ -218,7 +220,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
-            float y = (float) d.getAirReadings().getPressure();
+            float y = (float) PressureConverter.getFormattedPressure(getActivity().getApplicationContext(), d.getAirReadings().getPressure());
             pressureVals.add(new Entry(xNew, y));
         }
         LineDataSet set1;
@@ -263,7 +265,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
-             float y = (float) d.getWindReadings().getSpeed();vals.add(new Entry(xNew, y));
+             float y = (float) WindConverter.getFormattedWind(getActivity().getApplicationContext(), d.getWindReadings().getSpeed());vals.add(new Entry(xNew, y));
         }
 
         LineDataSet set1;

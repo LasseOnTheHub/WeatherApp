@@ -105,6 +105,8 @@ public class MainActivityTab extends AppCompatActivity
                 break;
             case R.id.logout_menu:
                 UserManager.getInstance(getApplicationContext()).logout();
+                Intent intent = new Intent(MainActivityTab.this, LogonActivity.class);
+                finishAffinity();
                 startActivity(new Intent(MainActivityTab.this, LogonActivity.class));
                 finish();
                 break;

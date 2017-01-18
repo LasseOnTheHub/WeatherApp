@@ -58,12 +58,14 @@ public class FallbackDataRepository extends DataRepository
         positions.put(1, new Double[]{ 55.732282, 12.39504 });
         positions.put(2, new Double[]{ 55.732282, 12.39504 });
 
+        String[] titles = new String[] {"Majsmark","Kornmark","Hvedemark"};
+
         for(int index = 0; index < this.getStationCount(); index++)
         {
             int      id  = index + 1;
             Double[] pos = positions.get(index);
 
-            stations.put(new Station(id, 1, "Demo station " + (index + 1), pos[0], pos[1]), getStationData(id));
+            stations.put(new Station(id, 1, titles[index], pos[0], pos[1]), getStationData(id));
         }
 
         super.addToCache(stations);
@@ -79,7 +81,7 @@ public class FallbackDataRepository extends DataRepository
             return super.getStationData(station);
         }
 
-        return generate(1, station, new Date(System.currentTimeMillis()), new Random());
+        return generate(1, station, new Date(System.currentTimeMillis()-((long) (Math.random()*1000000.0))), new Random());
     }
 
     @Override

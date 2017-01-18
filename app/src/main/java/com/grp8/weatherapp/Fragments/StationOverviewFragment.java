@@ -2,6 +2,7 @@ package com.grp8.weatherapp.Fragments;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -16,11 +17,15 @@ import android.widget.TextView;
 
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Logic.Converters.WindConverter;
 import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.Logic.Converters.PressureConverter;
 import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -30,6 +35,8 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private ProgressBar spinner;
     private ImageView weatherWindow;
     private boolean failed;
+    private TableLayout tableLayout;
+    private SimpleDateFormat format = new SimpleDateFormat("MMM d HH:mm", Locale.getDefault());
 
     private class DataRead extends AsyncTask<Void, DataReading, DataReading> {
         final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
@@ -96,6 +103,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
             humidity = (TextView) view.findViewById(R.id.humidity);
             updated = (TextView) view.findViewById(R.id.updated);
             spinner = (ProgressBar) view.findViewById(R.id.spinner);
+            tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
 
             // setting spinner visible and loading text
             loadedView();
@@ -106,8 +114,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
             // ImageView declaration
             weatherWindow = (ImageView) view.findViewById(R.id.weatherWindow);
 
-            // TableLayout declaration
-            TableLayout tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
         }
 
         return view;
@@ -121,6 +127,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         // removing spinner
         spinner.setVisibility(View.GONE);
+        tableLayout.setVisibility(View.VISIBLE);
 
         // setting text
 
@@ -129,12 +136,12 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         temp.setText(tem + " " + SettingsManager.getTempUnit(getActivity().getApplicationContext()));
 
         // set windspeed text and getting the appropriate unit
-        String speed = String.valueOf(reading.getWindReadings().getSpeed());
+        String speed = String.format(Locale.getDefault(), "%.2f", WindConverter.getFormattedWind(getActivity().getApplicationContext(), reading.getWindReadings().getSpeed()));
         windSpeed.setMaxWidth(315);
         windSpeed.setText(speed + " " + SettingsManager.getWindSpeedUnit(getActivity().getApplicationContext()));
 
         // set pressure text and getting the appropriate unit
-        String pressure = String.valueOf(PressureConverter.getFormattedPressure(getActivity().getApplicationContext(), reading.getAirReadings().getPressure()));
+        String pressure = String.format(Locale.getDefault(), "%.2f", PressureConverter.getFormattedPressure(getActivity().getApplicationContext(), reading.getAirReadings().getPressure()));
         airP.setMaxWidth(315);
         airP.setText(pressure + " " + SettingsManager.getPressureUnit(getActivity().getApplicationContext()));
         if (reading.getAirReadings().getPressure() < 1000) {
@@ -149,16 +156,12 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         // Set last updated text and getting the appropriate unit
         updated.setMaxWidth(315);
-        updated.setText(String.valueOf(reading.getTimestamp()));
+        updated.setText(format.format(reading.getTimestamp()));
     }
 
     private void loadedView() {
         spinner.setVisibility(View.VISIBLE);
-        temp.setText(R.string.loadingTextOverview);
-        windSpeed.setText(R.string.loadingTextOverview);
-        airP.setText(R.string.loadingTextOverview);
-        humidity.setText(R.string.loadingTextOverview);
-        updated.setText(R.string.loadingTextOverview);
+        tableLayout.setVisibility(View.GONE);
     }
 
     private void loadData() {

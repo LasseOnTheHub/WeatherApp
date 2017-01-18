@@ -11,16 +11,16 @@ import com.grp8.weatherapp.R;
 public class PressureConverter {
 
     public static double getFormattedPressure(Context context, double pres) {
-        String[] tempArray = context.getResources().getStringArray(R.array.pressure_options);
-        String userUnit = SettingsManager.getTempUnit(context);
+        String[] pressArray = context.getResources().getStringArray(R.array.pressure_options);
+        String userUnit = SettingsManager.getPressureUnit(context);
 
-        if (tempArray[1].equals(userUnit)) {
+        if (pressArray[1].equals(userUnit)) {
             // Bar
             return pres / 1000;
-        } else if (tempArray[2].equals(userUnit)) {
+        } else if (pressArray[2].equals(userUnit)) {
             // atm
             return pres / 1013.25;
-        } else if (tempArray[3].equals(userUnit)) {
+        } else if (pressArray[3].equals(userUnit)) {
             // mmHg
             return pres / 68.94757293168;
         } else {
