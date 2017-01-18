@@ -30,6 +30,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
     private ProgressBar spinner;
     private ImageView weatherWindow;
     private boolean failed;
+    private TableLayout tableLayout;
 
     private class DataRead extends AsyncTask<Void, DataReading, DataReading> {
         final int stationId = getActivity().getIntent().getExtras().getInt(Constants.KEY_STATION_ID);
@@ -96,6 +97,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
             humidity = (TextView) view.findViewById(R.id.humidity);
             updated = (TextView) view.findViewById(R.id.updated);
             spinner = (ProgressBar) view.findViewById(R.id.spinner);
+            tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
 
             // setting spinner visible and loading text
             loadedView();
@@ -106,8 +108,6 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
             // ImageView declaration
             weatherWindow = (ImageView) view.findViewById(R.id.weatherWindow);
 
-            // TableLayout declaration
-            TableLayout tableLayout = (TableLayout) view.findViewById(R.id.tableLayoutt);
         }
 
         return view;
@@ -121,6 +121,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
         // removing spinner
         spinner.setVisibility(View.GONE);
+        tableLayout.setVisibility(View.VISIBLE);
 
         // setting text
 
@@ -154,11 +155,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
 
     private void loadedView() {
         spinner.setVisibility(View.VISIBLE);
-        temp.setText(R.string.loadingTextOverview);
-        windSpeed.setText(R.string.loadingTextOverview);
-        airP.setText(R.string.loadingTextOverview);
-        humidity.setText(R.string.loadingTextOverview);
-        updated.setText(R.string.loadingTextOverview);
+        tableLayout.setVisibility(View.GONE);
     }
 
     private void loadData() {
