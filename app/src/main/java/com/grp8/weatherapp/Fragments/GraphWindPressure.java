@@ -140,7 +140,7 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         windChart.getAxisRight().setDrawLabels(false);
         windChart.getAxisRight().setDrawGridLines(false);
         windLeftAxis.setTypeface(mTfLight);
-        windLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        windLeftAxis.setTextColor(Color.BLACK);
         windLeftAxis.setSpaceTop(5);
         windLeftAxis.setSpaceBottom(5);
         windLeftAxis.setDrawGridLines(true);
@@ -176,13 +176,12 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         pressureChart.getAxisRight().setDrawLabels(false);
         pressureChart.getAxisRight().setDrawGridLines(false);
         pressureChart.getDescription().setEnabled(false);
-        PressureYLeftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        PressureYLeftAxis.setTextColor(Color.BLACK);
         PressureYLeftAxis.setSpaceTop(5);
         PressureYLeftAxis.setSpaceBottom(5);
         PressureYLeftAxis.setDrawGridLines(true);
         PressureYLeftAxis.setGranularityEnabled(true);
         PressureYLeftAxis.setValueFormatter(new PressureAxisValueFormatter());
-
         pressureChart.setNoDataText("Der er desværre ingen data i denne periode");
     }
 

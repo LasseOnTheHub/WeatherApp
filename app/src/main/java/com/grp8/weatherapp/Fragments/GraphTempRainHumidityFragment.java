@@ -150,7 +150,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         //Definere fugtigheds venstre Y-akses udseende
         YAxis HumidityYleftAxis = humidityChart.getAxisLeft();
         HumidityYleftAxis.setTypeface(mTfLight);
-        HumidityYleftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        HumidityYleftAxis.setTextColor(Color.BLACK);
         HumidityYleftAxis.setAxisMaximum(100);
         HumidityYleftAxis.setAxisMinimum(0f);
         HumidityYleftAxis.setDrawGridLines(true);
@@ -162,7 +162,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         //Definere fugtigheds højre Y-akses udseende.
         YAxis humidityYRightAxis = humidityChart.getAxisRight();
         humidityYRightAxis.setTypeface(mTfLight);
-        humidityYRightAxis.setTextColor(Color.RED);
+        humidityYRightAxis.setTextColor(Color.BLACK);
         humidityYRightAxis.setAxisMaximum(100);
         humidityYRightAxis.setAxisMinimum(0);
         humidityYRightAxis.setDrawGridLines(false);
