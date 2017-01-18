@@ -36,7 +36,9 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 UserManager.getInstance(getActivity().getApplicationContext()).logout();
-                getActivity().startActivity(new Intent(getActivity(), LogonActivity.class));
+                Intent intent = new Intent(getActivity(), LogonActivity.class);
+                getActivity().finishAffinity();
+                getActivity().startActivity(intent);
                 getActivity().finish();
                 return true;
             }
