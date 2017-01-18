@@ -2,6 +2,7 @@ package com.grp8.weatherapp.Fragments;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -16,11 +17,14 @@ import android.widget.TextView;
 
 import com.grp8.weatherapp.Data.DataRepositoryFactory;
 import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Logic.Converters.WindConverter;
 import com.grp8.weatherapp.Logic.SettingsManager;
 import com.grp8.weatherapp.R;
 import com.grp8.weatherapp.Logic.Constants;
 import com.grp8.weatherapp.Logic.Converters.PressureConverter;
 import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
+
+import java.util.Locale;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
@@ -130,12 +134,12 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         temp.setText(tem + " " + SettingsManager.getTempUnit(getActivity().getApplicationContext()));
 
         // set windspeed text and getting the appropriate unit
-        String speed = String.valueOf(reading.getWindReadings().getSpeed());
+        String speed = String.format(Locale.getDefault(), "%.2f", WindConverter.getFormattedWind(getActivity().getApplicationContext(), reading.getWindReadings().getSpeed()));
         windSpeed.setMaxWidth(315);
         windSpeed.setText(speed + " " + SettingsManager.getWindSpeedUnit(getActivity().getApplicationContext()));
 
         // set pressure text and getting the appropriate unit
-        String pressure = String.valueOf(PressureConverter.getFormattedPressure(getActivity().getApplicationContext(), reading.getAirReadings().getPressure()));
+        String pressure = String.format(Locale.getDefault(), "%.2f", PressureConverter.getFormattedPressure(getActivity().getApplicationContext(), reading.getAirReadings().getPressure()));
         airP.setMaxWidth(315);
         airP.setText(pressure + " " + SettingsManager.getPressureUnit(getActivity().getApplicationContext()));
         if (reading.getAirReadings().getPressure() < 1000) {
