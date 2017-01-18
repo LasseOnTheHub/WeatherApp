@@ -30,6 +30,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.grp8.weatherapp.Activities.WeatherStationTab;
 import com.grp8.weatherapp.Data.IDataRepository;
 import com.grp8.weatherapp.Entities.DataReading;
+import com.grp8.weatherapp.Logic.Converters.TemperatureConverter;
 import com.grp8.weatherapp.Logic.Formatters.HourAxisValueFormatter;
 import com.grp8.weatherapp.Logic.Formatters.MyMarkerView;
 import com.grp8.weatherapp.R;
@@ -206,7 +207,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         tempRainYLeftAxis.setDrawGridLines(false);
         tempRainYLeftAxis.setSpaceTop(5);
         tempRainYLeftAxis.setSpaceBottom(5);
-        tempRainYLeftAxis.setValueFormatter(new DegreeAxisValueFormatter());
+        tempRainYLeftAxis.setValueFormatter(new DegreeAxisValueFormatter(getActivity().getApplicationContext()));
 
         //Definere temperatur og nedbørs X-akse
         XAxis xAxis = tempRainChart.getXAxis();
@@ -313,7 +314,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         {
             DataReading d = data.get(i);
             long xNew = (d.getTimestamp().getTime()/1000)-referenceTimestamp;
-            float y = (float) d.getAirReadings().getTemperature();
+            float y = (float) TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(), d.getAirReadings().getTemperature());
             tempVals.add(new Entry(xNew, y));
         }
         LineDataSet set1;
