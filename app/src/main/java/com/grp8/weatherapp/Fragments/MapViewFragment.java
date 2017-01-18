@@ -135,7 +135,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                             for(final Map.Entry<Station, DataReading> entry : stations.entrySet())
                             {
                                 final Station station = entry.getKey();
-                                DataReading   reading = entry.getValue();
+                                final DataReading   reading = entry.getValue();
 
                                 Log.d("MAP", "Stations: " + station.getId() + " - " + station.getNotes());
 
@@ -178,6 +178,7 @@ public class MapViewFragment extends android.support.v4.app.Fragment implements 
                                         }
 
                                         Intent intent = new Intent(getActivity(), WeatherStationTab.class).putExtra(Constants.KEY_STATION_ID, markerIDs.get(marker.getId()));
+                                        intent.putExtra(Constants.KEY_STATION_NO_DATA, reading == null);
                                         startActivity(intent);
                                     }
                                 });
