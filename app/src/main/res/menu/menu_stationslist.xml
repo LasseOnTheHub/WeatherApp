@@ -16,9 +16,6 @@
 
     </item>
 
-    <item android:title="Refresh"
-        android:id="@+id/refresh_menu" />
-
     <item android:title="Settings"
         android:id="@+id/settings_menu" />
 
