@@ -3,6 +3,7 @@ package com.grp8.weatherapp.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,8 @@ public class MainFragmentList extends ListFragment implements Filterable {
     // List backgrounds
     private LinearLayout backgroundViewNoResults;
     private RelativeLayout backgroundViewLoading;
+    private SwipeRefreshLayout swipeContainer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +57,22 @@ public class MainFragmentList extends ListFragment implements Filterable {
         backgroundViewLoading   =   (RelativeLayout) view.findViewById(R.id.spinner_layout);
         backgroundViewNoResults =   (LinearLayout) view.findViewById(R.id.no_results);
         backgroundText          =   (TextView) view.findViewById(R.id.no_results_text);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                load();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
+
         backgroundViewLoading.setVisibility(View.GONE);
         backgroundViewNoResults.setVisibility(View.GONE);
         resetData();
