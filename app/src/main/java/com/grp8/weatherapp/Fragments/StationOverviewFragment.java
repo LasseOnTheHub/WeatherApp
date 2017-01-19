@@ -132,7 +132,7 @@ public class StationOverviewFragment extends android.support.v4.app.Fragment imp
         // setting text
 
         // set temperature text and getting the appropriate unit
-        String tem = String.valueOf(TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(), reading.getAirReadings().getTemperature()));
+        String tem = String.format(Locale.getDefault(), "%.2f", TemperatureConverter.getFormattedTemp(getActivity().getApplicationContext(), reading.getAirReadings().getTemperature()));
         temp.setText(tem + " " + SettingsManager.getTempUnit(getActivity().getApplicationContext()));
 
         // set windspeed text and getting the appropriate unit
