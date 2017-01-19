@@ -76,7 +76,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Large Text"
                     android:layout_marginLeft="30dp"
                     android:id="@+id/temp" />
             </TableRow>
@@ -105,7 +104,6 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:maxLength="20"
-                    android:text="Large Text"
                     android:layout_marginLeft="30dp"
                     android:id="@+id/windSpeed" />
             </TableRow>
@@ -133,7 +131,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Large Text"
                     android:layout_marginLeft="30dp"
                     android:id="@+id/airP" />
 
@@ -161,7 +158,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Large Text"
                     android:layout_marginLeft="30dp"
                     android:id="@+id/humidity" />
 
@@ -189,8 +185,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:maxLength="20"
-                    android:text="Large Text"
                     android:layout_marginLeft="30dp"
                     android:id="@+id/updated" />
 
