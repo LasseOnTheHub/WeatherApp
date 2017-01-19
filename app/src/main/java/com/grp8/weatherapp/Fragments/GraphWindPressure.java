@@ -140,12 +140,12 @@ public class GraphWindPressure extends Fragment implements DatePickerFragment {
         //Definere wind's Y-akse
         YAxis windLeftAxis= windChart.getAxisLeft();
         windChart.getAxisRight().setDrawLabels(false);
-        windChart.getAxisRight().setDrawGridLines(false);
+        windChart.getAxisRight().setDrawGridLines(true);
         windLeftAxis.setTypeface(mTfLight);
         windLeftAxis.setTextColor(Color.BLACK);
         windLeftAxis.setSpaceTop(5);
         windLeftAxis.setSpaceBottom(5);
-        windLeftAxis.setDrawGridLines(true);
+        windLeftAxis.setDrawGridLines(false);
         windLeftAxis.setGranularityEnabled(true);
         windLeftAxis.setValueFormatter(new WindAxisValueFormatter(getActivity().getApplicationContext()));
     }

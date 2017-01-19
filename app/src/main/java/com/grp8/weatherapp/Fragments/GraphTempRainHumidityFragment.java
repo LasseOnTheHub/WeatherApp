@@ -272,6 +272,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set1.setCubicIntensity(0.1f);
             set1.setDrawCircles(false);
+            set1.setDrawValues(false);
             set1.setHighLightColor(Color.rgb(244, 117, 117));
             set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
@@ -284,6 +285,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
             set2.setLineWidth(2f);
             set2.setHighLightColor(Color.rgb(244, 117, 117));
             set2.setDrawCircles(false);
+            set2.setDrawValues(false);
             set2.setValueFormatter(new PercentFormatter());
             humidityChart.getXAxis().setValueFormatter(new HourAxisValueFormatter(referenceTimestamp));
             myMarkerView = new MyMarkerView(getActivity().getApplicationContext(), referenceTimestamp);
@@ -369,6 +371,7 @@ public class GraphTempRainHumidityFragment extends Fragment implements DatePicke
         set1.setColor(Color.rgb(60, 220, 78));
         set1.setValueTextColor(Color.rgb(60, 220, 78));
         set1.setValueTextSize(10f);
+        set1.setDrawValues(false);
         set1.setAxisDependency(YAxis.AxisDependency.RIGHT);
         set1.setValueFormatter(new MMValueFormatter());
         BarData d = new BarData(set1);
