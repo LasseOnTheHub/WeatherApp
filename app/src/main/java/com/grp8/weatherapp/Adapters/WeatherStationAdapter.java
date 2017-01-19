@@ -86,7 +86,7 @@ public class WeatherStationAdapter extends BaseAdapter {
     }
 
     private void setTempLabel(ViewHolder viewHolder, DataReading reading) {
-        String convertedTemp = String.valueOf(TemperatureConverter.getFormattedTemp(context, reading.getAirReadings().getTemperature()));
+        String convertedTemp = String.format(Locale.getDefault(), "%.2f", TemperatureConverter.getFormattedTemp(context, reading.getAirReadings().getTemperature()));
         viewHolder.tempLabel.setVisibility(View.VISIBLE);
         String temp = convertedTemp + SettingsManager.getTempUnit(context);
         viewHolder.tempLabel.setText(temp);
